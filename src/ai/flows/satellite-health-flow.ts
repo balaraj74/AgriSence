@@ -28,23 +28,26 @@ const getSatelliteHealthFlow = ai.defineFlow(
     try {
       const { output } = await ai.generate({
           model: googleAI.model('gemini-1.5-flash'),
-          system: `You are an expert agricultural AI specializing in satellite imagery analysis. Your task is to simulate a crop health report based on a farmer's field data. The entire response must be in ${input.language}.
+          system: `You are an expert agricultural AI specializing in satellite imagery analysis. Your task is to simulate a crop health report based on a farmer's field data for the last 30 days. The entire response must be in ${input.language}.
+
+          CRITICAL: The data you generate must be for a rolling 30-day window, ending on today's date.
 
           You will generate:
-          1.  **Simulated NDVI Health Map**: A base64 encoded PNG image representing the crop health. The map should be a simple heatmap with green (healthy, NDVI > 0.6), yellow (moderate, NDVI 0.3-0.6), and red (stressed, NDVI < 0.3) zones. CRITICAL: The image background MUST be transparent, and the colored zones should roughly match the shape of the provided field coordinates to look like an overlay. Do not include any text or labels on the image itself.
-          2.  **30-Day Health Trend**: A list of 30 daily data points for an NDVI trend chart. The values should be plausible, showing some fluctuation over the month. The most recent date should be today.
-          3.  **Farmer-Friendly Advice**: Based on the simulated data, generate simple, actionable advice. If you simulate stressed areas, suggest potential causes (e.g., "The north-west corner of your field shows signs of stress. This could be due to uneven irrigation or a pest issue. A ground inspection is recommended.").
-          4.  **Overall Health Status**: A single word summarizing the current state: "Healthy", "Moderate", or "Stressed".
+          1.  **Last Updated Timestamp**: A timestamp for when the analysis was run, in ISO 8601 format (e.g., "2025-09-15T10:30:00Z").
+          2.  **Simulated NDVI Health Map**: A base64 encoded PNG image representing the crop health. The map should be a simple heatmap with green (healthy, NDVI > 0.6), yellow (moderate, NDVI 0.3-0.6), and red (stressed, NDVI < 0.3) zones. The image background MUST be transparent, and the colored zones should roughly match the shape of the provided field coordinates to look like an overlay. Do not include any text or labels on the image itself.
+          3.  **30-Day Health Trend**: A list of 30 daily data points for an NDVI trend chart. The values should be plausible, showing some fluctuation. The most recent date must be today, and the dates should go back 30 days from today.
+          4.  **Farmer-Friendly Advice**: Based on the simulated data, generate simple, actionable advice. If you simulate stressed areas, suggest potential causes (e.g., "The north-west corner of your field shows signs of stress. This could be due to uneven irrigation or a pest issue. A ground inspection is recommended.").
+          5.  **Overall Health Status**: A single word summarizing the current state: "Healthy", "Moderate", or "Stressed".
           `,
           prompt: `
-            Analyze the following farm field and generate a simulated satellite health report in ${input.language}.
+            Analyze the following farm field and generate a simulated satellite health report in ${input.language}. The analysis must cover the last 30 days.
 
             - **Field Name:** ${input.field.fieldName}
             - **Crop:** ${input.field.cropName || 'Not specified'}
             - **Area:** ${input.field.area.toFixed(2)} acres
             - **Field Shape Coordinates (for map generation):** ${JSON.stringify(input.field.coordinates)}
 
-            Generate the health map, 30-day trend, overall status, and farmer advice.
+            Generate the health map, 30-day trend, overall status, "last updated" timestamp, and farmer advice.
           `,
           output: {
               schema: GetSatelliteHealthOutputSchema,

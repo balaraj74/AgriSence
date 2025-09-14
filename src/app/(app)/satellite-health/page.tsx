@@ -35,7 +35,7 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from 'recharts';
-import { Satellite, Map, Bot, BarChartHorizontal, AlertCircle } from 'lucide-react';
+import { Satellite, Map, Bot, BarChartHorizontal, AlertCircle, Clock } from 'lucide-react';
 import { MapComponent } from './MapComponent';
 import { format, parseISO } from 'date-fns';
 
@@ -192,6 +192,10 @@ export default function SatelliteHealthPage() {
                         <div>
                             <CardTitle>Field Health Map</CardTitle>
                             <CardDescription>Simulated NDVI overlay for {selectedField?.fieldName}</CardDescription>
+                            <p className="text-xs text-muted-foreground flex items-center gap-1.5 pt-1">
+                                <Clock className="h-3 w-3" />
+                                Last updated: {format(parseISO(analysisResult.lastUpdated), 'd MMM yyyy, h:mm a')}
+                            </p>
                         </div>
                          <div className={`p-2 rounded-lg text-sm font-semibold ${statusStyles[analysisResult.overallHealth]}`}>
                             {analysisResult.overallHealth}
