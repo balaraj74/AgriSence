@@ -44,6 +44,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const MAP_ID = "AGRISENCE_SATELLITE_MAP";
 
+// Moved MapComponent outside of SatelliteHealthPage to fix syntax error
 const MapComponent = ({
   center,
   field,
