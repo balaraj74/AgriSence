@@ -20,6 +20,7 @@ import {
   Handshake,
   Video,
   TestTube,
+  Satellite,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -36,6 +37,12 @@ const toolItems: ToolItem[] = [
     title: "Crop Diagnosis",
     description: "Identify crop diseases from images.",
     icon: Stethoscope,
+  },
+  {
+    href: "/satellite-health",
+    title: "Satellite Health",
+    description: "Monitor crop health via satellite.",
+    icon: Satellite,
   },
   {
     href: "/live-advisor",

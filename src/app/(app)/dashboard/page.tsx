@@ -32,6 +32,7 @@ import {
   HeartPulse,
   BarChart,
   Handshake,
+  Satellite,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
@@ -57,6 +58,11 @@ const allTools: QuickLink[] = [
     href: '/disease-check',
     title: 'Diagnosis',
     icon: Stethoscope,
+  },
+  {
+    href: '/satellite-health',
+    title: 'Satellite',
+    icon: Satellite,
   },
   {
     href: '/analytics',

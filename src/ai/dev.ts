@@ -13,4 +13,5 @@ import '@/ai/flows/live-advisor-flow.ts';
 import '@/ai/flows/soil-advisor-flow.ts';
 import '@/ai/flows/soil-report-parser-flow.ts';
 import '@/ai/flows/find-best-sellers-flow.ts';
+import '@/ai/flows/satellite-health-flow.ts';
     
