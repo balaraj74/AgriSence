@@ -83,6 +83,8 @@ export default function SatelliteHealthPage() {
     }
     if (user) {
       loadFields(user);
+    } else {
+        setIsLoading(false);
     }
   }, [user, toast]);
   
