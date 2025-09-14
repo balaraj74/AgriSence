@@ -1,7 +1,31 @@
+
 "use client";
 
-import { useEffect, useState } from "react";
-import { Satellite } from "lucide-react";
+import { useState, useEffect, useCallback } from 'react';
+import { useAuth } from "@/hooks/use-auth";
+import type { User } from 'firebase/auth';
+import { getFields } from '@/lib/actions/fields';
+import type { Field } from '@/types';
+import { getSatelliteHealthAnalysis, type GetSatelliteHealthOutput } from '@/ai/flows/satellite-health-flow';
+import { useToast } from "@/hooks/use-toast";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import {
   LineChart,
   Line,
@@ -10,107 +34,225 @@ import {
   Tooltip,
   ResponsiveContainer,
   CartesianGrid,
-} from "recharts";
+} from 'recharts';
+import { Satellite, Map, Bot, BarChartHorizontal, AlertCircle } from 'lucide-react';
+import { MapComponent } from './MapComponent';
+import { format, parseISO } from 'date-fns';
+
+const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: any[]; label?: string }) => {
+    if (active && payload && payload.length) {
+        return (
+            <div className="p-2 bg-background/90 border rounded-lg shadow-lg backdrop-blur-sm">
+                <p className="font-bold text-base">NDVI: {payload[0].value.toFixed(3)}</p>
+                <p className="text-sm text-muted-foreground">{format(parseISO(label!), 'MMM d, yyyy')}</p>
+            </div>
+        );
+    }
+    return null;
+};
+
+const statusStyles = {
+    "Healthy": "bg-green-600/20 text-green-400 border-green-500/30",
+    "Moderate": "bg-yellow-600/20 text-yellow-400 border-yellow-500/30",
+    "Stressed": "bg-red-700/20 text-red-400 border-red-500/30",
+};
+
 
 export default function SatelliteHealthPage() {
-  const [analysisResult, setAnalysisResult] = useState<any>(null);
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const [fields, setFields] = useState<Field[]>([]);
+  const [selectedFieldId, setSelectedFieldId] = useState<string | null>(null);
+  const [analysisResult, setAnalysisResult] = useState<GetSatelliteHealthOutput | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  
+  const selectedField = fields.find(f => f.id === selectedFieldId) || null;
 
   useEffect(() => {
-    // Mocking an API call for demonstration purposes
-    const fetchData = async () => {
-      const mockData = {
-        healthTrend: [
-          { date: "2023-08-01", ndvi: 0.75 },
-          { date: "2023-08-08", ndvi: 0.78 },
-          { date: "2023-08-15", ndvi: 0.76 },
-          { date: "2023-08-22", ndvi: 0.81 },
-          { date: "2023-08-29", ndvi: 0.65 },
-          { date: "2023-09-05", ndvi: 0.45 },
-          { date: "2023-09-12", ndvi: 0.85 },
-        ]
-      };
-      setAnalysisResult(mockData);
+    const fetchFields = async (currentUser: User) => {
+        setIsLoading(true);
+        try {
+            const fetchedFields = await getFields(currentUser.uid);
+            setFields(fetchedFields);
+            if (fetchedFields.length > 0) {
+                // Automatically select the first field
+                setSelectedFieldId(fetchedFields[0].id);
+            }
+        } catch (error) {
+            toast({ variant: "destructive", title: "Error", description: "Could not fetch your fields." });
+        } finally {
+            setIsLoading(false);
+        }
     };
-    fetchData();
-  }, []);
 
-  const trendData =
-    analysisResult?.healthTrend?.map((d: any) => ({
-      date: d.date,
-      ndvi: d.ndvi,
-    })) || [];
+    if (user) {
+        fetchFields(user);
+    } else {
+        setIsLoading(false);
+    }
+  }, [user, toast]);
+  
+  const handleAnalysis = useCallback(async () => {
+    if (!selectedField) {
+        toast({ variant: 'destructive', title: 'No Field Selected' });
+        return;
+    }
+    setIsAnalyzing(true);
+    setAnalysisResult(null);
+    try {
+        const result = await getSatelliteHealthAnalysis({ field: selectedField, language: 'English' });
+        setAnalysisResult(result);
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "An unknown error occurred.";
+        toast({ variant: 'destructive', title: 'Analysis Failed', description: errorMessage });
+    } finally {
+        setIsAnalyzing(false);
+    }
+  }, [selectedField, toast]);
+  
+  // Automatically trigger analysis when a new field is selected
+  useEffect(() => {
+    if (selectedFieldId) {
+        handleAnalysis();
+    }
+  }, [selectedFieldId, handleAnalysis]);
+
+
+  const trendData = analysisResult?.healthTrend.map(d => ({
+    date: d.date,
+    ndvi: d.ndvi
+  }));
+
+  const renderContent = () => {
+    if (isLoading) {
+        return <Skeleton className="h-48 w-full" />;
+    }
+    if (fields.length === 0) {
+        return (
+            <Alert>
+                <Map className="h-4 w-4" />
+                <AlertTitle>No Fields Found</AlertTitle>
+                <AlertDescription>
+                    You need to map your fields first. Please go to the 'My Records' tab and use the 'Field Mapping' tool.
+                </AlertDescription>
+            </Alert>
+        );
+    }
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>Select Field</CardTitle>
+                <CardDescription>Choose one of your mapped fields to analyze its health.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Select onValueChange={setSelectedFieldId} value={selectedFieldId || ''} disabled={isAnalyzing}>
+                    <SelectTrigger>
+                        <SelectValue placeholder="Select a field..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {fields.map(field => (
+                            <SelectItem key={field.id} value={field.id}>
+                                {field.fieldName} ({field.area.toFixed(2)} acres)
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+            </CardContent>
+        </Card>
+    );
+  };
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
+    <div className="space-y-6">
       <div className="flex items-center gap-3">
         <div className="bg-primary/10 p-3 rounded-lg">
           <Satellite className="h-8 w-8 text-primary" />
         </div>
         <div>
-            <h1 className="text-3xl font-bold font-headline">Satellite Crop Health</h1>
-            <p className="text-muted-foreground">Monitor your field's health using satellite data.</p>
+          <h1 className="text-3xl font-bold font-headline">Satellite Crop Health</h1>
+          <p className="text-muted-foreground">Monitor your field's health using simulated satellite data.</p>
         </div>
       </div>
+      
+      {renderContent()}
 
-      {/* NDVI Trend Chart */}
-      <div className="bg-card shadow rounded-xl p-6">
-        <h2 className="text-lg font-semibold mb-4">NDVI Trend Over Time</h2>
-        {trendData.length > 0 ? (
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={trendData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-              <XAxis dataKey="date" stroke="hsl(var(--muted-foreground))" fontSize={12} />
-              <YAxis domain={[0, 1]} stroke="hsl(var(--muted-foreground))" fontSize={12}/>
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "hsl(var(--background))",
-                  borderColor: "hsl(var(--border))",
-                }}
-              />
-              <Line type="monotone" dataKey="ndvi" name="NDVI" stroke="hsl(var(--primary))" strokeWidth={3} />
-            </LineChart>
-          </ResponsiveContainer>
-        ) : (
-          <div className="w-full h-[300px] flex items-center justify-center">
-            <p className="text-muted-foreground">Loading NDVI data...</p>
-          </div>
-        )}
-      </div>
+      {isAnalyzing && (
+         <div className="space-y-6">
+            <Skeleton className="h-[400px] w-full" />
+            <Skeleton className="h-80 w-full" />
+         </div>
+      )}
 
-      {/* Health Status List */}
-      <div className="bg-card shadow rounded-xl p-6">
-        <h2 className="text-lg font-semibold mb-4">Latest Observations</h2>
-        <ul className="space-y-2">
-          {trendData.map((item, i) => {
-            let statusColor = "text-green-500";
-            if (item.ndvi < 0.5) statusColor = "text-red-500";
-            else if (item.ndvi < 0.7) statusColor = "text-yellow-500";
-
-            return (
-              <li
-                key={i}
-                className="flex justify-between p-3 rounded-lg bg-muted/50"
-              >
-                <span className="text-muted-foreground">{item.date}</span>
-                <span className={`font-semibold ${statusColor}`}>
-                  NDVI: {item.ndvi}
-                </span>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-
-      {/* Placeholder for Heatmap */}
-      <div className="bg-card shadow rounded-xl p-6">
-        <h2 className="text-lg font-semibold mb-4">Field Health Heatmap</h2>
-        <div className="w-full h-64 bg-gradient-to-r from-green-600 via-yellow-400 to-red-500 rounded-lg flex items-center justify-center">
-          <p className="text-white font-bold text-shadow-lg">
-            Satellite Heatmap (Integration Pending)
-          </p>
+      {analysisResult && !isAnalyzing && (
+        <div className="space-y-6 animate-in fade-in-50">
+            <div className="grid lg:grid-cols-2 gap-6">
+                <Card>
+                    <CardHeader className="flex flex-row items-start justify-between">
+                        <div>
+                            <CardTitle>Field Health Map</CardTitle>
+                            <CardDescription>Simulated NDVI overlay for {selectedField?.fieldName}</CardDescription>
+                        </div>
+                         <div className={`p-2 rounded-lg text-sm font-semibold ${statusStyles[analysisResult.overallHealth]}`}>
+                            {analysisResult.overallHealth}
+                        </div>
+                    </CardHeader>
+                    <CardContent className="h-[400px]">
+                       <MapComponent 
+                            center={selectedField?.centroid || {lat: 0, lng: 0}}
+                            field={selectedField}
+                            healthMapUrl={analysisResult.healthMapBase64}
+                       />
+                    </CardContent>
+                </Card>
+                 <Card>
+                    <CardHeader>
+                        <CardTitle>AI Farmer Advice</CardTitle>
+                        <CardDescription>Actionable insights based on the analysis.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <Alert>
+                            <Bot className="h-4 w-4" />
+                            <AlertTitle>AI Recommendation</AlertTitle>
+                            <AlertDescription>
+                                {analysisResult.farmerAdvice}
+                            </AlertDescription>
+                        </Alert>
+                    </CardContent>
+                </Card>
+            </div>
+            
+            <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                        <BarChartHorizontal className="h-5 w-5" />
+                        30-Day NDVI Trend
+                    </CardTitle>
+                    <CardDescription>Normalized Difference Vegetation Index over the last month.</CardDescription>
+                </CardHeader>
+                <CardContent className="h-[300px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={trendData}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="date" tickFormatter={(str) => format(parseISO(str), 'MMM d')} />
+                            <YAxis domain={[0, 1]} />
+                            <Tooltip content={<CustomTooltip />} />
+                            <Line type="monotone" dataKey="ndvi" stroke="hsl(var(--primary))" strokeWidth={2} name="NDVI" dot={false} />
+                        </LineChart>
+                    </ResponsiveContainer>
+                </CardContent>
+            </Card>
         </div>
-      </div>
+      )}
+
+      {!isAnalyzing && !analysisResult && selectedFieldId && (
+        <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Analysis Failed</AlertTitle>
+            <AlertDescription>Could not retrieve satellite health data for the selected field. Please try again.</AlertDescription>
+        </Alert>
+      )}
+
     </div>
   );
 }
