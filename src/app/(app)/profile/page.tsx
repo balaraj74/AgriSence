@@ -3,6 +3,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import type { User } from "firebase/auth";
+import dynamic from "next/dynamic";
 import { useAuth } from "@/hooks/use-auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -19,26 +20,25 @@ import { updateUserProfile } from "@/lib/actions/user";
 import { getHarvests } from "@/lib/actions/harvests";
 import { getExpenses } from "@/lib/actions/expenses";
 import type { Harvest, Expense, ExpenseCategory } from "@/types";
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from "recharts";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FileUploadManager } from "@/components/file-upload-manager";
 import { ThemeToggle } from "@/components/theme-toggle";
+
+const BarChart = dynamic(() => import("../analytics/charts").then(mod => mod.AnalyticsBarChart), {
+  ssr: false,
+  loading: () => <Skeleton className="h-[250px] w-full" />,
+});
+
+const PieChart = dynamic(() => import("../analytics/charts").then(mod => mod.AnalyticsPieChart), {
+  ssr: false,
+  loading: () => <Skeleton className="h-[250px] w-full" />,
+});
 
 
 const menuItems = [
     { label: "Privacy Policy", icon: Shield },
     { label: "Help & Support", icon: HelpCircle },
 ];
-
-const COLORS = ["#74B72E", "#D6AD60", "#3b82f6", "#f97316", "#8b5cf6", "#14b8a6"];
-const categoryColors: { [key in ExpenseCategory]: string } = {
-  Seeds: "#16a34a",
-  Fertilizer: "#ca8a04",
-  Labor: "#2563eb",
-  Equipment: "#ea580c",
-  Other: "#9ca3af",
-};
-
 
 export default function ProfilePage() {
     const { user } = useAuth();
@@ -248,31 +248,15 @@ export default function ProfilePage() {
                                 <>
                                     <div>
                                         <h3 className="font-semibold mb-2 text-center text-sm">Crop Yield (kg)</h3>
-                                        <ResponsiveContainer width="100%" height={250}>
-                                            {cropPerformanceData.length > 0 ? (
-                                                <BarChart data={cropPerformanceData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
-                                                    <XAxis dataKey="name" fontSize={12} tickLine={false} axisLine={false} interval={0} />
-                                                    <YAxis fontSize={12} tickLine={false} axisLine={false} />
-                                                    <Tooltip cursor={{ fill: 'hsl(var(--muted))' }} contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--border))' }} />
-                                                    <Bar dataKey="yield" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
-                                                </BarChart>
-                                            ) : <div className="flex items-center justify-center h-full"><p className="text-sm text-muted-foreground text-center">No harvest data yet.</p></div>}
-                                        </ResponsiveContainer>
+                                        {cropPerformanceData.length > 0 ? (
+                                            <BarChart data={cropPerformanceData} />
+                                        ) : <div className="flex items-center justify-center h-[250px]"><p className="text-sm text-muted-foreground text-center">No harvest data yet.</p></div>}
                                     </div>
                                     <div>
                                         <h3 className="font-semibold mb-2 text-center text-sm">Expense Breakdown</h3>
-                                        <ResponsiveContainer width="100%" height={250}>
-                                            {expenseBreakdownData.length > 0 ? (
-                                                <PieChart>
-                                                    <Pie data={expenseBreakdownData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} labelLine={false} label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}>
-                                                        {expenseBreakdownData.map((entry, index) => (
-                                                            <Cell key={`cell-${index}`} fill={categoryColors[entry.name as ExpenseCategory] || COLORS[index % COLORS.length]} />
-                                                        ))}
-                                                    </Pie>
-                                                    <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--border))' }} />
-                                                </PieChart>
-                                            ) : <div className="flex items-center justify-center h-full"><p className="text-sm text-muted-foreground text-center">No expense data yet.</p></div>}
-                                        </ResponsiveContainer>
+                                         {expenseBreakdownData.length > 0 ? (
+                                            <PieChart data={expenseBreakdownData} />
+                                        ) : <div className="flex items-center justify-center h-[250px]"><p className="text-sm text-muted-foreground text-center">No expense data yet.</p></div>}
                                     </div>
                                 </>
                                 )}

@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { useAuth } from "@/hooks/use-auth";
 import type { User } from "firebase/auth";
 import {
@@ -19,37 +20,24 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import type { Harvest, Expense, ExpenseCategory } from "@/types";
+import type { Harvest, Expense } from "@/types";
 import { getHarvests } from "@/lib/actions/harvests";
 import { getExpenses } from "@/lib/actions/expenses";
 import { BarChart as BarChartIcon, LayoutGrid, Loader2 } from "lucide-react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-} from "recharts";
 import { subMonths } from "date-fns";
 
+const BarChart = dynamic(() => import("./charts").then(mod => mod.AnalyticsBarChart), {
+  ssr: false,
+  loading: () => <Skeleton className="h-[300px] w-full" />,
+});
+
+const PieChart = dynamic(() => import("./charts").then(mod => mod.AnalyticsPieChart), {
+  ssr: false,
+  loading: () => <Skeleton className="h-[300px] w-full" />,
+});
+
+
 type TimeRange = "all" | "3m" | "6m" | "12m";
-
-const COLORS = ["#74B72E", "#D6AD60", "#3b82f6", "#f97316", "#8b5cf6", "#14b8a6"];
-
-const categoryColors: { [key in ExpenseCategory]: string } = {
-  Seeds: "#16a34a",
-  Fertilizer: "#ca8a04",
-  Labor: "#2563eb",
-  Equipment: "#ea580c",
-  Other: "#9ca3af",
-};
-
 
 export default function AnalyticsPageClient() {
   const { user } = useAuth();
@@ -150,23 +138,6 @@ export default function AnalyticsPageClient() {
     }));
   }, [filteredData.expenses]);
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
-      if (active && payload && payload.length) {
-          return (
-          <div className="p-2 bg-background/80 border rounded-md shadow-lg backdrop-blur-sm">
-              <p className="font-bold">{label}</p>
-              {payload.map((p: any) => (
-                  <p key={p.name} style={{ color: p.color }}>
-                      {`${p.name}: ${p.value.toLocaleString()} ${p.unit || ''}`}
-                  </p>
-              ))}
-          </div>
-          );
-      }
-
-      return null;
-  };
-
   const renderCharts = () => {
     if (isLoading) {
         return (
@@ -197,19 +168,11 @@ export default function AnalyticsPageClient() {
                     <CardDescription>Total yield (in kg) per crop.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <ResponsiveContainer width="100%" height={300}>
-                         {cropPerformanceData.length > 0 ? (
-                            <BarChart data={cropPerformanceData}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="name" />
-                                <YAxis />
-                                <Tooltip content={<CustomTooltip />} />
-                                <Bar dataKey="yield" fill="#74B72E" name="Yield" unit="kg" />
-                            </BarChart>
-                        ) : (
-                            <div className="flex items-center justify-center h-full text-muted-foreground">No harvest data for this period.</div>
-                        )}
-                    </ResponsiveContainer>
+                    {cropPerformanceData.length > 0 ? (
+                        <BarChart data={cropPerformanceData} />
+                    ) : (
+                        <div className="flex items-center justify-center h-[300px] text-muted-foreground">No harvest data for this period.</div>
+                    )}
                 </CardContent>
             </Card>
 
@@ -220,29 +183,11 @@ export default function AnalyticsPageClient() {
                     <CardDescription>Total spending by category.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <ResponsiveContainer width="100%" height={300}>
-                        {expenseBreakdownData.length > 0 ? (
-                            <PieChart>
-                                <Pie
-                                    data={expenseBreakdownData}
-                                    cx="50%"
-                                    cy="50%"
-                                    labelLine={false}
-                                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                                    outerRadius={80}
-                                    dataKey="value"
-                                >
-                                    {expenseBreakdownData.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={categoryColors[entry.name as ExpenseCategory] || COLORS[index % COLORS.length]} />
-                                    ))}
-                                </Pie>
-                                <Tooltip formatter={(value: number) => `₹${value.toLocaleString()}`} />
-                                <Legend />
-                            </PieChart>
-                        ) : (
-                            <div className="flex items-center justify-center h-full text-muted-foreground">No expense data for this period.</div>
-                        )}
-                    </ResponsiveContainer>
+                    {expenseBreakdownData.length > 0 ? (
+                        <PieChart data={expenseBreakdownData} />
+                    ) : (
+                        <div className="flex items-center justify-center h-[300px] text-muted-foreground">No expense data for this period.</div>
+                    )}
                 </CardContent>
             </Card>
         </div>

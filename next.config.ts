@@ -11,6 +11,7 @@ const nextConfig: NextConfig = {
   },
   images: {
     unoptimized: true,
+    formats: ['image/avif', 'image/webp'],
     remotePatterns: [
       {
         protocol: 'https',
@@ -30,7 +31,7 @@ const nextConfig: NextConfig = {
   },
   env: {
     NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY,
-    NEXT_PUBLIC_FIREBASE_VAPID_KEY: 'QqXsqHjpCn-22R2id_sYpiW7fOemxFSZTw5fMlEh3Zs',
+    // VAPID key is managed in firebase-messaging-sw.js and messaging.ts directly
   },
 };
 

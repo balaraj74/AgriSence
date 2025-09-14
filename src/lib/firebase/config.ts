@@ -3,6 +3,7 @@ import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
 import { getFirestore, type Firestore } from "firebase/firestore";
 import { getStorage, type FirebaseStorage } from "firebase/storage";
 import { getAuth, type Auth } from "firebase/auth";
+import { getPerformance } from "firebase/performance";
 
 // Your web app's Firebase configuration for agrisence-1dc30
 const firebaseConfig = {
@@ -21,6 +22,11 @@ if (!getApps().length) {
     app = initializeApp(firebaseConfig);
 } else {
     app = getApp();
+}
+
+// Initialize Performance Monitoring and get a reference to the service
+if (typeof window !== 'undefined') {
+    getPerformance(app);
 }
 
 const auth: Auth = getAuth(app);
