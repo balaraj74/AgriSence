@@ -186,45 +186,28 @@ export default function SatelliteHealthPage() {
 
       {analysisResult && !isAnalyzing && (
         <div className="space-y-6 animate-in fade-in-50">
-            <div className="grid lg:grid-cols-2 gap-6">
-                <Card>
-                    <CardHeader className="flex flex-row items-start justify-between">
-                        <div>
-                            <CardTitle>Field Health Map</CardTitle>
-                            <CardDescription>Simulated NDVI overlay for {selectedField?.fieldName}</CardDescription>
-                            <p className="text-xs text-muted-foreground flex items-center gap-1.5 pt-1">
-                                <Clock className="h-3 w-3" />
-                                Last updated: {format(parseISO(analysisResult.lastUpdated), 'd MMM yyyy, h:mm a')}
-                            </p>
-                        </div>
-                         <div className={`p-2 rounded-lg text-sm font-semibold ${statusStyles[analysisResult.overallHealth]}`}>
-                            {analysisResult.overallHealth}
-                        </div>
-                    </CardHeader>
-                    <CardContent className="h-[400px]">
-                       <MapComponent 
-                            center={selectedField?.centroid || {lat: 0, lng: 0}}
-                            field={selectedField}
-                            healthMapUrl={analysisResult.healthMapBase64}
-                       />
-                    </CardContent>
-                </Card>
-                 <Card>
-                    <CardHeader>
-                        <CardTitle>AI Farmer Advice</CardTitle>
-                        <CardDescription>Actionable insights based on the analysis.</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <Alert>
-                            <Bot className="h-4 w-4" />
-                            <AlertTitle>AI Recommendation</AlertTitle>
-                            <AlertDescription>
-                                {analysisResult.farmerAdvice}
-                            </AlertDescription>
-                        </Alert>
-                    </CardContent>
-                </Card>
-            </div>
+            <Card>
+                <CardHeader className="flex flex-row items-start justify-between">
+                    <div>
+                        <CardTitle>Field Health Map</CardTitle>
+                        <CardDescription>Simulated NDVI overlay for {selectedField?.fieldName}</CardDescription>
+                        <p className="text-xs text-muted-foreground flex items-center gap-1.5 pt-1">
+                            <Clock className="h-3 w-3" />
+                            Last updated: {format(parseISO(analysisResult.lastUpdated), 'd MMM yyyy, h:mm a')}
+                        </p>
+                    </div>
+                     <div className={`p-2 rounded-lg text-sm font-semibold ${statusStyles[analysisResult.overallHealth]}`}>
+                        {analysisResult.overallHealth}
+                    </div>
+                </CardHeader>
+                <CardContent className="h-[400px]">
+                   <MapComponent 
+                        center={selectedField?.centroid || {lat: 0, lng: 0}}
+                        field={selectedField}
+                        healthMapUrl={analysisResult.healthMapBase64}
+                   />
+                </CardContent>
+            </Card>
             
             <Card>
                 <CardHeader>
@@ -244,6 +227,24 @@ export default function SatelliteHealthPage() {
                             <Line type="monotone" dataKey="ndvi" stroke="hsl(var(--primary))" strokeWidth={2} name="NDVI" dot={false} />
                         </LineChart>
                     </ResponsiveContainer>
+                </CardContent>
+            </Card>
+
+             <Card>
+                <CardHeader>
+                    <CardTitle>AI Farmer Advice</CardTitle>
+                    <CardDescription>Actionable insights based on the analysis.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <Alert>
+                        <Bot className="h-4 w-4" />
+                        <AlertTitle>AI Recommendation</AlertTitle>
+                        <AlertDescription>
+                            <div className="prose prose-sm max-w-none text-muted-foreground whitespace-pre-line">
+                                {analysisResult.farmerAdvice}
+                            </div>
+                        </AlertDescription>
+                    </Alert>
                 </CardContent>
             </Card>
         </div>
