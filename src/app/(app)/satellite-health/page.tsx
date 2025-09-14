@@ -38,6 +38,7 @@ import {
 import { Satellite, Map, Bot, BarChartHorizontal, AlertCircle, Clock } from 'lucide-react';
 import { MapComponent } from './MapComponent';
 import { format, parseISO } from 'date-fns';
+import { cn } from '@/lib/utils';
 
 const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: any[]; label?: string }) => {
     if (active && payload && payload.length) {
@@ -51,7 +52,7 @@ const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?:
     return null;
 };
 
-const statusStyles = {
+const statusStyles: { [key in "Healthy" | "Moderate" | "Stressed"]: string } = {
     "Healthy": "bg-green-600/20 text-green-400 border-green-500/30",
     "Moderate": "bg-yellow-600/20 text-yellow-400 border-yellow-500/30",
     "Stressed": "bg-red-700/20 text-red-400 border-red-500/30",
@@ -113,10 +114,11 @@ export default function SatelliteHealthPage() {
   
   // Automatically trigger analysis when a new field is selected
   useEffect(() => {
-    if (selectedFieldId) {
+    if (selectedFieldId && !isAnalyzing) {
         handleAnalysis();
     }
-  }, [selectedFieldId, handleAnalysis]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedFieldId]);
 
 
   const trendData = analysisResult?.healthTrend.map(d => ({
@@ -196,7 +198,7 @@ export default function SatelliteHealthPage() {
                             Last updated: {format(parseISO(analysisResult.lastUpdated), 'd MMM yyyy, h:mm a')}
                         </p>
                     </div>
-                     <div className={`p-2 rounded-lg text-sm font-semibold ${statusStyles[analysisResult.overallHealth]}`}>
+                     <div className={cn("p-2 rounded-lg text-sm font-semibold", statusStyles[analysisResult.overallHealth])}>
                         {analysisResult.overallHealth}
                     </div>
                 </CardHeader>
