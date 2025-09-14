@@ -22,7 +22,7 @@ import {
 } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
-import { Satellite, Bot, Leaf, AreaChart, AlertTriangle, CheckCircle, BarChartHorizontal, Languages } from 'lucide-react';
+import { Satellite, Bot, Languages } from 'lucide-react';
 import { getFields } from '@/lib/actions/fields';
 import type { Field } from '@/types';
 import { getSatelliteHealthAnalysis, type GetSatelliteHealthOutput } from '@/ai/flows/satellite-health-flow';
@@ -233,7 +233,7 @@ export default function SatelliteHealthPage() {
         <div className="space-y-6 animate-in fade-in-50">
             <div className="grid lg:grid-cols-2 gap-6">
                  <Card className="h-[400px]">
-                    <MapComponent center={selectedField?.centroid || {lat: 20, lng: 78}} field={selectedField} healthMapUrl={analysisResult.healthMapBase64} />
+                    <MapComponent center={selectedField?.centroid || {lat: 20, lng: 78}} field={selectedField} healthMapUrl={`data:image/png;base64,${analysisResult.healthMapBase64}`} />
                  </Card>
                  <Card>
                     <CardHeader>
@@ -258,7 +258,7 @@ export default function SatelliteHealthPage() {
             
              <Card>
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-2"><AreaChart className="h-5 w-5"/> 30-Day Health Trend</CardTitle>
+                    <CardTitle className="flex items-center gap-2"> 30-Day Health Trend</CardTitle>
                     <CardDescription>Normalized Difference Vegetation Index (NDVI) over the last month.</CardDescription>
                 </CardHeader>
                 <CardContent className="h-[300px]">
