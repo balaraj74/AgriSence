@@ -5,39 +5,12 @@
  * @fileOverview An AI flow to simulate satellite-based crop health monitoring.
  * 
  * - getSatelliteHealthAnalysis - Analyzes a given field polygon to generate a simulated health map and advice.
- * - GetSatelliteHealthInput - The input type for the function.
- * - GetSatelliteHealthOutput - The return type for the function.
  */
 
 import { ai } from '@/ai/genkit';
-import { z } from 'zod';
 import { googleAI } from '@genkit-ai/googleai';
-import { Field } from '@/types';
-
-export const GetSatelliteHealthInputSchema = z.object({
-  field: z.object({
-    fieldName: z.string(),
-    area: z.number(),
-    cropName: z.string().nullable(),
-    coordinates: z.array(z.object({ lat: z.number(), lng: z.number() })),
-  }).describe("The field object containing details for analysis."),
-  language: z.string().describe("The language for the response, e.g., 'English', 'Kannada'."),
-});
-export type GetSatelliteHealthInput = z.infer<typeof GetSatelliteHealthInputSchema>;
-
-
-const TrendDataPointSchema = z.object({
-    date: z.string().describe("The date for the data point in 'YYYY-MM-DD' format."),
-    ndvi: z.number().min(0).max(1).describe("The average NDVI value for that date."),
-});
-
-export const GetSatelliteHealthOutputSchema = z.object({
-  healthMapBase64: z.string().describe("A base64 encoded PNG image of the simulated NDVI health map overlay. The image should have a transparent background and be distorted to roughly match the shape of the farm polygon."),
-  healthTrend: z.array(TrendDataPointSchema).describe("An array of the last 30 days of NDVI data points for a trend chart."),
-  farmerAdvice: z.string().describe("Simple, actionable advice for the farmer based on the analysis, translated into the requested language."),
-  overallHealth: z.enum(["Healthy", "Moderate", "Stressed"]).describe("The overall health status of the crop."),
-});
-export type GetSatelliteHealthOutput = z.infer<typeof GetSatelliteHealthOutputSchema>;
+import { GetSatelliteHealthInputSchema, GetSatelliteHealthOutputSchema } from '@/types';
+import type { GetSatelliteHealthInput, GetSatelliteHealthOutput } from '@/types';
 
 
 export async function getSatelliteHealthAnalysis(input: GetSatelliteHealthInput): Promise<GetSatelliteHealthOutput> {
