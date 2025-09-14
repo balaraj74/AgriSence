@@ -150,7 +150,15 @@ export default function ProfilePage() {
 
 
     if (!user) {
-        return null;
+        return (
+            <div className="space-y-6">
+                <Skeleton className="h-24 w-24 rounded-full mx-auto" />
+                <Skeleton className="h-8 w-48 mx-auto" />
+                <Skeleton className="h-4 w-64 mx-auto" />
+                <Card><CardContent><Skeleton className="h-48 w-full" /></CardContent></Card>
+                <Card><CardContent><Skeleton className="h-12 w-full" /></CardContent></Card>
+            </div>
+        );
     }
 
     return (
@@ -280,7 +288,7 @@ export default function ProfilePage() {
                     <ul className="space-y-1">
                         {menuItems.map(item => (
                             <li key={item.label}>
-                                <button className="w-full flex items-center justify-between p-3 hover:bg-muted rounded-lg">
+                                <button className="w-full flex items-center justify-between p-3 hover:bg-muted rounded-lg" aria-label={item.label}>
                                     <div className="flex items-center gap-4">
                                         <item.icon className="h-5 w-5 text-muted-foreground" />
                                         <span className="font-medium">{item.label}</span>
@@ -290,7 +298,7 @@ export default function ProfilePage() {
                             </li>
                         ))}
                          <li>
-                            <button onClick={handleSignOut} className="w-full flex items-center p-3 hover:bg-muted rounded-lg text-red-600">
+                            <button onClick={handleSignOut} className="w-full flex items-center p-3 hover:bg-muted rounded-lg text-red-600" aria-label="Logout">
                                 <div className="flex items-center gap-4">
                                     <LogOut className="h-5 w-5" />
                                     <span className="font-medium">Logout</span>

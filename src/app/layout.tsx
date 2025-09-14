@@ -20,6 +20,10 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: '#74B72E',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({
@@ -33,6 +37,7 @@ export default function RootLayout({
          <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
          <meta name="google-site-verification" content="w70z_ATdIg4qVVOUaY_qEugfjiWapembai-9s-AVzBM" />
          <link rel="icon" href="/icons/icon-192.png" type="image/png" sizes="192x192" />
+         <meta name="theme-color" content="#74B72E" />
       </head>
       <body className={`${inter.variable} font-sans antialiased`} suppressHydrationWarning>
         <AppProviders>

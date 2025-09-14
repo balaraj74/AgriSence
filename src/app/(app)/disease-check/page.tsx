@@ -344,9 +344,8 @@ export default function DiseaseCheckPage() {
         <div className="flex items-center justify-between">
             <Label className="text-lg font-semibold flex items-center gap-2"><Icon className="h-5 w-5 text-primary" /> {title}</Label>
             {sectionId && (
-              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleSpeak(content, sectionId)}>
+              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleSpeak(content, sectionId)} aria-label={`Read ${title} aloud`}>
                   {speakingSection === sectionId ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
-                  <span className="sr-only">Read aloud</span>
               </Button>
             )}
         </div>
@@ -478,7 +477,7 @@ export default function DiseaseCheckPage() {
                             {previewUrls.map((url, index) => (
                                 <div key={index} className="relative aspect-square">
                                     <Image src={url} alt={`Preview ${index + 1}`} fill className="object-cover rounded-md"/>
-                                    <Button variant="destructive" size="icon" className="absolute -top-2 -right-2 h-6 w-6 rounded-full" onClick={() => removeImage(index)}>
+                                    <Button variant="destructive" size="icon" className="absolute -top-2 -right-2 h-6 w-6 rounded-full" onClick={() => removeImage(index)} aria-label={`Remove image ${index + 1}`}>
                                         <X className="h-4 w-4"/>
                                     </Button>
                                 </div>
@@ -609,13 +608,15 @@ function DiagnosisHistoryTab() {
             {history.map(record => (
                 <Card key={record.id}>
                     <CardContent className="p-4 flex items-center gap-4">
-                        <Image
-                            src={record.imageUrl}
-                            alt="Diagnosed plant"
-                            width={80}
-                            height={80}
-                            className="rounded-md object-cover aspect-square"
-                        />
+                        <div className="relative h-20 w-20 flex-shrink-0">
+                            <Image
+                                src={record.imageUrl}
+                                alt={`Diagnosed ${record.plantName}`}
+                                fill
+                                sizes="80px"
+                                className="rounded-md object-cover"
+                            />
+                        </div>
                         <div className="flex-1 space-y-1">
                             <p className="font-semibold">{record.plantName}</p>
                             <p className="text-sm font-medium text-destructive">{record.diseaseName}</p>

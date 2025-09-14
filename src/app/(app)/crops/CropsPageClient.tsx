@@ -214,6 +214,7 @@ export default function CropsPageClient() {
                                         checked={nextTask.isCompleted} 
                                         onCheckedChange={(checked) => handleTaskToggle(crop, crop.calendar.indexOf(nextTask), !!checked)}
                                         disabled={togglingTaskId === `${crop.id}-${crop.calendar.indexOf(nextTask)}`}
+                                        aria-label={`Mark task ${nextTask.taskName} as complete`}
                                     />
                                     <div className="flex-1">
                                         <Label htmlFor={`task-${crop.id}-${crop.calendar.indexOf(nextTask)}`} className="font-medium">
@@ -234,8 +235,8 @@ export default function CropsPageClient() {
                         </div>
                    </CardContent>
                    <CardFooter className="grid grid-cols-2 gap-2">
-                        <Button variant="outline" onClick={() => handleEdit(crop)}><Pencil className="mr-2 h-4 w-4" /> Edit</Button>
-                        <Button variant="destructive-outline" onClick={() => handleDelete(crop.id)}><Trash2 className="mr-2 h-4 w-4" /> Delete</Button>
+                        <Button variant="outline" onClick={() => handleEdit(crop)} aria-label={`Edit ${crop.name}`}><Pencil className="mr-2 h-4 w-4" /> Edit</Button>
+                        <Button variant="destructive-outline" onClick={() => handleDelete(crop.id)} aria-label={`Delete ${crop.name}`}><Trash2 className="mr-2 h-4 w-4" /> Delete</Button>
                    </CardFooter>
                 </Card>
             )})}

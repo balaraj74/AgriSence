@@ -23,6 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import Image from "next/image";
 
 interface Message {
   id: number;
@@ -256,13 +257,13 @@ export default function ChatbotPage() {
                     <p className="text-sm whitespace-pre-wrap">{message.text}</p>
                   </div>
                    {message.sender === 'bot' && (
-                        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleSpeak(message)}>
+                        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleSpeak(message)} aria-label="Read message aloud">
                             {speakingMessageId === message.id ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
                         </Button>
                     )}
                   {message.sender === "user" && (
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src={""} />
+                      <AvatarImage src={""} alt="User avatar" />
                       <AvatarFallback>
                         <User />
                       </AvatarFallback>

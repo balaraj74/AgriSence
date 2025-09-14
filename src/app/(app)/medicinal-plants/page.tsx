@@ -22,6 +22,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const ANALYSIS_INTERVAL = 3000; // 3 seconds
 
@@ -320,8 +321,8 @@ export default function MedicinalPlantPage() {
                         <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
                             {previewUrls.map((url, index) => (
                                 <div key={index} className="relative aspect-square">
-                                    <Image src={url} alt={`Preview ${index + 1}`} fill className="object-cover rounded-md"/>
-                                    <Button variant="destructive" size="icon" className="absolute -top-2 -right-2 h-6 w-6 rounded-full" onClick={() => removeImage(index)}>
+                                    <Image src={url} alt={`Preview ${index + 1}`} fill sizes="100px" className="object-cover rounded-md"/>
+                                    <Button variant="destructive" size="icon" className="absolute -top-2 -right-2 h-6 w-6 rounded-full" onClick={() => removeImage(index)} aria-label={`Remove image ${index + 1}`}>
                                         <X className="h-4 w-4"/>
                                     </Button>
                                 </div>
@@ -339,7 +340,20 @@ export default function MedicinalPlantPage() {
             </TabsContent>
           </Tabs>
 
-            {finalResult && (
+            {isUploading && (
+                <Card className="mt-6">
+                    <CardContent className="p-6 space-y-4">
+                        <Skeleton className="h-8 w-3/4" />
+                        <Skeleton className="h-4 w-1/2" />
+                        <div className="space-y-2 pt-4">
+                            <Skeleton className="h-6 w-full" />
+                            <Skeleton className="h-10 w-full" />
+                        </div>
+                    </CardContent>
+                </Card>
+            )}
+
+            {finalResult && !isUploading && (
             <Card className="animate-in fade-in-50 mt-6">
                 <CardHeader>
                     <CardTitle className="flex items-center gap-3">
