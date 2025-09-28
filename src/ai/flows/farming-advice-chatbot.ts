@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -28,7 +29,7 @@ export async function farmingAdviceChatbot(input: FarmingAdviceChatbotInput): Pr
 
 const prompt = ai.definePrompt({
   name: 'farmingAdviceChatbotPrompt',
-  model: googleAI.model('gemini-1.5-flash'),
+  model: googleAI.model('gemini-1.5-flash-latest'),
   input: {schema: FarmingAdviceChatbotInputSchema},
   output: {schema: FarmingAdviceChatbotOutputSchema},
   prompt: `You are an AI assistant providing farming advice to farmers in India.

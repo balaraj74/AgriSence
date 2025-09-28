@@ -27,7 +27,7 @@ const getSoilAdviceFlow = ai.defineFlow(
   async (input) => {
     try {
       const { output } = await ai.generate({
-          model: googleAI.model('gemini-1.5-flash'),
+          model: googleAI.model('gemini-1.5-flash-latest'),
           system: `You are an expert agronomist AI specializing in Indian soil conditions. Your task is to provide a detailed and farmer-friendly soil health report.
           
           You will analyze the provided soil data and generate recommendations. The entire response, including all names and descriptions, must be in the requested language: ${input.language}.

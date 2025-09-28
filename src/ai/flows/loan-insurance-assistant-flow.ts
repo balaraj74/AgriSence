@@ -51,7 +51,7 @@ const loanInsuranceAssistantFlow = ai.defineFlow(
   async (input) => {
     try {
       const { output } = await ai.generate({
-          model: googleAI.model('gemini-1.5-flash'),
+          model: googleAI.model('gemini-1.5-flash-latest'),
           system: `You are an expert AI assistant for Indian farmers, specializing in government loans and insurance schemes. Your task is to analyze a farmer's profile and determine their eligibility for key financial products.
 
           Available Schemes to consider:

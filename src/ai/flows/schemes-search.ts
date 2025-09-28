@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -36,7 +37,7 @@ export async function searchSchemes(input: SearchSchemesInput): Promise<SearchSc
 
 const prompt = ai.definePrompt({
   name: 'searchSchemesPrompt',
-  model: googleAI.model('gemini-1.5-flash'),
+  model: googleAI.model('gemini-1.5-flash-latest'),
   input: { schema: SearchSchemesInputSchema },
   output: { schema: SearchSchemesOutputSchema },
   prompt: `You are an expert on agricultural policies and government schemes for farmers in India.
