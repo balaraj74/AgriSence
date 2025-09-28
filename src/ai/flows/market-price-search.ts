@@ -40,7 +40,7 @@ export async function marketPriceSearch(input: MarketPriceSearchInput): Promise<
 
 const prompt = ai.definePrompt({
   name: 'marketPriceSearchPrompt',
-  model: googleAI.model('gemini-1.5-flash-latest'),
+  model: googleAI.model('gemini-2.5-flash-preview-09-2025'),
   input: {schema: MarketPriceSearchInputSchema},
   output: {schema: MarketPriceSearchOutputSchema},
   prompt: `You are an expert agricultural market analyst. Your task is to provide an overview of major crop prices in India.
