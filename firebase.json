@@ -24,6 +24,7 @@
           }
         ]
       }
-    ]
+    ],
+    "authDomain": "agrisence-1dc30.firebaseapp.com"
   }
 }
