@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState, useEffect } from 'react';
@@ -11,13 +12,13 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   updateProfile,
-  onAuthStateChanged
 } from 'firebase/auth';
 import { auth } from '@/lib/firebase/config';
 import { useToast } from "@/hooks/use-toast";
 import { AgrisenceLogo } from '@/components/agrisence-logo';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
+import { useAuth } from '@/hooks/use-auth';
+import Loading from './(app)/loading';
 
 const GoogleIcon = () => (
   <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2">
@@ -29,6 +30,7 @@ const GoogleIcon = () => (
 export default function LoginPage() {
   const { toast } = useToast();
   const router = useRouter();
+  const { user, isLoading: isAuthLoading } = useAuth();
   
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
   const [name, setName] = useState('');
@@ -37,18 +39,12 @@ export default function LoginPage() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
-  const [isAuthLoading, setIsAuthLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        router.push('/dashboard');
-      } else {
-        setIsAuthLoading(false);
-      }
-    });
-    return () => unsubscribe();
-  }, [router]);
+    if (!isAuthLoading && user) {
+      router.push('/dashboard');
+    }
+  }, [user, isAuthLoading, router]);
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,7 +64,6 @@ export default function LoginPage() {
             await signInWithEmailAndPassword(auth, email, password);
             toast({ title: 'Sign in successful!', description: 'Welcome back.' });
         }
-        // The onAuthStateChanged listener will handle the redirect
     } catch (error: any) {
         toast({
             variant: 'destructive',
@@ -86,7 +81,6 @@ export default function LoginPage() {
     provider.setCustomParameters({ prompt: 'select_account' });
     try {
       await signInWithPopup(auth, provider);
-      // The onAuthStateChanged listener will handle the redirect
     } catch (error: any) {
        toast({
         variant: 'destructive',
@@ -98,25 +92,8 @@ export default function LoginPage() {
     }
   };
 
-  if (isAuthLoading) {
-    return (
-        <main className="flex flex-col items-center justify-center min-h-dvh p-4 bg-transparent">
-            <div className="w-full max-w-sm space-y-4">
-                 <Card className="rounded-3xl">
-                    <CardHeader className="text-center">
-                        <Skeleton className="w-24 h-24 rounded-full mx-auto" />
-                        <Skeleton className="h-8 w-40 mx-auto mt-4" />
-                        <Skeleton className="h-4 w-60 mx-auto mt-2" />
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        <Skeleton className="h-10 w-full" />
-                        <Skeleton className="h-10 w-full" />
-                        <Skeleton className="h-10 w-full" />
-                    </CardContent>
-                 </Card>
-            </div>
-        </main>
-    )
+  if (isAuthLoading || user) {
+    return <Loading />;
   }
 
   return (

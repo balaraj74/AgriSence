@@ -16,25 +16,6 @@ const AuthContext = createContext<AuthContextType>({
   isLoading: true,
 });
 
-const AuthGuard = ({ children }: { children: ReactNode }) => {
-  const { user, isLoading } = useAuth();
-  const router = useRouter();
-  const pathname = usePathname();
-
-  useEffect(() => {
-    if (!isLoading && !user) {
-      router.push('/');
-    }
-  }, [isLoading, user, router, pathname]);
-
-  if (isLoading || !user) {
-    // Let the main layout's loading animation handle the visual state
-    return null; 
-  }
-
-  return <>{children}</>;
-};
-
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -50,7 +31,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider value={{ user, isLoading }}>
-      <AuthGuard>{children}</AuthGuard>
+      {children}
     </AuthContext.Provider>
   );
 };
