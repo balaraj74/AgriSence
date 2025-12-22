@@ -11,6 +11,8 @@ import { WeatherIcon } from '@/components/weather-icon';
 import { Skeleton } from '@/components/ui/skeleton';
 import Link from 'next/link';
 import { Droplets, Wind, Thermometer, MapPin, CloudOff, RefreshCw } from 'lucide-react';
+import { useAuth } from '@/hooks/use-auth';
+import { saveWeatherData } from '@/lib/actions/ai-results';
 
 // Temperature-based Analogous Nature Themes
 const getTemperatureTheme = (temp: number) => {
@@ -88,6 +90,7 @@ const getTemperatureTheme = (temp: number) => {
 };
 
 export function WeatherWidget() {
+  const { user } = useAuth();
   const [weatherData, setWeatherData] = useState<GetWeatherInfoOutput | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -115,6 +118,30 @@ export function WeatherWidget() {
           try {
             const result = await getWeatherInfo({ lat: latitude, lon: longitude });
             setWeatherData(result);
+
+            // Save to Firestore for cross-feature integration
+            if (user?.uid && result) {
+              await saveWeatherData(user.uid, {
+                location: {
+                  name: result.location.name,
+                  latitude: latitude,
+                  longitude: longitude,
+                },
+                current: {
+                  temperature: result.current.temperature,
+                  humidity: result.current.humidity,
+                  windSpeed: result.current.windSpeed,
+                  weatherCode: result.current.weatherCode,
+                  description: result.summary || 'Weather data available',
+                },
+                daily: result.daily.map(d => ({
+                  date: d.date,
+                  maxTemp: d.maxTemp,
+                  minTemp: d.minTemp,
+                  weatherCode: d.weatherCode,
+                })),
+              });
+            }
           } catch (err) {
             console.error('AI weather error:', err);
             setError('Could not fetch weather data.');
@@ -131,7 +158,7 @@ export function WeatherWidget() {
     };
 
     fetchWeather();
-  }, []);
+  }, [user?.uid]);
 
   if (isLoading) {
     return (

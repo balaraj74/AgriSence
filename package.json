@@ -13,6 +13,8 @@
     "firebase:apphosting:deploy": "firebase apphosting:backends:create"
   },
   "dependencies": {
+    "@dataconnect/admin-generated": "file:src/dataconnect-admin-generated",
+    "@dataconnect/generated": "file:src/dataconnect-generated",
     "@genkit-ai/googleai": "^1.27.0",
     "@genkit-ai/next": "^1.27.0",
     "@googlemaps/react-wrapper": "^1.1.35",

@@ -1,0 +1,66 @@
+mutation CreateDemoData @transaction @auth(level: PUBLIC, insecureReason: "This mutation is used to seed the database with demo data.") {
+  user_insertMany(data: [
+    {
+      id: "550e8400-e29b-41d4-a716-446655440000",
+      createdAt: "2024-04-24T12:00:00Z",
+      displayName: "demouser1",
+      email: "demouser1@example.com"
+    },
+    {
+      id: "550e8400-e29b-41d4-a716-446655440001",
+      createdAt: "2024-04-24T12:00:00Z",
+      displayName: "demouser2",
+      email: "demouser2@example.com"
+    }
+  ])
+  farm_insertMany(data: [
+    {
+      id: "650e8400-e29b-41d4-a716-446655440000",
+      userId: "550e8400-e29b-41d4-a716-446655440000",
+      acreage: 100.0,
+      createdAt: "2024-04-24T12:00:00Z",
+      location: "Some location",
+      name: "Farm 1"
+    },
+    {
+      id: "650e8400-e29b-41d4-a716-446655440001",
+      userId: "550e8400-e29b-41d4-a716-446655440001",
+      acreage: 200.0,
+      createdAt: "2024-04-24T12:00:00Z",
+      location: "Another location",
+      name: "Farm 2"
+    }
+  ])
+  cropType_insertMany(data: [
+    {
+      id: "750e8400-e29b-41d4-a716-446655440000",
+      botanicalName: "Botanical Name 1",
+      name: "Crop Type 1"
+    },
+    {
+      id: "750e8400-e29b-41d4-a716-446655440001",
+      botanicalName: "Botanical Name 2",
+      name: "Crop Type 2"
+    }
+  ])
+  cropBatch_insertMany(data: [
+    {
+      id: "850e8400-e29b-41d4-a716-446655440000",
+      cropTypeId: "750e8400-e29b-41d4-a716-446655440000",
+      farmId: "650e8400-e29b-41d4-a716-446655440000",
+      expectedHarvestDate: "2024-05-24",
+      fieldLocation: "Field Location 1",
+      plantingDate: "2024-04-24",
+      quantityPlanted: 1000
+    },
+    {
+      id: "850e8400-e29b-41d4-a716-446655440001",
+      cropTypeId: "750e8400-e29b-41d4-a716-446655440001",
+      farmId: "650e8400-e29b-41d4-a716-446655440001",
+      expectedHarvestDate: "2024-06-24",
+      fieldLocation: "Field Location 2",
+      plantingDate: "2024-04-24",
+      quantityPlanted: 2000
+    }
+  ])
+}

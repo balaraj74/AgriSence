@@ -1,0 +1,78 @@
+extend type CropBatch {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "CropBatch", purpose: IMPLICIT_KEY_FIELD)
+  """
+  ✨ Implicit foreign key field based on `CropBatch`.`cropType`. It must match the value of `CropType`.`id`. See `@ref` for how to customize it.
+  """
+  cropTypeId: UUID @fdc_generated(from: "CropBatch.cropType", purpose: IMPLICIT_REF_FIELD)
+  """
+  ✨ Implicit foreign key field based on `CropBatch`.`farm`. It must match the value of `Farm`.`id`. See `@ref` for how to customize it.
+  """
+  farmId: UUID @fdc_generated(from: "CropBatch.farm", purpose: IMPLICIT_REF_FIELD)
+}
+extend type CropType {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "CropType", purpose: IMPLICIT_KEY_FIELD)
+}
+extend type Equipment {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "Equipment", purpose: IMPLICIT_KEY_FIELD)
+  """
+  ✨ Implicit foreign key field based on `Equipment`.`farm`. It must match the value of `Farm`.`id`. See `@ref` for how to customize it.
+  """
+  farmId: UUID @fdc_generated(from: "Equipment.farm", purpose: IMPLICIT_REF_FIELD)
+}
+extend type Farm {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "Farm", purpose: IMPLICIT_KEY_FIELD)
+  """
+  ✨ Implicit foreign key field based on `Farm`.`user`. It must match the value of `User`.`id`. See `@ref` for how to customize it.
+  """
+  userId: UUID @fdc_generated(from: "Farm.user", purpose: IMPLICIT_REF_FIELD)
+}
+extend type SensorReading {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "SensorReading", purpose: IMPLICIT_KEY_FIELD)
+  """
+  ✨ Implicit foreign key field based on `SensorReading`.`cropBatch`. It must match the value of `CropBatch`.`id`. See `@ref` for how to customize it.
+  """
+  cropBatchId: UUID @fdc_generated(from: "SensorReading.cropBatch", purpose: IMPLICIT_REF_FIELD)
+  """
+  ✨ Implicit foreign key field based on `SensorReading`.`farm`. It must match the value of `Farm`.`id`. See `@ref` for how to customize it.
+  """
+  farmId: UUID @fdc_generated(from: "SensorReading.farm", purpose: IMPLICIT_REF_FIELD)
+}
+extend type Task {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "Task", purpose: IMPLICIT_KEY_FIELD)
+  """
+  ✨ Implicit foreign key field based on `Task`.`assignedTo`. It must match the value of `User`.`id`. See `@ref` for how to customize it.
+  """
+  assignedToId: UUID @fdc_generated(from: "Task.assignedTo", purpose: IMPLICIT_REF_FIELD)
+  """
+  ✨ Implicit foreign key field based on `Task`.`cropBatch`. It must match the value of `CropBatch`.`id`. See `@ref` for how to customize it.
+  """
+  cropBatchId: UUID @fdc_generated(from: "Task.cropBatch", purpose: IMPLICIT_REF_FIELD)
+  """
+  ✨ Implicit foreign key field based on `Task`.`farm`. It must match the value of `Farm`.`id`. See `@ref` for how to customize it.
+  """
+  farmId: UUID @fdc_generated(from: "Task.farm", purpose: IMPLICIT_REF_FIELD)
+}
+extend type User {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "User", purpose: IMPLICIT_KEY_FIELD)
+}

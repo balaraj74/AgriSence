@@ -517,3 +517,239 @@ E1222 22:45:31.707116   58856 watch.go:40] Failed to load config from "/home/bal
  {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1222 22:46:01.707074   58856 watch.go:40] Failed to load config from \"/home/balaraj/studio/dataconnect\": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`\n"}}
 [info] [Firebase Plugin] Stopping Data Connect toolkit
 [warn] ⚠  Data Connect Emulator has exited upon receiving signal: SIGINT 
+[debug] [2025-12-22T18:22:25.687Z] [Firebase Plugin] Activating Firebase extension.
+[debug] [2025-12-22T18:22:28.392Z] [Firebase Plugin] requireAuthWrapper
+[debug] [2025-12-22T18:22:28.393Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-12-22T18:22:28.394Z] > authorizing via signed-in user (balarajr483@gmail.com)
+[debug] [2025-12-22T18:22:28.397Z] Checked if tokens are valid: true, expires at: 1766431056075
+[debug] [2025-12-22T18:22:28.397Z] Checked if tokens are valid: true, expires at: 1766431056075
+[debug] [2025-12-22T18:22:28.398Z] [Firebase Plugin] User found:  balarajr483@gmail.com
+[info] [Firebase Plugin] (Core:Project) New user detected, fetching projects
+[debug] [2025-12-22T18:22:28.399Z] Checked if tokens are valid: true, expires at: 1766431056075
+[debug] [2025-12-22T18:22:28.400Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=1000
+[debug] [2025-12-22T18:22:28.408Z] [Firebase Plugin] VSCode notification server listening on port 40001
+[debug] [2025-12-22T18:22:28.612Z] Object "/hosting" in "firebase.json" has unknown property: {"additionalProperty":"authDomain"}
+[debug] [2025-12-22T18:22:28.613Z] Field "/hosting" in "firebase.json" is possibly invalid: must be array
+[debug] [2025-12-22T18:22:28.613Z] Field "/hosting" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[info] [Firebase Plugin] Starting Data Connect toolkit (version 3.0.0) on port 50001
+[debug] [2025-12-22T18:22:28.643Z] 'fdc build' failed with error: Unable to build your Data Connect schema and connectors (exit code 1): E1222 23:52:28.641176  183355 cmd.go:43] Error loading data connect config: could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"'fdc build' failed with error: Unable to build your Data Connect schema and connectors (exit code 1): E1222 23:52:28.641176  183355 cmd.go:43] Error loading data connect config: could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`\n"}}
+[debug] [2025-12-22T18:22:28.643Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"dataconnect"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2025-12-22T18:22:28.644Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"dataconnect"},"message":"Ignoring unsupported arg: port"}}
+[debug] [2025-12-22T18:22:28.644Z] Starting Data Connect Emulator with command {"binary":"/home/balaraj/.cache/firebase/emulators/dataconnect-emulator-3.0.0","args":["--logtostderr","-v=2","dev","--listen=localhost:50001","--config_dir=/home/balaraj/studio/dataconnect","--enable_output_schema_extensions=true","--enable_output_generated_sdk=true"],"optionalArgs":["listen","config_dir","enable_output_schema_extensions","enable_output_generated_sdk"],"joinArgs":true,"shell":false,"port":9399} {"metadata":{"emulator":{"name":"dataconnect"},"message":"Starting Data Connect Emulator with command {\"binary\":\"/home/balaraj/.cache/firebase/emulators/dataconnect-emulator-3.0.0\",\"args\":[\"--logtostderr\",\"-v=2\",\"dev\",\"--listen=localhost:50001\",\"--config_dir=/home/balaraj/studio/dataconnect\",\"--enable_output_schema_extensions=true\",\"--enable_output_generated_sdk=true\"],\"optionalArgs\":[\"listen\",\"config_dir\",\"enable_output_schema_extensions\",\"enable_output_generated_sdk\"],\"joinArgs\":true,\"shell\":false,\"port\":9399}"}}
+[info] i  dataconnect: Data Connect Emulator logging to dataconnect-debug.log {"metadata":{"emulator":{"name":"dataconnect"},"message":"Data Connect Emulator logging to dataconnect-debug.log"}}
+[debug] [2025-12-22T18:22:28.669Z] E1222 23:52:28.661683  183364 dev.go:83] Failed to load initial config from "/home/balaraj/studio/dataconnect": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`
+E1222 23:52:28.663258  183364 watch.go:116] watchAllDir unable to walk dir `/home/balaraj/studio/dataconnect`: lstat /home/balaraj/studio/dataconnect: no such file or directory
+I1222 23:52:28.664120  183364 dev.go:104] Listening on address (HTTP + gRPC): 127.0.0.1:50001
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1222 23:52:28.661683  183364 dev.go:83] Failed to load initial config from \"/home/balaraj/studio/dataconnect\": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`\nE1222 23:52:28.663258  183364 watch.go:116] watchAllDir unable to walk dir `/home/balaraj/studio/dataconnect`: lstat /home/balaraj/studio/dataconnect: no such file or directory\nI1222 23:52:28.664120  183364 dev.go:104] Listening on address (HTTP + gRPC): 127.0.0.1:50001\n"}}
+[error] [Firebase Plugin] error:  {}
+[debug] [2025-12-22T18:22:29.773Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2025-12-22T18:22:29.773Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[debug] [2025-12-22T18:22:38.687Z] E1222 23:52:38.686856  183364 watch.go:40] Failed to load config from "/home/balaraj/studio/dataconnect": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1222 23:52:38.686856  183364 watch.go:40] Failed to load config from \"/home/balaraj/studio/dataconnect\": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`\n"}}
+[debug] [2025-12-22T18:22:48.673Z] E1222 23:52:48.673094  183364 watch.go:40] Failed to load config from "/home/balaraj/studio/dataconnect": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1222 23:52:48.673094  183364 watch.go:40] Failed to load config from \"/home/balaraj/studio/dataconnect\": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`\n"}}
+[info] [Firebase Plugin] Stopping Data Connect toolkit
+[debug] [2025-12-22T18:35:15.622Z] [Firebase Plugin] Activating Firebase extension.
+[debug] [2025-12-22T18:35:17.741Z] [Firebase Plugin] requireAuthWrapper
+[debug] [2025-12-22T18:35:17.742Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-12-22T18:35:17.742Z] > authorizing via signed-in user (balarajr483@gmail.com)
+[debug] [2025-12-22T18:35:17.744Z] Checked if tokens are valid: true, expires at: 1766431056075
+[debug] [2025-12-22T18:35:17.745Z] Checked if tokens are valid: true, expires at: 1766431056075
+[debug] [2025-12-22T18:35:17.745Z] [Firebase Plugin] User found:  balarajr483@gmail.com
+[info] [Firebase Plugin] (Core:Project) New user detected, fetching projects
+[debug] [2025-12-22T18:35:17.745Z] Checked if tokens are valid: true, expires at: 1766431056075
+[debug] [2025-12-22T18:35:17.746Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=1000
+[debug] [2025-12-22T18:35:17.752Z] [Firebase Plugin] VSCode notification server listening on port 40001
+[debug] [2025-12-22T18:35:17.983Z] Object "/hosting" in "firebase.json" has unknown property: {"additionalProperty":"authDomain"}
+[debug] [2025-12-22T18:35:17.983Z] Field "/hosting" in "firebase.json" is possibly invalid: must be array
+[debug] [2025-12-22T18:35:17.983Z] Field "/hosting" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[info] [Firebase Plugin] Starting Data Connect toolkit (version 3.0.0) on port 50001
+[debug] [2025-12-22T18:35:18.011Z] 'fdc build' failed with error: Unable to build your Data Connect schema and connectors (exit code 1): E1223 00:05:18.008568  201175 cmd.go:43] Error loading data connect config: could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"'fdc build' failed with error: Unable to build your Data Connect schema and connectors (exit code 1): E1223 00:05:18.008568  201175 cmd.go:43] Error loading data connect config: could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`\n"}}
+[debug] [2025-12-22T18:35:18.012Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"dataconnect"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2025-12-22T18:35:18.012Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"dataconnect"},"message":"Ignoring unsupported arg: port"}}
+[debug] [2025-12-22T18:35:18.012Z] Starting Data Connect Emulator with command {"binary":"/home/balaraj/.cache/firebase/emulators/dataconnect-emulator-3.0.0","args":["--logtostderr","-v=2","dev","--listen=localhost:50001","--config_dir=/home/balaraj/studio/dataconnect","--enable_output_schema_extensions=true","--enable_output_generated_sdk=true"],"optionalArgs":["listen","config_dir","enable_output_schema_extensions","enable_output_generated_sdk"],"joinArgs":true,"shell":false,"port":9399} {"metadata":{"emulator":{"name":"dataconnect"},"message":"Starting Data Connect Emulator with command {\"binary\":\"/home/balaraj/.cache/firebase/emulators/dataconnect-emulator-3.0.0\",\"args\":[\"--logtostderr\",\"-v=2\",\"dev\",\"--listen=localhost:50001\",\"--config_dir=/home/balaraj/studio/dataconnect\",\"--enable_output_schema_extensions=true\",\"--enable_output_generated_sdk=true\"],\"optionalArgs\":[\"listen\",\"config_dir\",\"enable_output_schema_extensions\",\"enable_output_generated_sdk\"],\"joinArgs\":true,\"shell\":false,\"port\":9399}"}}
+[info] i  dataconnect: Data Connect Emulator logging to dataconnect-debug.log {"metadata":{"emulator":{"name":"dataconnect"},"message":"Data Connect Emulator logging to dataconnect-debug.log"}}
+[debug] [2025-12-22T18:35:18.040Z] E1223 00:05:18.038856  201186 dev.go:83] Failed to load initial config from "/home/balaraj/studio/dataconnect": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1223 00:05:18.038856  201186 dev.go:83] Failed to load initial config from \"/home/balaraj/studio/dataconnect\": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`\n"}}
+[debug] [2025-12-22T18:35:18.040Z] E1223 00:05:18.040489  201186 watch.go:116] watchAllDir unable to walk dir `/home/balaraj/studio/dataconnect`: lstat /home/balaraj/studio/dataconnect: no such file or directory
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1223 00:05:18.040489  201186 watch.go:116] watchAllDir unable to walk dir `/home/balaraj/studio/dataconnect`: lstat /home/balaraj/studio/dataconnect: no such file or directory\n"}}
+[debug] [2025-12-22T18:35:18.041Z] I1223 00:05:18.041645  201186 dev.go:104] Listening on address (HTTP + gRPC): 127.0.0.1:50001
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1223 00:05:18.041645  201186 dev.go:104] Listening on address (HTTP + gRPC): 127.0.0.1:50001\n"}}
+[error] [Firebase Plugin] error:  {}
+[debug] [2025-12-22T18:35:19.021Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2025-12-22T18:35:19.022Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[debug] [2025-12-22T18:35:28.049Z] E1223 00:05:28.049329  201186 watch.go:40] Failed to load config from "/home/balaraj/studio/dataconnect": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1223 00:05:28.049329  201186 watch.go:40] Failed to load config from \"/home/balaraj/studio/dataconnect\": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`\n"}}
+[debug] [2025-12-22T18:35:34.016Z] [Firebase Plugin] Value of process.env.MONOSPACE_ENV: undefined
+[debug] [2025-12-22T18:35:34.016Z] [Firebase Plugin] requireAuthWrapper
+[debug] [2025-12-22T18:35:34.017Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-12-22T18:35:34.017Z] > authorizing via signed-in user (balarajr483@gmail.com)
+[debug] [2025-12-22T18:35:34.017Z] Checked if tokens are valid: true, expires at: 1766431056075
+[debug] [2025-12-22T18:35:34.018Z] [Firebase Plugin] User found:  balarajr483@gmail.com
+[info] [Firebase Plugin] (Core:Project) New user detected, fetching projects
+[debug] [2025-12-22T18:35:34.018Z] Checked if tokens are valid: true, expires at: 1766431056075
+[debug] [2025-12-22T18:35:34.019Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=1000
+[debug] [2025-12-22T18:35:34.051Z] [Firebase Plugin] Value of process.env.MONOSPACE_ENV: undefined
+[debug] [2025-12-22T18:35:34.051Z] [Firebase Plugin] requireAuthWrapper
+[debug] [2025-12-22T18:35:34.052Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-12-22T18:35:34.052Z] > authorizing via signed-in user (balarajr483@gmail.com)
+[debug] [2025-12-22T18:35:34.052Z] Checked if tokens are valid: true, expires at: 1766431056075
+[debug] [2025-12-22T18:35:34.052Z] [Firebase Plugin] User found:  balarajr483@gmail.com
+[info] [Firebase Plugin] (Core:Project) New user detected, fetching projects
+[debug] [2025-12-22T18:35:34.053Z] Checked if tokens are valid: true, expires at: 1766431056075
+[debug] [2025-12-22T18:35:34.053Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=1000
+[debug] [2025-12-22T18:35:34.062Z] Emulator locator file path: /tmp/hub-agrisence-1dc30.json
+[debug] [2025-12-22T18:35:35.020Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2025-12-22T18:35:35.021Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[debug] [2025-12-22T18:35:35.030Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2025-12-22T18:35:35.031Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[debug] [2025-12-22T18:35:38.052Z] E1223 00:05:38.050070  201186 watch.go:40] Failed to load config from "/home/balaraj/studio/dataconnect": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1223 00:05:38.050070  201186 watch.go:40] Failed to load config from \"/home/balaraj/studio/dataconnect\": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`\n"}}
+[debug] [2025-12-22T18:35:48.044Z] E1223 00:05:48.041189  201186 watch.go:40] Failed to load config from "/home/balaraj/studio/dataconnect": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1223 00:05:48.041189  201186 watch.go:40] Failed to load config from \"/home/balaraj/studio/dataconnect\": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`\n"}}
+[debug] [2025-12-22T18:35:58.050Z] E1223 00:05:58.050108  201186 watch.go:40] Failed to load config from "/home/balaraj/studio/dataconnect": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1223 00:05:58.050108  201186 watch.go:40] Failed to load config from \"/home/balaraj/studio/dataconnect\": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`\n"}}
+[debug] [2025-12-22T18:36:08.050Z] E1223 00:06:08.050163  201186 watch.go:40] Failed to load config from "/home/balaraj/studio/dataconnect": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1223 00:06:08.050163  201186 watch.go:40] Failed to load config from \"/home/balaraj/studio/dataconnect\": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`\n"}}
+[debug] [2025-12-22T18:36:18.041Z] E1223 00:06:18.041127  201186 watch.go:40] Failed to load config from "/home/balaraj/studio/dataconnect": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1223 00:06:18.041127  201186 watch.go:40] Failed to load config from \"/home/balaraj/studio/dataconnect\": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`\n"}}
+[debug] [2025-12-22T18:36:18.041Z] E1223 00:06:18.041053  201186 watch.go:116] watchAllDir unable to walk dir `/home/balaraj/studio/dataconnect`: lstat /home/balaraj/studio/dataconnect: no such file or directory
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1223 00:06:18.041053  201186 watch.go:116] watchAllDir unable to walk dir `/home/balaraj/studio/dataconnect`: lstat /home/balaraj/studio/dataconnect: no such file or directory\n"}}
+[debug] [2025-12-22T18:36:28.050Z] E1223 00:06:28.050081  201186 watch.go:40] Failed to load config from "/home/balaraj/studio/dataconnect": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1223 00:06:28.050081  201186 watch.go:40] Failed to load config from \"/home/balaraj/studio/dataconnect\": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`\n"}}
+[debug] [2025-12-22T18:36:38.050Z] E1223 00:06:38.050105  201186 watch.go:40] Failed to load config from "/home/balaraj/studio/dataconnect": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1223 00:06:38.050105  201186 watch.go:40] Failed to load config from \"/home/balaraj/studio/dataconnect\": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`\n"}}
+[debug] [2025-12-22T18:36:48.042Z] E1223 00:06:48.041871  201186 watch.go:40] Failed to load config from "/home/balaraj/studio/dataconnect": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1223 00:06:48.041871  201186 watch.go:40] Failed to load config from \"/home/balaraj/studio/dataconnect\": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`\n"}}
+[debug] [2025-12-22T18:36:58.049Z] E1223 00:06:58.049114  201186 watch.go:40] Failed to load config from "/home/balaraj/studio/dataconnect": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1223 00:06:58.049114  201186 watch.go:40] Failed to load config from \"/home/balaraj/studio/dataconnect\": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`\n"}}
+[debug] [2025-12-22T18:37:08.042Z] E1223 00:07:08.041968  201186 watch.go:40] Failed to load config from "/home/balaraj/studio/dataconnect": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1223 00:07:08.041968  201186 watch.go:40] Failed to load config from \"/home/balaraj/studio/dataconnect\": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`\n"}}
+[debug] [2025-12-22T18:37:18.041Z] E1223 00:07:18.041154  201186 watch.go:116] watchAllDir unable to walk dir `/home/balaraj/studio/dataconnect`: lstat /home/balaraj/studio/dataconnect: no such file or directory
+E1223 00:07:18.041206  201186 watch.go:40] Failed to load config from "/home/balaraj/studio/dataconnect": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1223 00:07:18.041154  201186 watch.go:116] watchAllDir unable to walk dir `/home/balaraj/studio/dataconnect`: lstat /home/balaraj/studio/dataconnect: no such file or directory\nE1223 00:07:18.041206  201186 watch.go:40] Failed to load config from \"/home/balaraj/studio/dataconnect\": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`\n"}}
+[debug] [2025-12-22T18:37:28.041Z] E1223 00:07:28.040939  201186 watch.go:40] Failed to load config from "/home/balaraj/studio/dataconnect": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1223 00:07:28.040939  201186 watch.go:40] Failed to load config from \"/home/balaraj/studio/dataconnect\": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`\n"}}
+[debug] [2025-12-22T18:37:38.041Z] E1223 00:07:38.040903  201186 watch.go:40] Failed to load config from "/home/balaraj/studio/dataconnect": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1223 00:07:38.040903  201186 watch.go:40] Failed to load config from \"/home/balaraj/studio/dataconnect\": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`\n"}}
+[debug] [2025-12-22T18:37:48.041Z] E1223 00:07:48.041266  201186 watch.go:40] Failed to load config from "/home/balaraj/studio/dataconnect": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1223 00:07:48.041266  201186 watch.go:40] Failed to load config from \"/home/balaraj/studio/dataconnect\": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`\n"}}
+[debug] [2025-12-22T18:37:58.050Z] E1223 00:07:58.050077  201186 watch.go:40] Failed to load config from "/home/balaraj/studio/dataconnect": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1223 00:07:58.050077  201186 watch.go:40] Failed to load config from \"/home/balaraj/studio/dataconnect\": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`\n"}}
+[debug] [2025-12-22T18:38:08.050Z] E1223 00:08:08.050075  201186 watch.go:40] Failed to load config from "/home/balaraj/studio/dataconnect": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1223 00:08:08.050075  201186 watch.go:40] Failed to load config from \"/home/balaraj/studio/dataconnect\": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`\n"}}
+[debug] [2025-12-22T18:38:18.041Z] E1223 00:08:18.041063  201186 watch.go:116] watchAllDir unable to walk dir `/home/balaraj/studio/dataconnect`: lstat /home/balaraj/studio/dataconnect: no such file or directory
+E1223 00:08:18.041086  201186 watch.go:40] Failed to load config from "/home/balaraj/studio/dataconnect": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1223 00:08:18.041063  201186 watch.go:116] watchAllDir unable to walk dir `/home/balaraj/studio/dataconnect`: lstat /home/balaraj/studio/dataconnect: no such file or directory\nE1223 00:08:18.041086  201186 watch.go:40] Failed to load config from \"/home/balaraj/studio/dataconnect\": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`\n"}}
+[debug] [2025-12-22T18:38:28.054Z] E1223 00:08:28.050083  201186 watch.go:40] Failed to load config from "/home/balaraj/studio/dataconnect": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1223 00:08:28.050083  201186 watch.go:40] Failed to load config from \"/home/balaraj/studio/dataconnect\": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`\n"}}
+[debug] [2025-12-22T18:38:38.050Z] E1223 00:08:38.050110  201186 watch.go:40] Failed to load config from "/home/balaraj/studio/dataconnect": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1223 00:08:38.050110  201186 watch.go:40] Failed to load config from \"/home/balaraj/studio/dataconnect\": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`\n"}}
+[debug] [2025-12-22T18:38:48.041Z] E1223 00:08:48.041205  201186 watch.go:40] Failed to load config from "/home/balaraj/studio/dataconnect": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1223 00:08:48.041205  201186 watch.go:40] Failed to load config from \"/home/balaraj/studio/dataconnect\": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`\n"}}
+[debug] [2025-12-22T18:38:58.050Z] E1223 00:08:58.050069  201186 watch.go:40] Failed to load config from "/home/balaraj/studio/dataconnect": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1223 00:08:58.050069  201186 watch.go:40] Failed to load config from \"/home/balaraj/studio/dataconnect\": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`\n"}}
+[debug] [2025-12-22T18:39:08.050Z] E1223 00:09:08.050105  201186 watch.go:40] Failed to load config from "/home/balaraj/studio/dataconnect": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1223 00:09:08.050105  201186 watch.go:40] Failed to load config from \"/home/balaraj/studio/dataconnect\": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`\n"}}
+[debug] [2025-12-22T18:39:18.042Z] E1223 00:09:18.041771  201186 watch.go:116] watchAllDir unable to walk dir `/home/balaraj/studio/dataconnect`: lstat /home/balaraj/studio/dataconnect: no such file or directory
+E1223 00:09:18.041821  201186 watch.go:40] Failed to load config from "/home/balaraj/studio/dataconnect": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1223 00:09:18.041771  201186 watch.go:116] watchAllDir unable to walk dir `/home/balaraj/studio/dataconnect`: lstat /home/balaraj/studio/dataconnect: no such file or directory\nE1223 00:09:18.041821  201186 watch.go:40] Failed to load config from \"/home/balaraj/studio/dataconnect\": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`\n"}}
+[debug] [2025-12-22T18:39:28.049Z] E1223 00:09:28.049104  201186 watch.go:40] Failed to load config from "/home/balaraj/studio/dataconnect": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1223 00:09:28.049104  201186 watch.go:40] Failed to load config from \"/home/balaraj/studio/dataconnect\": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`\n"}}
+[debug] [2025-12-22T18:39:38.041Z] E1223 00:09:38.041119  201186 watch.go:40] Failed to load config from "/home/balaraj/studio/dataconnect": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1223 00:09:38.041119  201186 watch.go:40] Failed to load config from \"/home/balaraj/studio/dataconnect\": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`\n"}}
+[debug] [2025-12-22T18:39:48.041Z] E1223 00:09:48.041162  201186 watch.go:40] Failed to load config from "/home/balaraj/studio/dataconnect": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1223 00:09:48.041162  201186 watch.go:40] Failed to load config from \"/home/balaraj/studio/dataconnect\": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`\n"}}
+[debug] [2025-12-22T18:39:58.049Z] E1223 00:09:58.049068  201186 watch.go:40] Failed to load config from "/home/balaraj/studio/dataconnect": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1223 00:09:58.049068  201186 watch.go:40] Failed to load config from \"/home/balaraj/studio/dataconnect\": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`\n"}}
+[debug] [2025-12-22T18:40:08.050Z] E1223 00:10:08.050106  201186 watch.go:40] Failed to load config from "/home/balaraj/studio/dataconnect": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1223 00:10:08.050106  201186 watch.go:40] Failed to load config from \"/home/balaraj/studio/dataconnect\": could not find dataconnect.yaml in `/home/balaraj/studio/dataconnect`\n"}}
+[debug] [2025-12-22T18:40:18.042Z] I1223 00:10:18.041526  201186 load.go:31] Reloading schema and connectors...
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1223 00:10:18.041526  201186 load.go:31] Reloading schema and connectors...\n"}}
+[debug] [2025-12-22T18:40:18.083Z] I1223 00:10:18.083071  201186 control.go:94] [/emulator/studio 7a84] UpdateResources(): done
+Main schema: sources: schema/schema.gql [1091B] 
+Connector "example": sources: example/queries.gql [748B] 
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1223 00:10:18.083071  201186 control.go:94] [/emulator/studio 7a84] UpdateResources(): done\nMain schema: sources: schema/schema.gql [1091B] \nConnector \"example\": sources: example/queries.gql [748B] \n"}}
+[debug] [2025-12-22T18:40:18.113Z] I1223 00:10:18.113194  201186 codegen.go:80] [connector "example" javascriptSdk] Generating sources into "/home/balaraj/studio/src/dataconnect-generated"
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1223 00:10:18.113194  201186 codegen.go:80] [connector \"example\" javascriptSdk] Generating sources into \"/home/balaraj/studio/src/dataconnect-generated\"\n"}}
+[debug] [2025-12-22T18:40:18.119Z] I1223 00:10:18.119206  201186 codegen.go:80] [connector "example" adminSdk] Generating sources into "/home/balaraj/studio/src/dataconnect-admin-generated"
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1223 00:10:18.119206  201186 codegen.go:80] [connector \"example\" adminSdk] Generating sources into \"/home/balaraj/studio/src/dataconnect-admin-generated\"\n"}}
+[debug] [2025-12-22T18:40:18.120Z] I1223 00:10:18.120568  201186 collector.go:107] schema extensions wrote into "/home/balaraj/studio/dataconnect/.dataconnect/schema"
+Generated sources: prelude.gql [73219B] main/implicit.gql [3978B] main/input.gql [70864B] main/relation.gql [35811B] main/query.gql [8834B] main/mutation.gql [23810B] 
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1223 00:10:18.120568  201186 collector.go:107] schema extensions wrote into \"/home/balaraj/studio/dataconnect/.dataconnect/schema\"\nGenerated sources: prelude.gql [73219B] main/implicit.gql [3978B] main/input.gql [70864B] main/relation.gql [35811B] main/query.gql [8834B] main/mutation.gql [23810B] \n"}}
+[debug] [2025-12-22T18:40:18.121Z] I1223 00:10:18.121069  201186 collector.go:107] connector "example" javascriptSdk wrote into "/home/balaraj/studio/src/dataconnect-generated"
+Generated sources: package.json [863B] react/index.d.ts [2373B] index.d.ts [4745B] react/package.json [460B] react/esm/index.esm.js [1741B] .guides/usage.md [2582B] esm/package.json [17B] react/esm/package.json [17B] react/index.cjs.js [1843B] .guides/config.json [236B] esm/index.esm.js [1930B] index.cjs.js [2236B] README.md [23605B] react/README.md [29262B] .guides/setup.md [1682B] 
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1223 00:10:18.121069  201186 collector.go:107] connector \"example\" javascriptSdk wrote into \"/home/balaraj/studio/src/dataconnect-generated\"\nGenerated sources: package.json [863B] react/index.d.ts [2373B] index.d.ts [4745B] react/package.json [460B] react/esm/index.esm.js [1741B] .guides/usage.md [2582B] esm/package.json [17B] react/esm/package.json [17B] react/index.cjs.js [1843B] .guides/config.json [236B] esm/index.esm.js [1930B] index.cjs.js [2236B] README.md [23605B] react/README.md [29262B] .guides/setup.md [1682B] \n"}}
+[debug] [2025-12-22T18:40:18.123Z] I1223 00:10:18.123434  201186 installsdk.go:86] Running command: /home/balaraj/.nvm/versions/node/v22.21.0/bin/npm install file:src/dataconnect-generated
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1223 00:10:18.123434  201186 installsdk.go:86] Running command: /home/balaraj/.nvm/versions/node/v22.21.0/bin/npm install file:src/dataconnect-generated\n"}}
+[debug] [2025-12-22T18:40:19.019Z] E1223 00:10:19.018798  201186 installsdk.go:88] Failed to install package: exit status 1
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1223 00:10:19.018798  201186 installsdk.go:88] Failed to install package: exit status 1\n"}}
+[debug] [2025-12-22T18:40:19.019Z] I1223 00:10:19.019282  201186 collector.go:107] connector "example" adminSdk wrote into "/home/balaraj/studio/src/dataconnect-admin-generated"
+Generated sources: index.cjs.js [1740B] package.json [632B] index.d.ts [4253B] esm/index.esm.js [1543B] esm/package.json [17B] 
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1223 00:10:19.019282  201186 collector.go:107] connector \"example\" adminSdk wrote into \"/home/balaraj/studio/src/dataconnect-admin-generated\"\nGenerated sources: index.cjs.js [1740B] package.json [632B] index.d.ts [4253B] esm/index.esm.js [1543B] esm/package.json [17B] \n"}}
+[debug] [2025-12-22T18:40:19.020Z] I1223 00:10:19.020377  201186 installsdk.go:86] Running command: /home/balaraj/.nvm/versions/node/v22.21.0/bin/npm install file:src/dataconnect-admin-generated
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1223 00:10:19.020377  201186 installsdk.go:86] Running command: /home/balaraj/.nvm/versions/node/v22.21.0/bin/npm install file:src/dataconnect-admin-generated\n"}}
+[debug] [2025-12-22T18:40:19.897Z] E1223 00:10:19.897192  201186 installsdk.go:88] Failed to install package: exit status 1
+I1223 00:10:19.897229  201186 load.go:109] Finished reloading
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1223 00:10:19.897192  201186 installsdk.go:88] Failed to install package: exit status 1\nI1223 00:10:19.897229  201186 load.go:109] Finished reloading\n"}}
+[info] [Firebase Plugin] Stopping Data Connect toolkit
+[warn] ⚠  Data Connect Emulator has exited upon receiving signal: SIGINT 
+[debug] [2025-12-22T19:03:29.446Z] [Firebase Plugin] Activating Firebase extension.
+[debug] [2025-12-22T19:03:33.597Z] [Firebase Plugin] requireAuthWrapper
+[debug] [2025-12-22T19:03:33.598Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-12-22T19:03:33.599Z] > authorizing via signed-in user (balarajr483@gmail.com)
+[debug] [2025-12-22T19:03:33.601Z] Checked if tokens are valid: false, expires at: 1766431056075
+[debug] [2025-12-22T19:03:33.601Z] Checked if tokens are valid: false, expires at: 1766431056075
+[debug] [2025-12-22T19:03:33.601Z] > refreshing access token with scopes: []
+[debug] [2025-12-22T19:03:33.602Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-12-22T19:03:33.602Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-12-22T19:03:33.608Z] [Firebase Plugin] VSCode notification server listening on port 40001
+[debug] [2025-12-22T19:03:33.746Z] Object "/hosting" in "firebase.json" has unknown property: {"additionalProperty":"authDomain"}
+[debug] [2025-12-22T19:03:33.746Z] Field "/hosting" in "firebase.json" is possibly invalid: must be array
+[debug] [2025-12-22T19:03:33.747Z] Field "/hosting" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[info] [Firebase Plugin] Starting Data Connect toolkit (version 3.0.0) on port 50001
+[debug] [2025-12-22T19:03:33.851Z] I1223 00:33:33.833729  257807 control.go:94] [/emulator/studio 5844] UpdateResources(): done
+Main schema: sources: schema/schema.gql [1091B] 
+Connector "example": sources: example/queries.gql [748B] 
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1223 00:33:33.833729  257807 control.go:94] [/emulator/studio 5844] UpdateResources(): done\nMain schema: sources: schema/schema.gql [1091B] \nConnector \"example\": sources: example/queries.gql [748B] \n"}}
+[debug] [2025-12-22T19:03:33.852Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"dataconnect"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2025-12-22T19:03:33.852Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"dataconnect"},"message":"Ignoring unsupported arg: port"}}
+[debug] [2025-12-22T19:03:33.852Z] Starting Data Connect Emulator with command {"binary":"/home/balaraj/.cache/firebase/emulators/dataconnect-emulator-3.0.0","args":["--logtostderr","-v=2","dev","--listen=localhost:50001","--config_dir=/home/balaraj/studio/dataconnect","--enable_output_schema_extensions=true","--enable_output_generated_sdk=true"],"optionalArgs":["listen","config_dir","enable_output_schema_extensions","enable_output_generated_sdk"],"joinArgs":true,"shell":false,"port":9399} {"metadata":{"emulator":{"name":"dataconnect"},"message":"Starting Data Connect Emulator with command {\"binary\":\"/home/balaraj/.cache/firebase/emulators/dataconnect-emulator-3.0.0\",\"args\":[\"--logtostderr\",\"-v=2\",\"dev\",\"--listen=localhost:50001\",\"--config_dir=/home/balaraj/studio/dataconnect\",\"--enable_output_schema_extensions=true\",\"--enable_output_generated_sdk=true\"],\"optionalArgs\":[\"listen\",\"config_dir\",\"enable_output_schema_extensions\",\"enable_output_generated_sdk\"],\"joinArgs\":true,\"shell\":false,\"port\":9399}"}}
+[info] i  dataconnect: Data Connect Emulator logging to dataconnect-debug.log {"metadata":{"emulator":{"name":"dataconnect"},"message":"Data Connect Emulator logging to dataconnect-debug.log"}}
+[debug] [2025-12-22T19:03:33.868Z] I1223 00:33:33.868779  257821 load.go:31] Reloading schema and connectors...
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1223 00:33:33.868779  257821 load.go:31] Reloading schema and connectors...\n"}}
+[debug] [2025-12-22T19:03:33.894Z] I1223 00:33:33.894672  257821 control.go:94] [/emulator/studio 9168] UpdateResources(): done
+Main schema: sources: schema/schema.gql [1091B] 
+Connector "example": sources: example/queries.gql [748B] 
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1223 00:33:33.894672  257821 control.go:94] [/emulator/studio 9168] UpdateResources(): done\nMain schema: sources: schema/schema.gql [1091B] \nConnector \"example\": sources: example/queries.gql [748B] \n"}}
+[debug] [2025-12-22T19:03:33.931Z] I1223 00:33:33.931435  257821 codegen.go:80] [connector "example" javascriptSdk] Generating sources into "/home/balaraj/studio/src/dataconnect-generated"
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1223 00:33:33.931435  257821 codegen.go:80] [connector \"example\" javascriptSdk] Generating sources into \"/home/balaraj/studio/src/dataconnect-generated\"\n"}}
+[debug] [2025-12-22T19:03:33.939Z] I1223 00:33:33.939672  257821 codegen.go:80] [connector "example" adminSdk] Generating sources into "/home/balaraj/studio/src/dataconnect-admin-generated"
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1223 00:33:33.939672  257821 codegen.go:80] [connector \"example\" adminSdk] Generating sources into \"/home/balaraj/studio/src/dataconnect-admin-generated\"\n"}}
+[debug] [2025-12-22T19:03:33.942Z] I1223 00:33:33.941653  257821 collector.go:107] schema extensions wrote into "/home/balaraj/studio/dataconnect/.dataconnect/schema"
+Generated sources: prelude.gql [73219B] main/query.gql [8834B] main/mutation.gql [23810B] main/implicit.gql [3978B] main/input.gql [70864B] main/relation.gql [35811B] 
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1223 00:33:33.941653  257821 collector.go:107] schema extensions wrote into \"/home/balaraj/studio/dataconnect/.dataconnect/schema\"\nGenerated sources: prelude.gql [73219B] main/query.gql [8834B] main/mutation.gql [23810B] main/implicit.gql [3978B] main/input.gql [70864B] main/relation.gql [35811B] \n"}}
+[debug] [2025-12-22T19:03:33.942Z] I1223 00:33:33.942802  257821 collector.go:107] connector "example" javascriptSdk wrote into "/home/balaraj/studio/src/dataconnect-generated"
+Generated sources: esm/package.json [17B] react/index.d.ts [2373B] react/esm/package.json [17B] react/esm/index.esm.js [1741B] .guides/setup.md [1682B] index.d.ts [4745B] esm/index.esm.js [1930B] README.md [23605B] react/index.cjs.js [1843B] .guides/usage.md [2582B] react/README.md [29262B] .guides/config.json [236B] index.cjs.js [2236B] package.json [863B] react/package.json [460B] 
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1223 00:33:33.942802  257821 collector.go:107] connector \"example\" javascriptSdk wrote into \"/home/balaraj/studio/src/dataconnect-generated\"\nGenerated sources: esm/package.json [17B] react/index.d.ts [2373B] react/esm/package.json [17B] react/esm/index.esm.js [1741B] .guides/setup.md [1682B] index.d.ts [4745B] esm/index.esm.js [1930B] README.md [23605B] react/index.cjs.js [1843B] .guides/usage.md [2582B] react/README.md [29262B] .guides/config.json [236B] index.cjs.js [2236B] package.json [863B] react/package.json [460B] \n"}}
+[debug] [2025-12-22T19:03:33.944Z] I1223 00:33:33.944257  257821 installsdk.go:86] Running command: /home/balaraj/.nvm/versions/node/v22.21.0/bin/npm install file:src/dataconnect-generated
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1223 00:33:33.944257  257821 installsdk.go:86] Running command: /home/balaraj/.nvm/versions/node/v22.21.0/bin/npm install file:src/dataconnect-generated\n"}}
+[debug] [2025-12-22T19:03:34.153Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-12-22T19:03:34.153Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-12-22T19:03:34.162Z] [Firebase Plugin] User found:  balarajr483@gmail.com
+[info] [Firebase Plugin] (Core:Project) New user detected, fetching projects
+[debug] [2025-12-22T19:03:34.163Z] Checked if tokens are valid: true, expires at: 1766433813154
+[debug] [2025-12-22T19:03:34.164Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=1000
+[debug] [2025-12-22T19:03:35.231Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2025-12-22T19:03:35.231Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[debug] [2025-12-22T19:03:41.467Z] I1223 00:33:41.467156  257821 collector.go:107] connector "example" adminSdk wrote into "/home/balaraj/studio/src/dataconnect-admin-generated"
+Generated sources: index.d.ts [4253B] esm/index.esm.js [1543B] esm/package.json [17B] index.cjs.js [1740B] package.json [632B] 
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1223 00:33:41.467156  257821 collector.go:107] connector \"example\" adminSdk wrote into \"/home/balaraj/studio/src/dataconnect-admin-generated\"\nGenerated sources: index.d.ts [4253B] esm/index.esm.js [1543B] esm/package.json [17B] index.cjs.js [1740B] package.json [632B] \n"}}
+[debug] [2025-12-22T19:03:41.469Z] I1223 00:33:41.469250  257821 installsdk.go:86] Running command: /home/balaraj/.nvm/versions/node/v22.21.0/bin/npm install file:src/dataconnect-admin-generated
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1223 00:33:41.469250  257821 installsdk.go:86] Running command: /home/balaraj/.nvm/versions/node/v22.21.0/bin/npm install file:src/dataconnect-admin-generated\n"}}
+[debug] [2025-12-22T19:03:43.716Z] I1223 00:33:43.716255  257821 load.go:109] Finished reloading
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1223 00:33:43.716255  257821 load.go:109] Finished reloading\n"}}
+[debug] [2025-12-22T19:03:43.719Z] I1223 00:33:43.719029  257821 dev.go:104] Listening on address (HTTP + gRPC): 127.0.0.1:50001
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1223 00:33:43.719029  257821 dev.go:104] Listening on address (HTTP + gRPC): 127.0.0.1:50001\n"}}

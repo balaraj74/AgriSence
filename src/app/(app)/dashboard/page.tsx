@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -37,6 +37,7 @@ import {
   Calendar,
   Bell,
   Zap,
+  Loader2,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
@@ -44,6 +45,8 @@ import { Button } from '@/components/ui/button';
 import { WeatherWidget } from '@/components/weather-widget';
 import { Input } from '@/components/ui/input';
 import { NotificationBell } from '@/components/notification-bell';
+import { getDashboardStats, type DashboardStats } from '@/lib/actions/farmer-context';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface QuickLink {
   href: string;
@@ -111,12 +114,6 @@ const allTools: QuickLink[] = [
     iconColor: 'text-lime-400',
     bgColor: 'bg-lime-500/20',
   },
-];
-
-const quickStats = [
-  { label: 'Active Crops', value: '12', icon: Sprout, color: 'text-emerald-400' },
-  { label: 'Health Score', value: '94%', icon: HeartPulse, color: 'text-teal-400' },
-  { label: 'Yield Forecast', value: '↑ 18%', icon: TrendingUp, color: 'text-lime-400' },
 ];
 
 const containerVariants = {
@@ -219,35 +216,102 @@ const AiToolsCard = () => (
   </motion.div>
 );
 
-const QuickStatsCard = () => (
-  <motion.div variants={itemVariants}>
-    <Card className="border-0 bg-gradient-to-br from-emerald-500/5 via-card to-transparent border border-white/5">
-      <CardContent className="p-4">
-        <div className="grid grid-cols-3 gap-3">
-          {quickStats.map((stat, index) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.3 + index * 0.1 }}
-              className="text-center p-3 rounded-xl bg-background/50 backdrop-blur-sm border border-white/5"
-            >
-              <stat.icon className={`h-5 w-5 mx-auto mb-1 ${stat.color}`} />
-              <p className="text-lg font-bold">{stat.value}</p>
-              <p className="text-[10px] text-muted-foreground truncate">
-                {stat.label}
-              </p>
-            </motion.div>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
-  </motion.div>
-);
+interface QuickStatsCardProps {
+  stats: DashboardStats | null;
+  isLoading: boolean;
+}
+
+const QuickStatsCard = ({ stats, isLoading }: QuickStatsCardProps) => {
+  const quickStats = [
+    {
+      label: 'Active Crops',
+      value: stats?.activeCrops?.toString() || '0',
+      icon: Sprout,
+      color: 'text-emerald-400'
+    },
+    {
+      label: 'Health Score',
+      value: stats?.healthScore !== undefined ? `${stats.healthScore}%` : '—',
+      icon: HeartPulse,
+      color: 'text-teal-400'
+    },
+    {
+      label: 'Yield Forecast',
+      value: stats?.yieldForecast || 'N/A',
+      icon: TrendingUp,
+      color: 'text-lime-400'
+    },
+  ];
+
+  if (isLoading) {
+    return (
+      <motion.div variants={itemVariants}>
+        <Card className="border-0 bg-gradient-to-br from-emerald-500/5 via-card to-transparent border border-white/5">
+          <CardContent className="p-4">
+            <div className="grid grid-cols-3 gap-3">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="text-center p-3 rounded-xl bg-background/50 backdrop-blur-sm border border-white/5">
+                  <Skeleton className="h-5 w-5 mx-auto mb-1 rounded-full" />
+                  <Skeleton className="h-6 w-12 mx-auto mb-1" />
+                  <Skeleton className="h-3 w-16 mx-auto" />
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+    );
+  }
+
+  return (
+    <motion.div variants={itemVariants}>
+      <Card className="border-0 bg-gradient-to-br from-emerald-500/5 via-card to-transparent border border-white/5">
+        <CardContent className="p-4">
+          <div className="grid grid-cols-3 gap-3">
+            {quickStats.map((stat, index) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.3 + index * 0.1 }}
+                className="text-center p-3 rounded-xl bg-background/50 backdrop-blur-sm border border-white/5"
+              >
+                <stat.icon className={`h-5 w-5 mx-auto mb-1 ${stat.color}`} />
+                <p className="text-lg font-bold">{stat.value}</p>
+                <p className="text-[10px] text-muted-foreground truncate">
+                  {stat.label}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    </motion.div>
+  );
+};
 
 export default function DashboardPage() {
   const { user } = useAuth();
   const [greeting, setGreeting] = useState('Hello');
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [isLoadingStats, setIsLoadingStats] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const fetchStats = useCallback(async () => {
+    if (!user?.uid) {
+      setIsLoadingStats(false);
+      return;
+    }
+    try {
+      const fetchedStats = await getDashboardStats(user.uid);
+      setStats(fetchedStats);
+    } catch (error) {
+      console.error('Failed to fetch dashboard stats:', error);
+    } finally {
+      setIsLoadingStats(false);
+      setIsRefreshing(false);
+    }
+  }, [user?.uid]);
 
   useEffect(() => {
     const hour = new Date().getHours();
@@ -255,6 +319,17 @@ export default function DashboardPage() {
     else if (hour < 17) setGreeting('Good Afternoon');
     else setGreeting('Good Evening');
   }, []);
+
+  useEffect(() => {
+    if (user?.uid) {
+      fetchStats();
+    }
+  }, [user?.uid, fetchStats]);
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    fetchStats();
+  };
 
   const date = new Date();
   const formattedDate = date.toLocaleString('en-US', {
@@ -305,9 +380,15 @@ export default function DashboardPage() {
           <div className="md:hidden">
             <NotificationBell />
           </div>
-          <motion.div whileHover={{ rotate: 180 }} transition={{ duration: 0.3 }}>
-            <Button variant="ghost" size="icon" className="rounded-full hover:bg-emerald-500/10">
-              <RefreshCw className="h-5 w-5" />
+          <motion.div whileHover={{ rotate: isRefreshing ? 0 : 180 }} transition={{ duration: 0.3 }}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-full hover:bg-emerald-500/10"
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+            >
+              <RefreshCw className={`h-5 w-5 ${isRefreshing ? 'animate-spin' : ''}`} />
             </Button>
           </motion.div>
         </div>
@@ -336,7 +417,7 @@ export default function DashboardPage() {
       </motion.div>
 
       {/* Quick Stats */}
-      <QuickStatsCard />
+      <QuickStatsCard stats={stats} isLoading={isLoadingStats} />
 
       {/* Farming Toolkit */}
       <motion.div variants={itemVariants}>

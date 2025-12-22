@@ -1,0 +1,65 @@
+type User @table {
+  displayName: String!
+  email: String!
+  createdAt: Timestamp!
+  phoneNumber: String
+  farmName: String
+}
+
+type Farm @table {
+  name: String!
+  location: String!
+  createdAt: Timestamp!
+  user: User
+  acreage: Float
+  boundaryCoordinates: [String]
+}
+
+type CropType @table {
+  name: String!
+  botanicalName: String!
+  idealGrowingConditions: String
+  harvestTime: String
+}
+
+type CropBatch @table {
+  plantingDate: Date!
+  expectedHarvestDate: Date!
+  fieldLocation: String!
+  farm: Farm
+  cropType: CropType
+  quantityPlanted: Int
+  notes: String
+}
+
+type SensorReading @table {
+  timestamp: Timestamp!
+  readingType: String!
+  value: Float!
+  unit: String!
+  farm: Farm
+  cropBatch: CropBatch
+  notes: String
+  sensorId: String
+}
+
+type Equipment @table {
+  name: String!
+  type: String!
+  purchaseDate: Date!
+  farm: Farm
+  serialNumber: String
+  lastMaintenanceDate: Date
+  nextMaintenanceDate: Date
+}
+
+type Task @table {
+  title: String!
+  dueDate: Date!
+  status: String!
+  farm: Farm
+  cropBatch: CropBatch
+  description: String
+  assignedTo: User
+  priority: String
+}

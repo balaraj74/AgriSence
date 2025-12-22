@@ -1,0 +1,1013 @@
+extend type CropBatch {
+  """
+  ✨ List `SensorReading` objects in a one-to-many relationship (where `SensorReading`.`cropBatch` is this object).
+  """
+  sensorReadings_on_cropBatch(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: SensorReading_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [SensorReading_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: SensorReading_Having
+  ): [SensorReading!]! @fdc_generated(from: "SensorReading.cropBatch", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  ✨ List `Task` objects in a one-to-many relationship (where `Task`.`cropBatch` is this object).
+  """
+  tasks_on_cropBatch(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Task_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Task_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Task_Having
+  ): [Task!]! @fdc_generated(from: "Task.cropBatch", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  Implicit metadata field that cannot be written. It provides extra information about query results.
+  """
+  _metadata: _Metadata @fdc_generated(from: "CropBatch", purpose: METADATA_FIELD)
+  """
+  ✨ Count the number of rows in the `CropBatch` table.
+  """
+  _count: Int! @fdc_generated(from: "CropBatch.", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `CropBatch` table where the `cropTypeId` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  cropTypeId_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "CropBatch.cropTypeId", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `CropBatch` table where the `expectedHarvestDate` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  expectedHarvestDate_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "CropBatch.expectedHarvestDate", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `CropBatch` table where the `farmId` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  farmId_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "CropBatch.farmId", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `CropBatch` table where the `fieldLocation` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  fieldLocation_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "CropBatch.fieldLocation", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `CropBatch` table where the `id` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  id_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "CropBatch.id", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `CropBatch` table where the `notes` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  notes_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "CropBatch.notes", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `CropBatch` table where the `plantingDate` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  plantingDate_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "CropBatch.plantingDate", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `CropBatch` table where the `quantityPlanted` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  quantityPlanted_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "CropBatch.quantityPlanted", purpose: QUERY_COUNT)
+  """
+  ✨ Sum the `quantityPlanted` field in the `CropBatch` table.
+  """
+  quantityPlanted_sum(
+    """
+    Set to true to sum the distinct values.
+    """
+    distinct: Boolean = false
+  ): Int @fdc_generated(from: "CropBatch.quantityPlanted", purpose: QUERY_SUM)
+  """
+  ✨ Average the `quantityPlanted` field in the `CropBatch` table.
+  """
+  quantityPlanted_avg(
+    """
+    Set to true to average the distinct values.
+    """
+    distinct: Boolean = false
+  ): Float @fdc_generated(from: "CropBatch.quantityPlanted", purpose: QUERY_AVG)
+  """
+  ✨ Minimum of the `expectedHarvestDate` field in the `CropBatch` table.
+  """
+  expectedHarvestDate_min: Date @fdc_generated(from: "CropBatch.expectedHarvestDate", purpose: QUERY_MIN)
+  """
+  ✨ Minimum of the `plantingDate` field in the `CropBatch` table.
+  """
+  plantingDate_min: Date @fdc_generated(from: "CropBatch.plantingDate", purpose: QUERY_MIN)
+  """
+  ✨ Minimum of the `quantityPlanted` field in the `CropBatch` table.
+  """
+  quantityPlanted_min: Int @fdc_generated(from: "CropBatch.quantityPlanted", purpose: QUERY_MIN)
+  """
+  ✨ Maximum of the `expectedHarvestDate` field in the `CropBatch` table.
+  """
+  expectedHarvestDate_max: Date @fdc_generated(from: "CropBatch.expectedHarvestDate", purpose: QUERY_MAX)
+  """
+  ✨ Maximum of the `plantingDate` field in the `CropBatch` table.
+  """
+  plantingDate_max: Date @fdc_generated(from: "CropBatch.plantingDate", purpose: QUERY_MAX)
+  """
+  ✨ Maximum of the `quantityPlanted` field in the `CropBatch` table.
+  """
+  quantityPlanted_max: Int @fdc_generated(from: "CropBatch.quantityPlanted", purpose: QUERY_MAX)
+  """
+  A generated field that is used for caching results in SDKs.
+  """
+  _id: ID! @fdc_generated(from: "CropBatch.id", purpose: GLOBAL_ID)
+}
+extend type CropType {
+  """
+  ✨ List `CropBatch` objects in a one-to-many relationship (where `CropBatch`.`cropType` is this object).
+  """
+  cropBatches_on_cropType(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: CropBatch_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [CropBatch_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: CropBatch_Having
+  ): [CropBatch!]! @fdc_generated(from: "CropBatch.cropType", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  Implicit metadata field that cannot be written. It provides extra information about query results.
+  """
+  _metadata: _Metadata @fdc_generated(from: "CropType", purpose: METADATA_FIELD)
+  """
+  ✨ Count the number of rows in the `CropType` table.
+  """
+  _count: Int! @fdc_generated(from: "CropType.", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `CropType` table where the `botanicalName` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  botanicalName_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "CropType.botanicalName", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `CropType` table where the `harvestTime` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  harvestTime_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "CropType.harvestTime", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `CropType` table where the `id` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  id_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "CropType.id", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `CropType` table where the `idealGrowingConditions` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  idealGrowingConditions_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "CropType.idealGrowingConditions", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `CropType` table where the `name` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  name_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "CropType.name", purpose: QUERY_COUNT)
+  """
+  A generated field that is used for caching results in SDKs.
+  """
+  _id: ID! @fdc_generated(from: "CropType.id", purpose: GLOBAL_ID)
+}
+extend type Equipment {
+  """
+  Implicit metadata field that cannot be written. It provides extra information about query results.
+  """
+  _metadata: _Metadata @fdc_generated(from: "Equipment", purpose: METADATA_FIELD)
+  """
+  ✨ Count the number of rows in the `Equipment` table.
+  """
+  _count: Int! @fdc_generated(from: "Equipment.", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Equipment` table where the `farmId` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  farmId_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Equipment.farmId", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Equipment` table where the `id` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  id_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Equipment.id", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Equipment` table where the `lastMaintenanceDate` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  lastMaintenanceDate_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Equipment.lastMaintenanceDate", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Equipment` table where the `name` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  name_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Equipment.name", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Equipment` table where the `nextMaintenanceDate` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  nextMaintenanceDate_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Equipment.nextMaintenanceDate", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Equipment` table where the `purchaseDate` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  purchaseDate_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Equipment.purchaseDate", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Equipment` table where the `serialNumber` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  serialNumber_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Equipment.serialNumber", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Equipment` table where the `type` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  type_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Equipment.type", purpose: QUERY_COUNT)
+  """
+  ✨ Minimum of the `lastMaintenanceDate` field in the `Equipment` table.
+  """
+  lastMaintenanceDate_min: Date @fdc_generated(from: "Equipment.lastMaintenanceDate", purpose: QUERY_MIN)
+  """
+  ✨ Minimum of the `nextMaintenanceDate` field in the `Equipment` table.
+  """
+  nextMaintenanceDate_min: Date @fdc_generated(from: "Equipment.nextMaintenanceDate", purpose: QUERY_MIN)
+  """
+  ✨ Minimum of the `purchaseDate` field in the `Equipment` table.
+  """
+  purchaseDate_min: Date @fdc_generated(from: "Equipment.purchaseDate", purpose: QUERY_MIN)
+  """
+  ✨ Maximum of the `lastMaintenanceDate` field in the `Equipment` table.
+  """
+  lastMaintenanceDate_max: Date @fdc_generated(from: "Equipment.lastMaintenanceDate", purpose: QUERY_MAX)
+  """
+  ✨ Maximum of the `nextMaintenanceDate` field in the `Equipment` table.
+  """
+  nextMaintenanceDate_max: Date @fdc_generated(from: "Equipment.nextMaintenanceDate", purpose: QUERY_MAX)
+  """
+  ✨ Maximum of the `purchaseDate` field in the `Equipment` table.
+  """
+  purchaseDate_max: Date @fdc_generated(from: "Equipment.purchaseDate", purpose: QUERY_MAX)
+  """
+  A generated field that is used for caching results in SDKs.
+  """
+  _id: ID! @fdc_generated(from: "Equipment.id", purpose: GLOBAL_ID)
+}
+extend type Farm {
+  """
+  ✨ List `CropBatch` objects in a one-to-many relationship (where `CropBatch`.`farm` is this object).
+  """
+  cropBatches_on_farm(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: CropBatch_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [CropBatch_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: CropBatch_Having
+  ): [CropBatch!]! @fdc_generated(from: "CropBatch.farm", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  ✨ List `Equipment` objects in a one-to-many relationship (where `Equipment`.`farm` is this object).
+  """
+  equipments_on_farm(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Equipment_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Equipment_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Equipment_Having
+  ): [Equipment!]! @fdc_generated(from: "Equipment.farm", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  ✨ List `SensorReading` objects in a one-to-many relationship (where `SensorReading`.`farm` is this object).
+  """
+  sensorReadings_on_farm(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: SensorReading_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [SensorReading_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: SensorReading_Having
+  ): [SensorReading!]! @fdc_generated(from: "SensorReading.farm", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  ✨ List `Task` objects in a one-to-many relationship (where `Task`.`farm` is this object).
+  """
+  tasks_on_farm(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Task_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Task_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Task_Having
+  ): [Task!]! @fdc_generated(from: "Task.farm", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  Implicit metadata field that cannot be written. It provides extra information about query results.
+  """
+  _metadata: _Metadata @fdc_generated(from: "Farm", purpose: METADATA_FIELD)
+  """
+  ✨ Count the number of rows in the `Farm` table.
+  """
+  _count: Int! @fdc_generated(from: "Farm.", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Farm` table where the `acreage` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  acreage_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Farm.acreage", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Farm` table where the `createdAt` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  createdAt_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Farm.createdAt", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Farm` table where the `id` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  id_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Farm.id", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Farm` table where the `location` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  location_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Farm.location", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Farm` table where the `name` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  name_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Farm.name", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Farm` table where the `userId` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  userId_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Farm.userId", purpose: QUERY_COUNT)
+  """
+  ✨ Sum the `acreage` field in the `Farm` table.
+  """
+  acreage_sum(
+    """
+    Set to true to sum the distinct values.
+    """
+    distinct: Boolean = false
+  ): Float @fdc_generated(from: "Farm.acreage", purpose: QUERY_SUM)
+  """
+  ✨ Average the `acreage` field in the `Farm` table.
+  """
+  acreage_avg(
+    """
+    Set to true to average the distinct values.
+    """
+    distinct: Boolean = false
+  ): Float @fdc_generated(from: "Farm.acreage", purpose: QUERY_AVG)
+  """
+  ✨ Minimum of the `acreage` field in the `Farm` table.
+  """
+  acreage_min: Float @fdc_generated(from: "Farm.acreage", purpose: QUERY_MIN)
+  """
+  ✨ Minimum of the `createdAt` field in the `Farm` table.
+  """
+  createdAt_min: Timestamp @fdc_generated(from: "Farm.createdAt", purpose: QUERY_MIN)
+  """
+  ✨ Maximum of the `acreage` field in the `Farm` table.
+  """
+  acreage_max: Float @fdc_generated(from: "Farm.acreage", purpose: QUERY_MAX)
+  """
+  ✨ Maximum of the `createdAt` field in the `Farm` table.
+  """
+  createdAt_max: Timestamp @fdc_generated(from: "Farm.createdAt", purpose: QUERY_MAX)
+  """
+  A generated field that is used for caching results in SDKs.
+  """
+  _id: ID! @fdc_generated(from: "Farm.id", purpose: GLOBAL_ID)
+}
+extend type SensorReading {
+  """
+  Implicit metadata field that cannot be written. It provides extra information about query results.
+  """
+  _metadata: _Metadata @fdc_generated(from: "SensorReading", purpose: METADATA_FIELD)
+  """
+  ✨ Count the number of rows in the `SensorReading` table.
+  """
+  _count: Int! @fdc_generated(from: "SensorReading.", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `SensorReading` table where the `cropBatchId` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  cropBatchId_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "SensorReading.cropBatchId", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `SensorReading` table where the `farmId` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  farmId_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "SensorReading.farmId", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `SensorReading` table where the `id` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  id_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "SensorReading.id", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `SensorReading` table where the `notes` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  notes_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "SensorReading.notes", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `SensorReading` table where the `readingType` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  readingType_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "SensorReading.readingType", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `SensorReading` table where the `sensorId` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  sensorId_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "SensorReading.sensorId", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `SensorReading` table where the `timestamp` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  timestamp_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "SensorReading.timestamp", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `SensorReading` table where the `unit` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  unit_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "SensorReading.unit", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `SensorReading` table where the `value` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  value_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "SensorReading.value", purpose: QUERY_COUNT)
+  """
+  ✨ Sum the `value` field in the `SensorReading` table.
+  """
+  value_sum(
+    """
+    Set to true to sum the distinct values.
+    """
+    distinct: Boolean = false
+  ): Float @fdc_generated(from: "SensorReading.value", purpose: QUERY_SUM)
+  """
+  ✨ Average the `value` field in the `SensorReading` table.
+  """
+  value_avg(
+    """
+    Set to true to average the distinct values.
+    """
+    distinct: Boolean = false
+  ): Float @fdc_generated(from: "SensorReading.value", purpose: QUERY_AVG)
+  """
+  ✨ Minimum of the `timestamp` field in the `SensorReading` table.
+  """
+  timestamp_min: Timestamp @fdc_generated(from: "SensorReading.timestamp", purpose: QUERY_MIN)
+  """
+  ✨ Minimum of the `value` field in the `SensorReading` table.
+  """
+  value_min: Float @fdc_generated(from: "SensorReading.value", purpose: QUERY_MIN)
+  """
+  ✨ Maximum of the `timestamp` field in the `SensorReading` table.
+  """
+  timestamp_max: Timestamp @fdc_generated(from: "SensorReading.timestamp", purpose: QUERY_MAX)
+  """
+  ✨ Maximum of the `value` field in the `SensorReading` table.
+  """
+  value_max: Float @fdc_generated(from: "SensorReading.value", purpose: QUERY_MAX)
+  """
+  A generated field that is used for caching results in SDKs.
+  """
+  _id: ID! @fdc_generated(from: "SensorReading.id", purpose: GLOBAL_ID)
+}
+extend type Task {
+  """
+  Implicit metadata field that cannot be written. It provides extra information about query results.
+  """
+  _metadata: _Metadata @fdc_generated(from: "Task", purpose: METADATA_FIELD)
+  """
+  ✨ Count the number of rows in the `Task` table.
+  """
+  _count: Int! @fdc_generated(from: "Task.", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Task` table where the `assignedToId` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  assignedToId_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Task.assignedToId", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Task` table where the `cropBatchId` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  cropBatchId_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Task.cropBatchId", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Task` table where the `description` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  description_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Task.description", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Task` table where the `dueDate` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  dueDate_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Task.dueDate", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Task` table where the `farmId` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  farmId_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Task.farmId", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Task` table where the `id` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  id_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Task.id", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Task` table where the `priority` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  priority_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Task.priority", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Task` table where the `status` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  status_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Task.status", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Task` table where the `title` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  title_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Task.title", purpose: QUERY_COUNT)
+  """
+  ✨ Minimum of the `dueDate` field in the `Task` table.
+  """
+  dueDate_min: Date @fdc_generated(from: "Task.dueDate", purpose: QUERY_MIN)
+  """
+  ✨ Maximum of the `dueDate` field in the `Task` table.
+  """
+  dueDate_max: Date @fdc_generated(from: "Task.dueDate", purpose: QUERY_MAX)
+  """
+  A generated field that is used for caching results in SDKs.
+  """
+  _id: ID! @fdc_generated(from: "Task.id", purpose: GLOBAL_ID)
+}
+extend type User {
+  """
+  ✨ List `Farm` objects in a one-to-many relationship (where `Farm`.`user` is this object).
+  """
+  farms_on_user(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Farm_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Farm_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Farm_Having
+  ): [Farm!]! @fdc_generated(from: "Farm.user", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  ✨ List `Task` objects in a one-to-many relationship (where `Task`.`assignedTo` is this object).
+  """
+  tasks_on_assignedTo(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Task_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Task_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Task_Having
+  ): [Task!]! @fdc_generated(from: "Task.assignedTo", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  Implicit metadata field that cannot be written. It provides extra information about query results.
+  """
+  _metadata: _Metadata @fdc_generated(from: "User", purpose: METADATA_FIELD)
+  """
+  ✨ Count the number of rows in the `User` table.
+  """
+  _count: Int! @fdc_generated(from: "User.", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `User` table where the `createdAt` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  createdAt_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "User.createdAt", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `User` table where the `displayName` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  displayName_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "User.displayName", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `User` table where the `email` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  email_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "User.email", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `User` table where the `farmName` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  farmName_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "User.farmName", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `User` table where the `id` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  id_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "User.id", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `User` table where the `phoneNumber` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  phoneNumber_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "User.phoneNumber", purpose: QUERY_COUNT)
+  """
+  ✨ Minimum of the `createdAt` field in the `User` table.
+  """
+  createdAt_min: Timestamp @fdc_generated(from: "User.createdAt", purpose: QUERY_MIN)
+  """
+  ✨ Maximum of the `createdAt` field in the `User` table.
+  """
+  createdAt_max: Timestamp @fdc_generated(from: "User.createdAt", purpose: QUERY_MAX)
+  """
+  A generated field that is used for caching results in SDKs.
+  """
+  _id: ID! @fdc_generated(from: "User.id", purpose: GLOBAL_ID)
+}

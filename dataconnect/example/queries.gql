@@ -1,0 +1,24 @@
+mutation CreateNewTask($title: String!, $status: String!, $dueDate: Date!, $farmId: UUID!, $cropBatchId: UUID!, $assignedToId: UUID!) @auth(level: USER) {
+  task_insert(data: {title: $title, status: $status, dueDate: $dueDate, farmId: $farmId, cropBatchId: $cropBatchId, assignedToId: $assignedToId})
+}
+
+query ListTasksForFarm($farmId: UUID!) @auth(level: USER) {
+  tasks(where: {farmId: {eq: $farmId}}) {
+    id
+    title
+    status
+    dueDate
+  }
+}
+
+mutation UpdateTaskStatus($id: UUID!, $status: String!) @auth(level: USER) {
+  task_update(id: $id, data: {status: $status})
+}
+
+query GetCropBatchesForFarm($farmId: UUID!) @auth(level: USER) {
+  cropBatches(where: {farmId: {eq: $farmId}}) {
+    id
+    expectedHarvestDate
+    fieldLocation
+  }
+}

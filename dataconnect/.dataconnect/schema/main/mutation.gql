@@ -1,0 +1,786 @@
+extend type Mutation {
+  """
+  ✨ Insert a single `CropBatch` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  cropBatch_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: CropBatch_Data!
+  ): CropBatch_KeyOutput! @fdc_generated(from: "CropBatch", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `CropType` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  cropType_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: CropType_Data!
+  ): CropType_KeyOutput! @fdc_generated(from: "CropType", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `Equipment` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  equipment_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: Equipment_Data!
+  ): Equipment_KeyOutput! @fdc_generated(from: "Equipment", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `Farm` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  farm_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: Farm_Data!
+  ): Farm_KeyOutput! @fdc_generated(from: "Farm", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `SensorReading` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  sensorReading_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: SensorReading_Data!
+  ): SensorReading_KeyOutput! @fdc_generated(from: "SensorReading", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `Task` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  task_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: Task_Data!
+  ): Task_KeyOutput! @fdc_generated(from: "Task", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `User` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  user_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: User_Data!
+  ): User_KeyOutput! @fdc_generated(from: "User", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert `CropBatch` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  cropBatch_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [CropBatch_Data!]!
+  ): [CropBatch_KeyOutput!]! @fdc_generated(from: "CropBatch", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `CropType` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  cropType_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [CropType_Data!]!
+  ): [CropType_KeyOutput!]! @fdc_generated(from: "CropType", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `Equipment` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  equipment_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [Equipment_Data!]!
+  ): [Equipment_KeyOutput!]! @fdc_generated(from: "Equipment", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `Farm` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  farm_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [Farm_Data!]!
+  ): [Farm_KeyOutput!]! @fdc_generated(from: "Farm", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `SensorReading` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  sensorReading_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [SensorReading_Data!]!
+  ): [SensorReading_KeyOutput!]! @fdc_generated(from: "SensorReading", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `Task` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  task_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [Task_Data!]!
+  ): [Task_KeyOutput!]! @fdc_generated(from: "Task", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `User` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  user_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [User_Data!]!
+  ): [User_KeyOutput!]! @fdc_generated(from: "User", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert or update a single `CropBatch` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `CropBatch`.
+  """
+  cropBatch_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: CropBatch_Data!
+  ): CropBatch_KeyOutput! @fdc_generated(from: "CropBatch", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `CropType` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `CropType`.
+  """
+  cropType_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: CropType_Data!
+  ): CropType_KeyOutput! @fdc_generated(from: "CropType", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `Equipment` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Equipment`.
+  """
+  equipment_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: Equipment_Data!
+  ): Equipment_KeyOutput! @fdc_generated(from: "Equipment", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `Farm` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Farm`.
+  """
+  farm_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: Farm_Data!
+  ): Farm_KeyOutput! @fdc_generated(from: "Farm", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `SensorReading` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `SensorReading`.
+  """
+  sensorReading_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: SensorReading_Data!
+  ): SensorReading_KeyOutput! @fdc_generated(from: "SensorReading", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `Task` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Task`.
+  """
+  task_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: Task_Data!
+  ): Task_KeyOutput! @fdc_generated(from: "Task", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `User` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `User`.
+  """
+  user_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: User_Data!
+  ): User_KeyOutput! @fdc_generated(from: "User", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update `CropBatch` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `CropBatch`.
+  """
+  cropBatch_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [CropBatch_Data!]!
+  ): [CropBatch_KeyOutput!]! @fdc_generated(from: "CropBatch", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `CropType` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `CropType`.
+  """
+  cropType_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [CropType_Data!]!
+  ): [CropType_KeyOutput!]! @fdc_generated(from: "CropType", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `Equipment` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Equipment`.
+  """
+  equipment_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [Equipment_Data!]!
+  ): [Equipment_KeyOutput!]! @fdc_generated(from: "Equipment", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `Farm` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Farm`.
+  """
+  farm_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [Farm_Data!]!
+  ): [Farm_KeyOutput!]! @fdc_generated(from: "Farm", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `SensorReading` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `SensorReading`.
+  """
+  sensorReading_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [SensorReading_Data!]!
+  ): [SensorReading_KeyOutput!]! @fdc_generated(from: "SensorReading", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `Task` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Task`.
+  """
+  task_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [Task_Data!]!
+  ): [Task_KeyOutput!]! @fdc_generated(from: "Task", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `User` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `User`.
+  """
+  user_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [User_Data!]!
+  ): [User_KeyOutput!]! @fdc_generated(from: "User", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Update a single `CropBatch` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `CropBatch` or `null` if not found.
+  """
+  cropBatch_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: CropBatch_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: CropBatch_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: CropBatch_Data!
+  ): CropBatch_KeyOutput @fdc_generated(from: "CropBatch", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `CropType` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `CropType` or `null` if not found.
+  """
+  cropType_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: CropType_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: CropType_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: CropType_Data!
+  ): CropType_KeyOutput @fdc_generated(from: "CropType", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `Equipment` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `Equipment` or `null` if not found.
+  """
+  equipment_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Equipment_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Equipment_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: Equipment_Data!
+  ): Equipment_KeyOutput @fdc_generated(from: "Equipment", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `Farm` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `Farm` or `null` if not found.
+  """
+  farm_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Farm_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Farm_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: Farm_Data!
+  ): Farm_KeyOutput @fdc_generated(from: "Farm", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `SensorReading` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `SensorReading` or `null` if not found.
+  """
+  sensorReading_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: SensorReading_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: SensorReading_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: SensorReading_Data!
+  ): SensorReading_KeyOutput @fdc_generated(from: "SensorReading", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `Task` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `Task` or `null` if not found.
+  """
+  task_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Task_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Task_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: Task_Data!
+  ): Task_KeyOutput @fdc_generated(from: "Task", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `User` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `User` or `null` if not found.
+  """
+  user_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: User_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: User_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: User_Data!
+  ): User_KeyOutput @fdc_generated(from: "User", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update `CropBatch` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  cropBatch_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: CropBatch_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: CropBatch_Data!
+  ): Int! @fdc_generated(from: "CropBatch", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `CropType` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  cropType_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: CropType_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: CropType_Data!
+  ): Int! @fdc_generated(from: "CropType", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `Equipment` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  equipment_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: Equipment_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: Equipment_Data!
+  ): Int! @fdc_generated(from: "Equipment", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `Farm` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  farm_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: Farm_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: Farm_Data!
+  ): Int! @fdc_generated(from: "Farm", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `SensorReading` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  sensorReading_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: SensorReading_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: SensorReading_Data!
+  ): Int! @fdc_generated(from: "SensorReading", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `Task` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  task_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: Task_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: Task_Data!
+  ): Int! @fdc_generated(from: "Task", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `User` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  user_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: User_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: User_Data!
+  ): Int! @fdc_generated(from: "User", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Delete a single `CropBatch` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  cropBatch_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: CropBatch_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: CropBatch_FirstRow
+  ): CropBatch_KeyOutput @fdc_generated(from: "CropBatch", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `CropType` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  cropType_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: CropType_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: CropType_FirstRow
+  ): CropType_KeyOutput @fdc_generated(from: "CropType", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `Equipment` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  equipment_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Equipment_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Equipment_FirstRow
+  ): Equipment_KeyOutput @fdc_generated(from: "Equipment", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `Farm` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  farm_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Farm_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Farm_FirstRow
+  ): Farm_KeyOutput @fdc_generated(from: "Farm", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `SensorReading` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  sensorReading_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: SensorReading_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: SensorReading_FirstRow
+  ): SensorReading_KeyOutput @fdc_generated(from: "SensorReading", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `Task` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  task_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Task_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Task_FirstRow
+  ): Task_KeyOutput @fdc_generated(from: "Task", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `User` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  user_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: User_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: User_FirstRow
+  ): User_KeyOutput @fdc_generated(from: "User", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete `CropBatch` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  cropBatch_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: CropBatch_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "CropBatch", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `CropType` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  cropType_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: CropType_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "CropType", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `Equipment` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  equipment_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: Equipment_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "Equipment", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `Farm` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  farm_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: Farm_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "Farm", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `SensorReading` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  sensorReading_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: SensorReading_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "SensorReading", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `Task` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  task_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: Task_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "Task", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `User` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  user_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: User_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "User", purpose: DELETE_MULTIPLE)
+}
