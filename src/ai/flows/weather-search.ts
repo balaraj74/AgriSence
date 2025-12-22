@@ -20,10 +20,10 @@ const GetWeatherInfoInputSchema = z.object({
 export type GetWeatherInfoInput = z.infer<typeof GetWeatherInfoInputSchema>;
 
 const DailyForecastSchema = z.object({
-    date: z.string().describe("The date for the forecast, e.g., 'Monday'."),
-    weatherCode: z.number().describe("The WMO weather code."),
-    maxTemp: z.number().describe("The maximum temperature."),
-    minTemp: z.number().describe("The minimum temperature."),
+  date: z.string().describe("The date for the forecast, e.g., 'Monday'."),
+  weatherCode: z.number().describe("The WMO weather code."),
+  maxTemp: z.number().describe("The maximum temperature."),
+  minTemp: z.number().describe("The minimum temperature."),
 });
 
 const GetWeatherInfoOutputSchema = z.object({
@@ -62,16 +62,16 @@ const weatherTool = ai.defineTool(
     const geocodeUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`;
 
     const [weatherResponse, geocodeResponse] = await Promise.all([
-        fetch(weatherUrl),
-        fetch(geocodeUrl, { headers: { 'User-Agent': 'AgriSence-App/1.0' }})
+      fetch(weatherUrl),
+      fetch(geocodeUrl, { headers: { 'User-Agent': 'AgriSence-App/1.0' } })
     ]);
 
-     if (!weatherResponse.ok) {
-        throw new Error(`Failed to fetch weather data. Status: ${weatherResponse.status}`);
+    if (!weatherResponse.ok) {
+      throw new Error(`Failed to fetch weather data. Status: ${weatherResponse.status}`);
     }
-     if (!geocodeResponse.ok) {
-        // Don't fail the whole thing, just proceed without a location name
-        console.error(`Failed to fetch geocoding data. Status: ${geocodeResponse.status}`);
+    if (!geocodeResponse.ok) {
+      // Don't fail the whole thing, just proceed without a location name
+      console.error(`Failed to fetch geocoding data. Status: ${geocodeResponse.status}`);
     }
 
     const weatherData = await weatherResponse.json() as any;
@@ -79,42 +79,42 @@ const weatherTool = ai.defineTool(
 
     let locationName = "Your Location";
     if (geocodeData?.address) {
-        const { village, town, city, county, state, state_district } = geocodeData.address;
-        locationName = [village, town, city, county, state_district, state].filter(Boolean).slice(0, 2).join(', ');
-        if (!locationName) locationName = "Your Location";
+      const { village, town, city, county, state, state_district } = geocodeData.address;
+      locationName = [village, town, city, county, state_district, state].filter(Boolean).slice(0, 2).join(', ');
+      if (!locationName) locationName = "Your Location";
     }
 
     const dailyForecasts = weatherData.daily.time.slice(0, 5).map((time: string, index: number) => ({
-        date: new Date(time).toLocaleDateString('en-US', { weekday: 'long' }),
-        weatherCode: weatherData.daily.weather_code[index],
-        maxTemp: Math.round(weatherData.daily.temperature_2m_max[index]),
-        minTemp: Math.round(weatherData.daily.temperature_2m_min[index]),
+      date: new Date(time).toLocaleDateString('en-US', { weekday: 'long' }),
+      weatherCode: weatherData.daily.weather_code[index],
+      maxTemp: Math.round(weatherData.daily.temperature_2m_max[index]),
+      minTemp: Math.round(weatherData.daily.temperature_2m_min[index]),
     }));
-    
+
     return {
-        location: {
-            name: locationName
-        },
-        current: {
-            temperature: Math.round(weatherData.current.temperature_2m),
-            weatherCode: weatherData.current.weather_code,
-            humidity: weatherData.current.relative_humidity_2m,
-            windSpeed: Math.round(weatherData.current.wind_speed_10m),
-            isDay: weatherData.current.is_day,
-        },
-        daily: dailyForecasts,
-        sunrise: new Date(weatherData.daily.sunrise[0]).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit'}),
-        sunset: new Date(weatherData.daily.sunset[0]).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit'}),
+      location: {
+        name: locationName
+      },
+      current: {
+        temperature: Math.round(weatherData.current.temperature_2m),
+        weatherCode: weatherData.current.weather_code,
+        humidity: weatherData.current.relative_humidity_2m,
+        windSpeed: Math.round(weatherData.current.wind_speed_10m),
+        isDay: weatherData.current.is_day,
+      },
+      daily: dailyForecasts,
+      sunrise: new Date(weatherData.daily.sunrise[0]).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }),
+      sunset: new Date(weatherData.daily.sunset[0]).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }),
     };
   }
 );
 
 const weatherPrompt = ai.definePrompt({
-    name: 'summarizeWeather',
-    model: googleAI.model('gemini-2.5-flash-preview-09-2025'),
-    input: { schema: GetWeatherInfoOutputSchema.omit({ summary: true }) },
-    output: { schema: z.object({ summary: GetWeatherInfoOutputSchema.shape.summary })},
-    prompt: `You are a helpful weather assistant. Given the following weather data in JSON format, provide a short, conversational summary of the overall weather. For example "Looks like a clear day, but expect some rain showers later in the week."
+  name: 'summarizeWeather',
+  model: googleAI.model('gemini-2.0-flash'),
+  input: { schema: GetWeatherInfoOutputSchema.omit({ summary: true }) },
+  output: { schema: z.object({ summary: GetWeatherInfoOutputSchema.shape.summary }) },
+  prompt: `You are a helpful weather assistant. Given the following weather data in JSON format, provide a short, conversational summary of the overall weather. For example "Looks like a clear day, but expect some rain showers later in the week."
 
     Data:
     {{{json this}}}

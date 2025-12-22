@@ -65,7 +65,7 @@ const marketMatchmakingFlow = ai.defineFlow(
   async (input) => {
     try {
       const { output } = await ai.generate({
-          model: googleAI.model('gemini-2.5-flash-preview-09-2025'),
+          model: googleAI.model('gemini-2.0-flash'),
           system: `You are an expert AI Market Matchmaking engine for Indian farmers, simulating a two-way digital mandi. Your task is to analyze a farmer's crop supply and find the best potential buyers from a simulated market of wholesalers, retailers, and other farmers.
 
           You must generate a list of 3 to 5 plausible and diverse buyer matches. The matches should be realistic for the Indian context and ranked by the best combination of proximity and offer price.

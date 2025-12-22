@@ -61,7 +61,7 @@ const liveFarmAdvisorFlow = ai.defineFlow(
 
       const { output } = await ai.generate({
           prompt: promptPayload, 
-          model: googleAI.model('gemini-2.5-flash-preview-09-2025'),
+          model: googleAI.model('gemini-2.0-flash'),
           output: { schema: LiveFarmAdvisorOutputSchema }
       });
       

@@ -48,7 +48,7 @@ const generateCropCalendarFlow = ai.defineFlow(
   async (input) => {
     try {
       const { output } = await ai.generate({
-          model: googleAI.model('gemini-2.5-flash-preview-09-2025'),
+          model: googleAI.model('gemini-2.0-flash'),
           system: `You are an expert agriculturalist specializing in Indian farming practices. Your task is to generate a typical, simplified seasonal calendar for a specific crop in a given Indian region.`,
           prompt: `
             The calendar should include the most critical tasks: Sowing, at least one Fertilizing event, Irrigation period, and Harvesting.

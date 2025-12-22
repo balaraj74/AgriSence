@@ -1,0 +1,81 @@
+╔══════════════════════════════════════════════════════════════╗
+║          🌾 AgriSence - Firebase Deployment Quick Ref       ║
+╚══════════════════════════════════════════════════════════════╝
+
+📦 PROJECT INFO
+   Project ID: agrisence-1dc30
+   Framework: Next.js 15.3.3
+   AI: Genkit 1.13.0
+
+🚀 QUICK DEPLOY (3 Steps)
+   1. ./setup-backend.sh
+   2. Go to Firebase Console → App Hosting
+   3. Connect GitHub repository
+
+🔑 SET SECRETS
+   firebase apphosting:secrets:set GOOGLE_API_KEY
+
+🌐 API ENDPOINTS (once deployed)
+   GET  /api/health          - Health check
+   GET  /api/genkit          - List available flows
+   POST /api/genkit          - Execute AI flow
+
+📊 AI FLOWS (15 Available)
+   • diagnoseCropDisease
+   • farmingAdviceChatbot
+   • marketPriceSearch
+   • searchSchemes
+   • getWeatherInfo
+   • identifyMedicinalPlant
+   • generateCropCalendar
+   • getSoilAdvice
+   • parseSoilReport
+   • getSatelliteHealthAnalysis
+   • predictMarketPrice
+   • liveFarmAdvisor
+   • checkLoanInsuranceEligibility
+   • findBestBuyers
+   • findBestSellers
+
+🧪 TEST LOCALLY
+   npm install
+   cp .env.example .env.local
+   # Edit .env.local with your keys
+   npm run dev
+
+📋 DEPLOYMENT CHECKLIST
+   □ Firebase CLI installed
+   □ Logged into Firebase
+   □ GOOGLE_API_KEY secret set
+   □ GitHub repo connected
+   □ First deployment successful
+   □ Health endpoint working
+   □ AI flows responding
+
+🛠️ USEFUL COMMANDS
+   firebase login
+   firebase use
+   firebase apphosting:backends:list
+   firebase apphosting:backends:logs <backend-id>
+   firebase apphosting:secrets:list
+   firebase apphosting:secrets:set SECRET_NAME
+
+📚 DOCUMENTATION
+   README.md               - Project overview
+   DEPLOYMENT.md           - Detailed deployment guide
+   DEPLOYMENT_CHECKLIST.md - Step-by-step checklist
+   SETUP_COMPLETE.md       - What was created
+   .env.example            - Environment template
+
+🔗 LINKS
+   Firebase Console: https://console.firebase.google.com/
+   Your Project: https://console.firebase.google.com/project/agrisence-1dc30
+
+📞 SUPPORT
+   Team: Balaraj R, Bharath C D, Mahesh Kumar B, Basavaraj M
+   Phone: +91 8431206594
+
+═══════════════════════════════════════════════════════════════
+Status: ✅ Backend ready for deployment
+Next: Connect GitHub → Auto-deploy 🚀
+═══════════════════════════════════════════════════════════════
