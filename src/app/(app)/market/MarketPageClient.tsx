@@ -76,65 +76,139 @@ function PriceForecastCard() {
 
   const chartData = prediction?.forecast.map(f => ({
     date: f.date,
-    price: f.predictedPrice
+    price: f.predictedPrice,
+    min: f.priceRange?.min,
+    max: f.priceRange?.max,
   }));
+
+  const getTrendColor = (trend: string) => {
+    if (trend === 'bullish') return 'text-green-500 bg-green-500/10';
+    if (trend === 'bearish') return 'text-red-500 bg-red-500/10';
+    return 'text-yellow-500 bg-yellow-500/10';
+  };
+
+  const getImpactColor = (impact: string) => {
+    if (impact === 'positive') return 'text-green-400';
+    if (impact === 'negative') return 'text-red-400';
+    return 'text-muted-foreground';
+  };
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>7-Day Price Forecast</CardTitle>
-        <CardDescription>Predict next week's mandi prices for any crop and market.</CardDescription>
+        <CardTitle className="flex items-center gap-2">
+          <AreaChart className="h-5 w-5 text-primary" />
+          7-Day Price Forecast
+        </CardTitle>
+        <CardDescription>AI-powered price predictions based on real market data and seasonal patterns.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
           <Input
-            placeholder="Enter Crop Name (e.g., Wheat)"
+            placeholder="Enter Crop (e.g., Wheat, Soybean)"
             value={selectedCrop}
             onChange={(e) => setSelectedCrop(e.target.value)}
             disabled={isPredicting}
           />
           <Input
-            placeholder="Enter Market (e.g., Nagpur Mandi)"
+            placeholder="Enter Market (e.g., Azadpur Mandi)"
             value={selectedMarket}
             onChange={(e) => setSelectedMarket(e.target.value)}
             disabled={isPredicting}
           />
           <Button onClick={handlePredict} disabled={isPredicting}>
             {isPredicting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <AreaChart className="mr-2 h-4 w-4" />}
-            {isPredicting ? 'Forecasting...' : 'Forecast Prices'}
+            {isPredicting ? 'Analyzing...' : 'Predict Prices'}
           </Button>
         </div>
+
         {prediction && (
           <div className="space-y-4 animate-in fade-in-50">
-            <p className="text-sm text-muted-foreground">{prediction.summary}</p>
+            {/* Current Price & Trend */}
+            <div className="flex flex-wrap items-center gap-4 p-4 rounded-lg bg-muted/50">
+              <div>
+                <p className="text-xs text-muted-foreground">Current Price</p>
+                <p className="text-2xl font-bold">₹{prediction.currentPrice?.toLocaleString('en-IN')}<span className="text-sm font-normal text-muted-foreground">/quintal</span></p>
+              </div>
+              <Badge className={cn('text-sm', getTrendColor(prediction.trendDirection || 'stable'))}>
+                {prediction.trendDirection === 'bullish' ? '📈 Bullish' :
+                  prediction.trendDirection === 'bearish' ? '📉 Bearish' : '➡️ Stable'}
+              </Badge>
+              <Badge variant="outline">
+                {prediction.expectedChange >= 0 ? '+' : ''}{prediction.expectedChange?.toFixed(1)}% in 7 days
+              </Badge>
+            </div>
+
+            {/* Chart */}
             <div className="h-[250px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <RechartsLineChart data={chartData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="date" tickFormatter={(str) => format(parseISO(str), 'MMM d')} />
-                  <YAxis domain={['dataMin - 10', 'dataMax + 10']} />
+                  <YAxis domain={['dataMin - 50', 'dataMax + 50']} />
                   <Tooltip content={<CustomTooltip />} />
-                  <Line type="monotone" dataKey="price" stroke="hsl(var(--primary))" strokeWidth={2} name="Price" dot={false} />
+                  <Line type="monotone" dataKey="price" stroke="hsl(var(--primary))" strokeWidth={2} name="Price" dot={{ r: 4 }} />
                 </RechartsLineChart>
               </ResponsiveContainer>
             </div>
+
+            {/* Factors Analysis */}
+            {prediction.factors && prediction.factors.length > 0 && (
+              <div className="space-y-2">
+                <p className="text-sm font-medium">Key Price Factors:</p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                  {prediction.factors.slice(0, 3).map((factor, idx) => (
+                    <div key={idx} className="p-3 rounded-lg bg-muted/30 border border-white/5">
+                      <p className={cn('text-sm font-medium', getImpactColor(factor.impact))}>
+                        {factor.impact === 'positive' ? '↑' : factor.impact === 'negative' ? '↓' : '→'} {factor.factor}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">{factor.description}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Recommendation */}
+            {prediction.recommendation && (
+              <div className="p-4 rounded-lg bg-primary/10 border border-primary/20">
+                <p className="text-sm font-medium text-primary">💡 Recommendation for Farmers:</p>
+                <p className="text-sm mt-1">{prediction.recommendation}</p>
+              </div>
+            )}
+
+            {/* Summary */}
+            <p className="text-sm text-muted-foreground">{prediction.summary}</p>
           </div>
         )}
       </CardContent>
       {prediction && (
-        <CardFooter>
+        <CardFooter className="flex-col items-start">
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Date</TableHead>
-                <TableHead className="text-right">Predicted Price (per Quintal)</TableHead>
+                <TableHead className="text-right">Predicted Price</TableHead>
+                <TableHead className="text-right">Confidence</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {prediction.forecast.map((f: DailyForecast) => (
                 <TableRow key={f.date}>
-                  <TableCell>{format(parseISO(f.date), 'EEEE, MMM d')}</TableCell>
-                  <TableCell className="text-right font-mono">₹{f.predictedPrice.toFixed(2)}</TableCell>
+                  <TableCell>{format(parseISO(f.date), 'EEE, MMM d')}</TableCell>
+                  <TableCell className="text-right font-mono">
+                    ₹{f.predictedPrice.toLocaleString('en-IN')}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Badge variant="outline" className={cn(
+                      'text-xs',
+                      f.confidence === 'high' ? 'text-green-400 border-green-400/30' :
+                        f.confidence === 'medium' ? 'text-yellow-400 border-yellow-400/30' :
+                          'text-muted-foreground'
+                    )}>
+                      {f.confidence || 'medium'}
+                    </Badge>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -302,11 +376,25 @@ export default function MarketPageClient() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Today's Market Overview</CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2">
+              Today's Market Overview
+              <Badge variant="outline" className="text-xs text-emerald-400 border-emerald-400/30">
+                🔴 Live
+              </Badge>
+            </CardTitle>
+          </div>
           {isInitialLoading ? (
             <Skeleton className="h-5 w-3/4 mt-1.5" />
           ) : (
-            <CardDescription>{searchResult?.summary || 'Price data for major crops across India.'}</CardDescription>
+            <div className="space-y-1">
+              <CardDescription>{searchResult?.summary || 'Price data for major crops across India.'}</CardDescription>
+              {searchResult?.dataSource && (
+                <p className="text-xs text-muted-foreground">
+                  Source: {searchResult.dataSource} • {searchResult.lastUpdated || 'Just now'}
+                </p>
+              )}
+            </div>
           )}
         </CardHeader>
         <CardContent>

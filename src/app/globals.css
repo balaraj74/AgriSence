@@ -2,69 +2,92 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================
+   PRODUCTION-READY AGRITECH DESIGN SYSTEM
+   Clean, accessible, enterprise-grade UI
+   ============================================ */
+
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Light Mode - Clean whites with subtle warmth */
+    --background: 0 0% 98%;
+    --foreground: 210 15% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 210 15% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 210 15% 15%;
 
-    --primary: 88 60% 55%;
-    --primary-foreground: 88 95% 10%;
+    /* Primary - Professional green (AgriTech) */
+    --primary: 142 50% 40%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 210 10% 95%;
+    --secondary-foreground: 210 15% 25%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 210 10% 94%;
+    --muted-foreground: 210 10% 45%;
 
-    --accent: 44 65% 61%;
-    --accent-foreground: 44 95% 10%;
+    /* Accent - Warm amber for CTAs */
+    --accent: 38 90% 50%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 210 15% 88%;
+    --input: 210 15% 88%;
+    --ring: 142 50% 40%;
 
-    --radius: 20px;
+    --radius: 8px;
+
+    /* Semantic Colors */
+    --success: 142 60% 40%;
+    --warning: 38 90% 50%;
+    --error: 0 70% 50%;
+    --info: 210 70% 50%;
   }
 
   .dark {
-    --background: 220 25% 3%;
-    --foreground: 210 40% 98%;
+    /* Dark Mode - Deep slate with green accents */
+    --background: 220 20% 8%;
+    --foreground: 210 20% 95%;
 
-    --card: 210 40% 98% / 0.08;
-    --card-foreground: 210 40% 98%;
+    --card: 220 20% 10%;
+    --card-foreground: 210 20% 95%;
 
-    --popover: 220 25% 5%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 220 20% 10%;
+    --popover-foreground: 210 20% 95%;
 
-    --primary: 88 60% 55%;
-    --primary-foreground: 88 95% 10%;
+    /* Primary - Bright but not neon green */
+    --primary: 142 55% 48%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 98% / 0.08;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 220 15% 15%;
+    --secondary-foreground: 210 15% 85%;
 
-    --muted: 210 40% 98% / 0.05;
-    --muted-foreground: 215 20% 65%;
+    --muted: 220 15% 14%;
+    --muted-foreground: 210 15% 60%;
 
-    --accent: 44 65% 61%;
-    --accent-foreground: 44 95% 10%;
+    /* Accent - Warm amber */
+    --accent: 38 85% 55%;
+    --accent-foreground: 0 0% 10%;
 
-    --destructive: 0 62.8% 50.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 65% 55%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 210 40% 98% / 0.15;
-    --input: 210 40% 98% / 0.1;
-    --ring: 88 60% 55%;
+    --border: 220 15% 18%;
+    --input: 220 15% 15%;
+    --ring: 142 55% 48%;
 
-    --radius: 20px;
+    --radius: 8px;
+
+    /* Semantic Colors */
+    --success: 142 55% 48%;
+    --warning: 38 85% 55%;
+    --error: 0 65% 55%;
+    --info: 210 65% 55%;
   }
 }
 
@@ -73,28 +96,15 @@
     @apply border-border;
   }
 
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
   body {
     @apply text-foreground;
     background-color: hsl(var(--background));
-    position: relative;
-  }
-
-  body::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: hsl(var(--background) / 0.85);
-    z-index: 0;
-  }
-
-  main,
-  header,
-  .fixed {
-    position: relative;
-    z-index: 1;
+    line-height: 1.6;
   }
 
   h1,
@@ -103,52 +113,65 @@
   h4,
   h5,
   h6 {
-    @apply font-headline;
+    @apply font-headline tracking-tight;
+  }
+
+  h1 {
+    @apply text-2xl font-bold sm:text-3xl;
+  }
+
+  h2 {
+    @apply text-xl font-semibold sm:text-2xl;
+  }
+
+  h3 {
+    @apply text-lg font-semibold;
   }
 }
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
 
+  /* Subtle hover states */
   .interactive-element {
-    @apply transition-all duration-200 ease-in-out;
+    @apply transition-colors duration-150;
   }
 
   .interactive-element:hover {
-    @apply transform -translate-y-[2px] shadow-lg shadow-primary/10;
+    @apply bg-muted/50;
   }
 
   .interactive-element:active {
-    @apply transform scale-[0.98] translate-y-0 shadow-sm shadow-primary/5;
-    filter: brightness(0.95);
+    @apply bg-muted;
   }
 }
 
-.bg-card {
-  background: hsl(var(--card)) !important;
-  backdrop-filter: blur(10px) !important;
-  -webkit-backdrop-filter: blur(10px) !important;
-  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.1) !important;
-}
+/* ============================================
+   COMPONENT OVERRIDES
+   Production-ready card styles
+   ============================================ */
 
-:root .bg-card {
-  background: hsl(0 0% 100% / 0.6) !important;
+.bg-card {
+  background-color: hsl(var(--card)) !important;
+  border: 1px solid hsl(var(--border));
 }
 
 .dark .bg-card {
-  background: hsl(var(--card)) !important;
+  background-color: hsl(var(--card)) !important;
 }
 
 .dark .bg-muted {
-  background-color: var(--muted) !important;
+  background-color: hsl(var(--muted)) !important;
 }
 
 .dark .bg-popover {
   background-color: hsl(var(--popover)) !important;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
 }
 
 .dark .bg-background {
@@ -159,148 +182,202 @@
   background-color: hsl(var(--secondary)) !important;
 }
 
-@keyframes corner-blur-glow {
-  0% {
-    transform: translate(-50%, -50%) rotate(0deg);
-  }
+/* ============================================
+   SEMANTIC STATUS INDICATORS
+   ============================================ */
 
-  100% {
-    transform: translate(-50%, -50%) rotate(360deg);
-  }
+.status-success {
+  @apply text-green-600 dark:text-green-400;
 }
 
-.card-corner-blur {
-  position: relative;
-  overflow: hidden;
+.status-warning {
+  @apply text-amber-600 dark:text-amber-400;
 }
 
-.card-corner-blur::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 150px;
-  height: 150px;
-  background: radial-gradient(circle, hsl(var(--primary) / 0.25) 0%, transparent 70%);
-  filter: blur(40px);
-  transform-origin: center center;
-  animation: corner-blur-glow 15s linear infinite;
-  z-index: 0;
-  pointer-events: none;
+.status-error {
+  @apply text-red-600 dark:text-red-400;
 }
 
-
-.gradient-button {
-  background-image: linear-gradient(to right, hsl(var(--primary) / 0.9), hsl(var(--accent) / 0.9));
-  transition: all 0.3s ease;
+.status-info {
+  @apply text-blue-600 dark:text-blue-400;
 }
 
-.gradient-button:hover {
-  box-shadow: 0 4px 15px 0 hsl(var(--primary) / 0.4);
-  background-image: linear-gradient(to right, hsl(var(--primary)), hsl(var(--accent)));
+/* Status badges */
+.badge-success {
+  @apply bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400;
 }
 
-/* 
-  ✅ BACKGROUND IMAGE ANIMATION
-  Replace the placeholder URLs below with your own image links.
-*/
-@keyframes image-fade {
-
-  /* 👉 IMAGE 1 - Replace URL here */
-  0%,
-  100% {
-    background-image: url('https://i.im.ge/2025/07/27/J66TeD.representation-ecology-sustainability.jpeg');
-    opacity: 1;
-  }
-
-  22% {
-    opacity: 1;
-  }
-
-  25% {
-    opacity: 0;
-  }
-
-  /* 👉 IMAGE 2 - Replace URL here */
-  25.001% {
-    background-image: url('https://i.im.ge/2025/07/27/J666Dz.beautiful-retro-nature-with-field.jpeg');
-    opacity: 0;
-  }
-
-  47% {
-    opacity: 1;
-  }
-
-  50% {
-    opacity: 0;
-  }
-
-  /* 👉 IMAGE 3 - Replace URL here */
-  50.001% {
-    background-image: url('https://i.im.ge/2025/07/27/J66ySK.truck-working-field-sunny-day.jpeg');
-    opacity: 0;
-  }
-
-  72% {
-    opacity: 1;
-  }
-
-  75% {
-    opacity: 0;
-  }
-
-  /* 👉 IMAGE 4 - Replace URL here */
-  75.001% {
-    background-image: url('https://i.im.ge/2025/07/27/J66AN9.sunny-meadow-landscape.jpeg');
-    opacity: 0;
-  }
-
-  97% {
-    opacity: 1;
-  }
+.badge-warning {
+  @apply bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400;
 }
 
-
-.animated-bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  background-color: hsl(var(--background));
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  animation: image-fade 40s linear infinite;
+.badge-error {
+  @apply bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400;
 }
 
-@keyframes grow-stem {
+.badge-info {
+  @apply bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400;
+}
+
+/* ============================================
+   DATA DISPLAY PATTERNS
+   ============================================ */
+
+/* Stat cards */
+.stat-value {
+  @apply text-2xl font-bold tracking-tight;
+}
+
+.stat-label {
+  @apply text-sm text-muted-foreground;
+}
+
+.stat-change-positive {
+  @apply text-sm text-green-600 dark:text-green-400 font-medium;
+}
+
+.stat-change-negative {
+  @apply text-sm text-red-600 dark:text-red-400 font-medium;
+}
+
+/* Data tables */
+.data-table {
+  @apply w-full text-sm;
+}
+
+.data-table th {
+  @apply text-left font-medium text-muted-foreground py-3 px-4;
+}
+
+.data-table td {
+  @apply py-3 px-4 border-t border-border;
+}
+
+/* ============================================
+   FORM ELEMENTS
+   ============================================ */
+
+.form-label {
+  @apply text-sm font-medium mb-1.5 block;
+}
+
+.form-hint {
+  @apply text-xs text-muted-foreground mt-1;
+}
+
+/* ============================================
+   NAVIGATION
+   ============================================ */
+
+.nav-link {
+  @apply flex items-center gap-3 px-3 py-2 rounded-md text-muted-foreground transition-colors;
+}
+
+.nav-link:hover {
+  @apply bg-muted text-foreground;
+}
+
+.nav-link.active {
+  @apply bg-primary/10 text-primary font-medium;
+}
+
+/* ============================================
+   BUTTONS - Standardized
+   ============================================ */
+
+.btn-primary {
+  @apply bg-primary text-primary-foreground hover:bg-primary/90 font-medium;
+}
+
+.btn-secondary {
+  @apply bg-secondary text-secondary-foreground hover:bg-secondary/80 font-medium;
+}
+
+.btn-ghost {
+  @apply hover:bg-muted text-muted-foreground hover:text-foreground;
+}
+
+/* ============================================
+   ANIMATIONS - Subtle, purposeful
+   ============================================ */
+
+@keyframes fade-in {
   from {
-    transform: scaleY(0);
+    opacity: 0;
   }
 
   to {
-    transform: scaleY(1);
+    opacity: 1;
   }
 }
 
-@keyframes grow-leaf-left {
+@keyframes slide-up {
   from {
-    transform: scale(0) rotate(45deg);
+    opacity: 0;
+    transform: translateY(8px);
   }
 
   to {
-    transform: scale(1) rotate(45deg);
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-@keyframes grow-leaf-right {
-  from {
-    transform: scale(0) rotate(-45deg);
+.animate-fade-in {
+  animation: fade-in 0.2s ease-out;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.2s ease-out;
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background;
+}
+
+/* Skip link for keyboard users */
+.skip-link {
+  @apply sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md;
+}
+
+/* ============================================
+   SCROLLBAR STYLING
+   ============================================ */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.3);
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+  .no-print {
+    display: none !important;
   }
 
-  to {
-    transform: scale(1) rotate(-45deg);
+  body {
+    background: white !important;
+    color: black !important;
   }
 }

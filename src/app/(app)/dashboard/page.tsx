@@ -53,67 +53,46 @@ interface QuickLink {
   href: string;
   title: string;
   icon: LucideIcon;
-  shade: string;
-  iconColor: string;
-  bgColor?: string;
+  description?: string;
 }
 
-// Analogous Nature Palette: Blue -> Cyan -> Teal -> Green -> Lime -> Amber
-// This provides variety (not just green) while staying close on the color wheel for harmony.
+// Simplified, professional tool list
 const allTools: QuickLink[] = [
   {
     href: '/disease-check',
-    title: 'Diagnosis',
+    title: 'Disease Diagnosis',
     icon: Stethoscope,
-    // Teal: Clinical, clean, nature-aligned
-    shade: 'from-teal-500/20 to-teal-600/10 border-teal-500/20 hover:border-teal-400/40',
-    iconColor: 'text-teal-400',
-    bgColor: 'bg-teal-500/20',
+    description: 'Identify crop issues',
   },
   {
     href: '/satellite-health',
-    title: 'Satellite',
+    title: 'Satellite Health',
     icon: Satellite,
-    // Sky/Blue: Sky context, tech vibe
-    shade: 'from-sky-500/20 to-sky-600/10 border-sky-500/20 hover:border-sky-400/40',
-    iconColor: 'text-sky-400',
-    bgColor: 'bg-sky-500/20',
+    description: 'Monitor field status',
   },
   {
     href: '/analytics',
     title: 'Analytics',
     icon: BarChart,
-    // Cyan: Data, modern, cool tone
-    shade: 'from-cyan-500/20 to-cyan-600/10 border-cyan-500/20 hover:border-cyan-400/40',
-    iconColor: 'text-cyan-400',
-    bgColor: 'bg-cyan-500/20',
-  },
-  {
-    href: '/medicinal-plants',
-    title: 'Medicinal',
-    icon: HeartPulse,
-    // Emerald: Deep healing green
-    shade: 'from-emerald-500/20 to-emerald-600/10 border-emerald-500/20 hover:border-emerald-400/40',
-    iconColor: 'text-emerald-400',
-    bgColor: 'bg-emerald-500/20',
-  },
-  {
-    href: '/market-matchmaking',
-    title: 'Buyers',
-    icon: Handshake,
-    // Amber: Wheat, harvest, gold/money
-    shade: 'from-amber-500/20 to-amber-600/10 border-amber-500/20 hover:border-amber-400/40',
-    iconColor: 'text-amber-400',
-    bgColor: 'bg-amber-500/20',
+    description: 'View farm data',
   },
   {
     href: '/market',
-    title: 'Market',
+    title: 'Market Prices',
     icon: LineChart,
-    // Lime: Growth, active, energetic green
-    shade: 'from-lime-500/20 to-lime-600/10 border-lime-500/20 hover:border-lime-400/40',
-    iconColor: 'text-lime-400',
-    bgColor: 'bg-lime-500/20',
+    description: 'Check mandi rates',
+  },
+  {
+    href: '/market-matchmaking',
+    title: 'Find Buyers',
+    icon: Handshake,
+    description: 'Connect with traders',
+  },
+  {
+    href: '/schemes',
+    title: 'Govt Schemes',
+    icon: ScrollText,
+    description: 'View subsidies',
   },
 ];
 
@@ -240,21 +219,21 @@ const QuickStatsCard = ({ stats, isLoading }: QuickStatsCardProps) => {
       label: 'Yield Forecast',
       value: stats?.yieldForecast || 'N/A',
       icon: TrendingUp,
-      color: 'text-lime-400'
+      color: 'text-primary'
     },
   ];
 
   if (isLoading) {
     return (
       <motion.div variants={itemVariants}>
-        <Card className="border-0 bg-gradient-to-br from-emerald-500/5 via-card to-transparent border border-white/5">
+        <Card>
           <CardContent className="p-4">
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-4">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="text-center p-3 rounded-xl bg-background/50 backdrop-blur-sm border border-white/5">
-                  <Skeleton className="h-5 w-5 mx-auto mb-1 rounded-full" />
-                  <Skeleton className="h-6 w-12 mx-auto mb-1" />
-                  <Skeleton className="h-3 w-16 mx-auto" />
+                <div key={i} className="p-4 rounded-lg bg-muted/50">
+                  <Skeleton className="h-4 w-4 mb-2" />
+                  <Skeleton className="h-7 w-16 mb-1" />
+                  <Skeleton className="h-3 w-20" />
                 </div>
               ))}
             </div>
@@ -266,23 +245,15 @@ const QuickStatsCard = ({ stats, isLoading }: QuickStatsCardProps) => {
 
   return (
     <motion.div variants={itemVariants}>
-      <Card className="border-0 bg-gradient-to-br from-emerald-500/5 via-card to-transparent border border-white/5">
+      <Card>
         <CardContent className="p-4">
-          <div className="grid grid-cols-3 gap-3">
-            {quickStats.map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.3 + index * 0.1 }}
-                className="text-center p-3 rounded-xl bg-background/50 backdrop-blur-sm border border-white/5"
-              >
-                <stat.icon className={`h-5 w-5 mx-auto mb-1 ${stat.color}`} />
-                <p className="text-lg font-bold">{stat.value}</p>
-                <p className="text-[10px] text-muted-foreground truncate">
-                  {stat.label}
-                </p>
-              </motion.div>
+          <div className="grid grid-cols-3 gap-4">
+            {quickStats.map((stat) => (
+              <div key={stat.label} className="p-4 rounded-lg bg-muted/30">
+                <stat.icon className={`h-4 w-4 mb-2 ${stat.color}`} />
+                <p className="text-xl font-bold">{stat.value}</p>
+                <p className="text-xs text-muted-foreground">{stat.label}</p>
+              </div>
             ))}
           </div>
         </CardContent>
@@ -460,29 +431,21 @@ export default function DashboardPage() {
             </div>
           </CardHeader>
           <CardContent className="pb-4">
-            <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
-              {allTools.map((link, index) => (
-                <motion.div
-                  key={link.href}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.4 + index * 0.05 }}
-                >
-                  <Link href={link.href} className="block group">
-                    <motion.div
-                      whileHover={{ scale: 1.05, y: -4 }}
-                      whileTap={{ scale: 0.95 }}
-                      className={`flex flex-col items-center justify-center text-center gap-2 p-4 bg-gradient-to-br ${link.shade} rounded-2xl border transition-all duration-300 shadow-lg shadow-black/5 hover:shadow-xl hover:shadow-green-500/10`}
-                    >
-                      <div className={`p-3 backdrop-blur-sm rounded-xl transition-colors ${link.bgColor || 'bg-background/50'}`}>
-                        <link.icon
-                          className={`h-6 w-6 ${link.iconColor} transition-transform group-hover:scale-110`}
-                        />
-                      </div>
-                      <p className="text-xs font-medium">{link.title}</p>
-                    </motion.div>
-                  </Link>
-                </motion.div>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+              {allTools.map((link) => (
+                <Link key={link.href} href={link.href} className="block group">
+                  <div className="flex items-center gap-3 p-3 rounded-lg border border-border bg-card hover:bg-muted/50 transition-colors">
+                    <div className="p-2 rounded-lg bg-primary/10">
+                      <link.icon className="h-5 w-5 text-primary" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium truncate">{link.title}</p>
+                      {link.description && (
+                        <p className="text-xs text-muted-foreground truncate">{link.description}</p>
+                      )}
+                    </div>
+                  </div>
+                </Link>
               ))}
             </div>
           </CardContent>
