@@ -88,7 +88,7 @@ Your role is to provide:
 ${input.farmerContext ? `\n**Farmer's Context:**\n${input.farmerContext}` : ''}${historyContext}`;
 
       const { output } = await ai.generate({
-        model: googleAI.model('gemini-2.0-flash'),
+        model: googleAI.model('gemini-2.5-flash'),
         system: systemPrompt,
         prompt: `Farmer's Question: "${input.question}"
 

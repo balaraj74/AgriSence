@@ -43,7 +43,7 @@ const predictMarketPriceFlow = ai.defineFlow(
   },
   async ({ cropName, marketName }) => {
     const { output } = await ai.generate({
-      model: googleAI.model('gemini-2.0-flash'),
+      model: googleAI.model('gemini-2.5-flash'),
       prompt: `
         You are an expert agricultural market analyst. Your task is to generate a plausible and realistic 7-day price forecast for a specific crop in a given Indian market.
         

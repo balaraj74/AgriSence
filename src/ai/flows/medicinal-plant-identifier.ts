@@ -64,7 +64,7 @@ If the image does not contain a recognizable medicinal plant from India or is no
 
       const { output } = await ai.generate({
           prompt: promptPayload, 
-          model: googleAI.model('gemini-2.0-flash'),
+          model: googleAI.model('gemini-2.5-flash'),
           output: { schema: IdentifyMedicinalPlantOutputSchema }
       });
       

@@ -3,7 +3,7 @@
  * Centralized configuration for Gemini model selection
  * 
  * Available models as of December 2025:
- * - gemini-2.0-flash: Stable, production-ready
+ * - gemini-2.5-flash: Stable, production-ready
  * - gemini-3-flash-preview: Latest preview with enhanced capabilities
  * - gemini-2.5-pro: Balanced performance and capability
  */
@@ -16,11 +16,11 @@ const USE_PREVIEW_MODEL = true;
 // Model identifiers
 const MODELS = {
     // Latest Gemini 3 Flash - frontier intelligence built for speed
-    GEMINI_3_FLASH: 'gemini-2.0-flash', // Use stable version for now until 3-flash is fully released
+    GEMINI_3_FLASH: 'gemini-2.5-flash', // Use stable version for now until 3-flash is fully released
     // Stable production model
-    GEMINI_2_FLASH: 'gemini-2.0-flash',
+    GEMINI_2_FLASH: 'gemini-2.5-flash',
     // Pro model for complex reasoning
-    GEMINI_PRO: 'gemini-2.0-flash',
+    GEMINI_PRO: 'gemini-2.5-flash',
 } as const;
 
 /**
