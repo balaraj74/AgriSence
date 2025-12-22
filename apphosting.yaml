@@ -4,9 +4,28 @@
 runConfig:
   # Increase this value if you'd like to automatically spin up
   # more instances in response to increased traffic.
-  maxInstances: 1
+  minInstances: 1
+  maxInstances: 10
+  cpu: 1
+  memoryMiB: 512
+  concurrency: 80
 
 # Declares the secrets that are used by this backend.
-# Secrets can be set using `firebase apphosting:secrets:set`.
-secrets:
-  - GEMINI_API_KEY
+# Secrets can be set using `firebase apphosting:secrets:set`
+env:
+  - variable: GOOGLE_API_KEY
+    secret: GOOGLE_API_KEY
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: GEMINI_API_KEY
+    secret: GOOGLE_API_KEY
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: NODE_ENV
+    value: production
+    availability:
+      - BUILD
+      - RUNTIME
+
