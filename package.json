@@ -8,7 +8,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "firebase:deploy": "firebase deploy --only hosting",
+    "firebase:apphosting:deploy": "firebase apphosting:backends:create"
   },
   "dependencies": {
     "@genkit-ai/googleai": "^1.13.0",
@@ -69,6 +71,7 @@
     "genkit-cli": "^1.13.0",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   }
 }

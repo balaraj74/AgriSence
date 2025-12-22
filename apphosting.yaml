@@ -28,4 +28,9 @@ env:
     availability:
       - BUILD
       - RUNTIME
+  - variable: NEXT_TELEMETRY_DISABLED
+    value: "1"
+    availability:
+      - BUILD
+      - RUNTIME
 
