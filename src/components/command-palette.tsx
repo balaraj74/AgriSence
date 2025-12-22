@@ -2,9 +2,10 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import {
     Search,
     Leaf,
@@ -286,6 +287,12 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="overflow-hidden p-0 shadow-2xl max-w-lg border-white/10">
+                <VisuallyHidden.Root>
+                    <DialogTitle>Search AgriSence</DialogTitle>
+                    <DialogDescription>
+                        Search for crops, tools, AI features, and more
+                    </DialogDescription>
+                </VisuallyHidden.Root>
                 <div className="flex flex-col">
                     {/* Search Input */}
                     <div className="flex items-center border-b border-white/10 px-4">
