@@ -192,13 +192,13 @@ export function WeatherWidget() {
     >
       <Card className={`overflow-hidden border-0 bg-gradient-to-br ${theme.gradient} ${theme.hoverGradient} transition-all duration-500 ${theme.border}`}>
         <Link href="/weather" className="block">
-          <CardContent className="p-5 relative overflow-hidden">
+          <CardContent className="p-4 sm:p-5 relative overflow-hidden">
             {/* Animated background accent */}
             <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${theme.iconBg} rounded-full blur-3xl opacity-50`} />
 
-            <div className="flex flex-row items-center justify-between relative">
+            <div className="flex flex-row items-center gap-3 sm:gap-4 relative">
               {/* Left: Weather icon and main info */}
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3 sm:gap-4 flex-shrink-0">
                 <motion.div
                   animate={{
                     y: [0, -4, 0],
@@ -209,51 +209,51 @@ export function WeatherWidget() {
                     repeat: Infinity,
                     ease: "easeInOut"
                   }}
-                  className={`p-3 rounded-2xl bg-gradient-to-br ${theme.iconBg} shadow-lg ${theme.shadow}`}
+                  className={`p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-gradient-to-br ${theme.iconBg} shadow-lg ${theme.shadow}`}
                 >
-                  <WeatherIcon code={weatherData.current.weatherCode} className={`h-10 w-10 ${theme.iconColor}`} />
+                  <WeatherIcon code={weatherData.current.weatherCode} className={`h-8 w-8 sm:h-10 sm:w-10 ${theme.iconColor}`} />
                 </motion.div>
-                <div>
+                <div className="min-w-0">
                   <div className="flex items-center gap-1.5 text-muted-foreground mb-0.5">
-                    <MapPin className="h-3 w-3" />
-                    <p className="text-xs font-medium truncate max-w-[120px]">
+                    <MapPin className="h-3 w-3 flex-shrink-0" />
+                    <p className="text-xs font-medium truncate max-w-[100px] sm:max-w-[120px]">
                       {weatherData.location.name}
                     </p>
                   </div>
-                  <div className="flex items-baseline gap-1">
-                    <span className={`text-4xl font-bold ${theme.iconColor}`}>
+                  <div className="flex items-baseline gap-0.5 sm:gap-1">
+                    <span className={`text-3xl sm:text-4xl font-bold ${theme.iconColor}`}>
                       {weatherData.current.temperature}
                     </span>
-                    <span className="text-xl text-muted-foreground">°C</span>
+                    <span className="text-lg sm:text-xl text-muted-foreground">°C</span>
                   </div>
                 </div>
               </div>
 
               {/* Right: Weather stats */}
-              <div className="grid grid-cols-3 gap-3">
+              <div className="flex items-center gap-1.5 sm:gap-3 ml-auto">
                 <motion.div
                   whileHover={{ scale: 1.05 }}
-                  className={`flex flex-col items-center p-2.5 rounded-xl bg-background/40 backdrop-blur-sm min-w-[52px] border ${theme.statBorder}`}
+                  className={`flex flex-col items-center p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl bg-background/40 backdrop-blur-sm min-w-[44px] sm:min-w-[52px] border ${theme.statBorder}`}
                 >
-                  <Droplets className={`h-4 w-4 ${theme.accent1} mb-1`} />
-                  <p className="font-bold text-sm">{weatherData.current.humidity}%</p>
-                  <p className="text-[10px] text-muted-foreground">Humidity</p>
+                  <Droplets className={`h-3.5 w-3.5 sm:h-4 sm:w-4 ${theme.accent1} mb-0.5 sm:mb-1`} />
+                  <p className="font-bold text-xs sm:text-sm">{weatherData.current.humidity}</p>
+                  <p className="text-[8px] sm:text-[10px] text-muted-foreground">Hum.</p>
                 </motion.div>
                 <motion.div
                   whileHover={{ scale: 1.05 }}
-                  className={`flex flex-col items-center p-2.5 rounded-xl bg-background/40 backdrop-blur-sm min-w-[52px] border ${theme.statBorder}`}
+                  className={`flex flex-col items-center p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl bg-background/40 backdrop-blur-sm min-w-[44px] sm:min-w-[52px] border ${theme.statBorder}`}
                 >
-                  <Wind className={`h-4 w-4 ${theme.accent2} mb-1`} />
-                  <p className="font-bold text-sm">{weatherData.current.windSpeed}</p>
-                  <p className="text-[10px] text-muted-foreground">km/h</p>
+                  <Wind className={`h-3.5 w-3.5 sm:h-4 sm:w-4 ${theme.accent2} mb-0.5 sm:mb-1`} />
+                  <p className="font-bold text-xs sm:text-sm">{weatherData.current.windSpeed}</p>
+                  <p className="text-[8px] sm:text-[10px] text-muted-foreground">km/h</p>
                 </motion.div>
                 <motion.div
                   whileHover={{ scale: 1.05 }}
-                  className={`flex flex-col items-center p-2.5 rounded-xl bg-background/40 backdrop-blur-sm min-w-[52px] border ${theme.statBorder}`}
+                  className={`flex flex-col items-center p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl bg-background/40 backdrop-blur-sm min-w-[44px] sm:min-w-[52px] border ${theme.statBorder}`}
                 >
-                  <Thermometer className={`h-4 w-4 ${theme.accent3} mb-1`} />
-                  <p className="font-bold text-sm">{weatherData.daily[0].maxTemp}°</p>
-                  <p className="text-[10px] text-muted-foreground">Max</p>
+                  <Thermometer className={`h-3.5 w-3.5 sm:h-4 sm:w-4 ${theme.accent3} mb-0.5 sm:mb-1`} />
+                  <p className="font-bold text-xs sm:text-sm">{weatherData.daily[0].maxTemp}°</p>
+                  <p className="text-[8px] sm:text-[10px] text-muted-foreground">Max</p>
                 </motion.div>
               </div>
             </div>
