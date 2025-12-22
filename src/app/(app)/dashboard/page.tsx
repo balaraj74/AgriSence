@@ -47,6 +47,7 @@ import { Input } from '@/components/ui/input';
 import { NotificationBell } from '@/components/notification-bell';
 import { getDashboardStats, type DashboardStats } from '@/lib/actions/farmer-context';
 import { Skeleton } from '@/components/ui/skeleton';
+import { CommandPalette } from '@/components/command-palette';
 
 interface QuickLink {
   href: string;
@@ -296,6 +297,7 @@ export default function DashboardPage() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [isLoadingStats, setIsLoadingStats] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const fetchStats = useCallback(async () => {
     if (!user?.uid) {
@@ -325,6 +327,18 @@ export default function DashboardPage() {
       fetchStats();
     }
   }, [user?.uid, fetchStats]);
+
+  // Keyboard shortcut for search (Cmd+K or Ctrl+K)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsSearchOpen(true);
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const handleRefresh = () => {
     setIsRefreshing(true);
@@ -396,20 +410,21 @@ export default function DashboardPage() {
 
       {/* Search Bar */}
       <motion.div variants={itemVariants} className="relative group">
-        <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 via-teal-500/20 to-emerald-500/20 rounded-full blur-xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-500" />
-        <div className="relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground transition-colors group-focus-within:text-emerald-400" />
-          <Input
-            placeholder="Search crops, tools, or advice..."
-            className="pl-12 h-14 rounded-full bg-card/80 backdrop-blur-sm text-base border-2 border-transparent focus:border-emerald-500/30 transition-all duration-300 shadow-lg shadow-black/5"
-          />
-          <div className="absolute right-3 top-1/2 -translate-y-1/2">
-            <kbd className="hidden sm:inline-flex h-7 select-none items-center gap-1 rounded-lg border bg-muted px-2 font-mono text-[10px] font-medium text-muted-foreground">
-              <span className="text-xs">⌘</span>K
-            </kbd>
-          </div>
-        </div>
+        <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 via-teal-500/20 to-emerald-500/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <button
+          onClick={() => setIsSearchOpen(true)}
+          className="relative w-full flex items-center gap-3 pl-12 pr-4 h-14 rounded-full bg-card/80 backdrop-blur-sm text-base border-2 border-transparent hover:border-emerald-500/30 transition-all duration-300 shadow-lg shadow-black/5 text-left"
+        >
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+          <span className="text-muted-foreground flex-1">Search crops, tools, or advice...</span>
+          <kbd className="hidden sm:inline-flex h-7 select-none items-center gap-1 rounded-lg border bg-muted px-2 font-mono text-[10px] font-medium text-muted-foreground">
+            <span className="text-xs">⌘</span>K
+          </kbd>
+        </button>
       </motion.div>
+
+      {/* Command Palette */}
+      <CommandPalette open={isSearchOpen} onOpenChange={setIsSearchOpen} />
 
       {/* Weather Widget */}
       <motion.div variants={itemVariants}>
