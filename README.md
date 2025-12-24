@@ -199,9 +199,6 @@ This project is licensed under the MIT License.
 ## 👥 Team
 
 - Balaraj R
-- Bharath C D
-- Mahesh Kumar B
-- Basavaraj M
 
 ## 📞 Contact
 
