@@ -11,7 +11,7 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
-import { googleAI } from '@genkit-ai/googleai';
+import { vertexAI } from '@genkit-ai/google-genai';
 
 const CheckLoanInsuranceEligibilityInputSchema = z.object({
   landSizeAcres: z.number().describe("The farmer's total land holding in acres."),
@@ -51,7 +51,7 @@ const loanInsuranceAssistantFlow = ai.defineFlow(
   async (input) => {
     try {
       const { output } = await ai.generate({
-          model: googleAI.model('gemini-2.5-flash'),
+          model: vertexAI.model('gemini-2.5-flash'),
           system: `You are an expert AI assistant for Indian farmers, specializing in government loans and insurance schemes. Your task is to analyze a farmer's profile and determine their eligibility for key financial products.
 
           Available Schemes to consider:

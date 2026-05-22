@@ -11,7 +11,7 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
-import { googleAI } from '@genkit-ai/googleai';
+import { vertexAI } from '@genkit-ai/google-genai';
 
 const IdentifyMedicinalPlantInputSchema = z.object({
   imageUris: z.array(z.string()).describe("A list of photos of a plant, as data URIs. Format: 'data:<mimetype>;base64,<encoded_data>'."),
@@ -64,7 +64,7 @@ If the image does not contain a recognizable medicinal plant from India or is no
 
       const { output } = await ai.generate({
           prompt: promptPayload, 
-          model: googleAI.model('gemini-2.5-flash'),
+          model: vertexAI.model('gemini-2.5-flash'),
           output: { schema: IdentifyMedicinalPlantOutputSchema }
       });
       

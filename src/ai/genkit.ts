@@ -2,12 +2,13 @@ import { config } from 'dotenv';
 config();
 
 import { genkit } from 'genkit';
-import { googleAI } from '@genkit-ai/googleai';
+import { vertexAI } from '@genkit-ai/google-genai';
 
 export const ai = genkit({
   plugins: [
-    googleAI({
-      apiKey: process.env.GOOGLE_API_KEY || process.env.GEMINI_API_KEY,
+    vertexAI({
+      projectId: process.env.GCLOUD_PROJECT || 'agrisence-1dc30',
+      location: process.env.GCLOUD_LOCATION || 'us-central1',
     }),
   ],
 });

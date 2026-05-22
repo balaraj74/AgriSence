@@ -11,7 +11,7 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
-import { googleAI } from '@genkit-ai/googleai';
+import { vertexAI } from '@genkit-ai/google-genai';
 
 
 const LiveFarmAdvisorInputSchema = z.object({
@@ -61,7 +61,7 @@ const liveFarmAdvisorFlow = ai.defineFlow(
 
       const { output } = await ai.generate({
           prompt: promptPayload, 
-          model: googleAI.model('gemini-2.5-flash'),
+          model: vertexAI.model('gemini-2.5-flash'),
           output: { schema: LiveFarmAdvisorOutputSchema }
       });
       

@@ -11,7 +11,7 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
-import { googleAI } from '@genkit-ai/googleai';
+import { vertexAI } from '@genkit-ai/google-genai';
 
 const SearchSchemesInputSchema = z.object({
   query: z.string().describe("The user's query about government schemes, which could include crop, state, or other keywords. If empty, provide a general list of major national schemes."),
@@ -37,7 +37,7 @@ export async function searchSchemes(input: SearchSchemesInput): Promise<SearchSc
 
 const prompt = ai.definePrompt({
   name: 'searchSchemesPrompt',
-  model: googleAI.model('gemini-2.5-flash'),
+  model: vertexAI.model('gemini-2.5-flash'),
   input: { schema: SearchSchemesInputSchema },
   output: { schema: SearchSchemesOutputSchema },
   prompt: `You are an expert on agricultural policies and government schemes for farmers in India.

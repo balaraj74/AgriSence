@@ -8,7 +8,7 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
-import { googleAI } from '@genkit-ai/googleai';
+import { vertexAI } from '@genkit-ai/google-genai';
 
 const PredictMarketPriceInputSchema = z.object({
   cropName: z.string().describe("The name of the crop, e.g., 'Wheat'."),
@@ -107,7 +107,7 @@ Return JSON with:
 
     try {
       const { output } = await ai.generate({
-        model: googleAI.model('gemini-2.5-flash'),
+        model: vertexAI.model('gemini-2.5-flash'),
         prompt: prompt,
         output: { schema: PredictMarketPriceOutputSchema },
         config: { temperature: 0.5 },

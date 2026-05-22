@@ -12,7 +12,7 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import { getWeatherInfo } from './weather-search';
-import { googleAI } from '@genkit-ai/googleai';
+import { vertexAI } from '@genkit-ai/google-genai';
 import { addDiagnosisRecord, getDiagnosisHistory } from '@/lib/actions/diagnoses';
 import { storage } from '@/lib/firebase/config';
 import { ref, uploadString, getDownloadURL } from 'firebase/storage';
@@ -139,7 +139,7 @@ ${historyData}
       
       const { output } = await ai.generate({
         prompt: promptPayload,
-        model: googleAI.model('gemini-2.5-flash'),
+        model: vertexAI.model('gemini-2.5-flash'),
         output: { schema: DiagnoseCropDiseaseOutputSchema },
       });
 

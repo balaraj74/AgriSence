@@ -12,7 +12,7 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
-import { googleAI } from '@genkit-ai/googleai';
+import { vertexAI } from '@genkit-ai/google-genai';
 
 const MarketPriceSearchInputSchema = z.object({
   question: z.string().describe("An optional user question about specific crop prices. If empty, the AI should provide a general overview of major crop prices in India."),
@@ -117,7 +117,7 @@ Provide a summary of overall market sentiment for today.`;
 
     try {
       const { output } = await ai.generate({
-        model: googleAI.model('gemini-2.5-flash'),
+        model: vertexAI.model('gemini-2.5-flash'),
         system: systemPrompt,
         prompt: userPrompt,
         output: { schema: MarketPriceSearchOutputSchema },

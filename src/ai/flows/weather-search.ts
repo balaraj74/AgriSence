@@ -11,7 +11,7 @@
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
 import fetch from 'node-fetch';
-import { googleAI } from '@genkit-ai/googleai';
+import { vertexAI } from '@genkit-ai/google-genai';
 
 const GetWeatherInfoInputSchema = z.object({
   lat: z.number().describe('The latitude for the location.'),
@@ -111,7 +111,7 @@ const weatherTool = ai.defineTool(
 
 const weatherPrompt = ai.definePrompt({
   name: 'summarizeWeather',
-  model: googleAI.model('gemini-2.5-flash'),
+  model: vertexAI.model('gemini-2.5-flash'),
   input: { schema: GetWeatherInfoOutputSchema.omit({ summary: true }) },
   output: { schema: z.object({ summary: GetWeatherInfoOutputSchema.shape.summary }) },
   prompt: `You are a helpful weather assistant. Given the following weather data in JSON format, provide a short, conversational summary of the overall weather. For example "Looks like a clear day, but expect some rain showers later in the week."

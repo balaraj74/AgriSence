@@ -8,7 +8,7 @@
  * - gemini-2.5-pro: Balanced performance and capability
  */
 
-import { googleAI } from '@genkit-ai/googleai';
+import { vertexAI } from '@genkit-ai/google-genai';
 
 // Model selection - Use preview for cutting-edge features, stable for production
 const USE_PREVIEW_MODEL = true;
@@ -28,7 +28,7 @@ const MODELS = {
  * Uses the latest stable model for reliable results
  */
 export function getPrimaryModel() {
-    return googleAI.model(USE_PREVIEW_MODEL ? MODELS.GEMINI_3_FLASH : MODELS.GEMINI_2_FLASH);
+    return vertexAI.model(USE_PREVIEW_MODEL ? MODELS.GEMINI_3_FLASH : MODELS.GEMINI_2_FLASH);
 }
 
 /**
@@ -36,7 +36,7 @@ export function getPrimaryModel() {
  * Flash model has excellent multimodal capabilities
  */
 export function getVisionModel() {
-    return googleAI.model(MODELS.GEMINI_3_FLASH);
+    return vertexAI.model(MODELS.GEMINI_3_FLASH);
 }
 
 /**

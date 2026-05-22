@@ -8,7 +8,7 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { googleAI } from '@genkit-ai/googleai';
+import { vertexAI } from '@genkit-ai/google-genai';
 import { GetSatelliteHealthInputSchema, GetSatelliteHealthOutputSchema } from '@/types';
 import type { GetSatelliteHealthInput, GetSatelliteHealthOutput } from '@/types';
 
@@ -27,7 +27,7 @@ const getSatelliteHealthFlow = ai.defineFlow(
   async (input) => {
     try {
       const { output } = await ai.generate({
-          model: googleAI.model('gemini-2.5-flash'),
+          model: vertexAI.model('gemini-2.5-flash'),
           system: `You are an expert agricultural AI specializing in satellite imagery analysis. Your task is to simulate a crop health report based on a farmer's field data for the last 30 days. The entire response must be in ${input.language}.
 
           CRITICAL: The data you generate must be for a rolling 30-day window, ending on today's date.

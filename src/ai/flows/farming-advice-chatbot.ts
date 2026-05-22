@@ -12,7 +12,7 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
-import { googleAI } from '@genkit-ai/googleai';
+import { vertexAI } from '@genkit-ai/google-genai';
 
 const FarmingAdviceChatbotInputSchema = z.object({
   question: z.string().describe('The question asked by the farmer.'),
@@ -88,7 +88,7 @@ Your role is to provide:
 ${input.farmerContext ? `\n**Farmer's Context:**\n${input.farmerContext}` : ''}${historyContext}`;
 
       const { output } = await ai.generate({
-        model: googleAI.model('gemini-2.5-flash'),
+        model: vertexAI.model('gemini-2.5-flash'),
         system: systemPrompt,
         prompt: `Farmer's Question: "${input.question}"
 
