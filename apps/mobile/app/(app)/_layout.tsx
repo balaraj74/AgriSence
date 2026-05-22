@@ -44,9 +44,6 @@ export default function AppLayout() {
       <Stack.Screen name="market" options={{ presentation: 'card', headerShown: false }} />
       <Stack.Screen name="market-matchmaking" options={{ presentation: 'card', headerShown: false }} />
       <Stack.Screen name="land-records" options={{ presentation: 'card', headerShown: false }} />
-      <Stack.Screen name="crop-calendar" options={{ presentation: 'card', headerShown: false }} />
-      <Stack.Screen name="all-farms" options={{ presentation: 'card', headerShown: false }} />
-      <Stack.Screen name="statistic" options={{ presentation: 'card', headerShown: false }} />
       <Stack.Screen name="voice" options={{ presentation: 'card', headerShown: false }} />
       <Stack.Screen name="live-advisor" options={{ presentation: 'card', headerShown: false }} />
       <Stack.Screen name="crops" options={{ presentation: 'card', headerShown: false }} />

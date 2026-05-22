@@ -22,10 +22,25 @@ export const useAuthStore = create<AuthState>()(
     setLoading: (isLoading) => set({ isLoading }),
 
     initialize: () => {
+      const timeoutId = setTimeout(() => {
+        set((state) => {
+          if (state.isLoading) {
+            console.warn('[AuthStore] Auth initialization timed out, forcing isLoading to false');
+            return { isLoading: false, isInitialized: true };
+          }
+          return {};
+        });
+      }, 2500);
+
       const unsubscribe = onAuthStateChanged((user) => {
+        clearTimeout(timeoutId);
         set({ user, isLoading: false, isInitialized: true });
       });
-      return unsubscribe;
+
+      return () => {
+        clearTimeout(timeoutId);
+        unsubscribe();
+      };
     },
   }))
 );
