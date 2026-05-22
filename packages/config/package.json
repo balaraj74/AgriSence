@@ -1,0 +1,16 @@
+{
+  "name": "@agrisence/config",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Shared ESLint + TypeScript base configurations for all AgriSence apps",
+  "exports": {
+    "./tsconfig/base": "./tsconfig/base.json",
+    "./tsconfig/next": "./tsconfig/next.json",
+    "./tsconfig/react-native": "./tsconfig/react-native.json",
+    "./eslint/base": "./eslint/base.js",
+    "./eslint/next": "./eslint/next.js"
+  },
+  "devDependencies": {
+    "typescript": "^5"
+  }
+}

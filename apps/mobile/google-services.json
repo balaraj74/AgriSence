@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "948776556057",
+    "firebase_url": "https://agrisence-1dc30-default-rtdb.firebaseio.com",
+    "project_id": "agrisence-1dc30",
+    "storage_bucket": "agrisence-1dc30.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:948776556057:android:d250cc852dfb6e2d01bc88",
+        "android_client_info": {
+          "package_name": "com.agrisence"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "948776556057-k7njbrv2m3d88f23irtpgjq71pl0g046.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDO_VMKZ1CZOn9vx5HBtG2q1mrtcdkF10g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "948776556057-k7njbrv2m3d88f23irtpgjq71pl0g046.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

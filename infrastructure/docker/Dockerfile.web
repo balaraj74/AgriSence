@@ -1,0 +1,41 @@
+# ──────────────────────────────────────────────────────────────────
+# AgriSence Web App — Docker Image
+# apps/web/Dockerfile
+# ──────────────────────────────────────────────────────────────────
+FROM node:20-alpine AS base
+
+# ── Install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+WORKDIR /app
+
+# ── Copy workspace manifests
+COPY pnpm-workspace.yaml ./
+COPY package.json ./
+COPY turbo.json ./
+COPY packages/types/package.json ./packages/types/
+COPY packages/config/package.json ./packages/config/
+COPY packages/constants/package.json ./packages/constants/
+COPY apps/web/package.json ./apps/web/
+
+# ── Install deps
+RUN pnpm install --frozen-lockfile
+
+# ── Copy all source
+COPY packages/ ./packages/
+COPY apps/web/ ./apps/web/
+
+# ── Build
+RUN pnpm --filter @agrisence/web build
+
+# ── Production image
+FROM node:20-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+
+COPY --from=base /app/apps/web/.next/standalone ./
+COPY --from=base /app/apps/web/.next/static ./apps/web/.next/static
+COPY --from=base /app/apps/web/public ./apps/web/public
+
+EXPOSE 3000
+CMD ["node", "apps/web/server.js"]

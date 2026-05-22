@@ -1,0 +1,18 @@
+{
+  "name": "@agrisence/analytics",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AgriSence shared analytics package [stub — not yet implemented]",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "devDependencies": {
+    "@agrisence/config": "workspace:*",
+    "typescript": "^5"
+  }
+}
