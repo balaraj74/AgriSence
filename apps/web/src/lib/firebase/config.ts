@@ -39,7 +39,12 @@ if (typeof window !== 'undefined') {
 const auth: Auth = getAuth(app);
 const db: Firestore = getFirestore(app);
 const storage: FirebaseStorage = getStorage(app);
-const realtimeDb: Database = getDatabase(app);
+let realtimeDb: Database | null = null;
+try {
+    realtimeDb = getDatabase(app);
+} catch (e) {
+    console.warn("Firebase Realtime Database could not be initialized:", e);
+}
 
 export { app, db, storage, auth, analytics, realtimeDb, firebaseConfig };
 

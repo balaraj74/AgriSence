@@ -1,7 +1,11 @@
 package com.agrisence.app
+import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.view.ViewTreeObserver
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
@@ -12,11 +16,24 @@ import expo.modules.ReactActivityDelegateWrapper
 
 class MainActivity : ReactActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
-    // Set the theme to AppTheme BEFORE onCreate to support
-    // coloring the background, status bar, and navigation bar.
-    // This is required for expo-splash-screen.
-    setTheme(R.style.AppTheme);
+    // @generated begin expo-splashscreen - expo prebuild (DO NOT MODIFY) sync-f3ff59a738c56c9a6119210cb55f0b613eb8b6af
+    SplashScreenManager.registerOnActivity(this)
+    // @generated end expo-splashscreen
     super.onCreate(null)
+
+    // ── Splash screen safety net ──────────────────────────────────────────────
+    // expo-splash-screen v0.29 with New Architecture can deadlock if JS doesn't
+    // call hideAsync() fast enough. Force-clear the pre-draw listener after 4s.
+    Handler(Looper.getMainLooper()).postDelayed({
+      try {
+        val decorView = window.decorView
+        val vto = decorView.viewTreeObserver
+        if (vto.isAlive) {
+          // Force invalidate to let drawing proceed
+          decorView.invalidate()
+        }
+      } catch (_: Exception) { /* ignore */ }
+    }, 4000L)
   }
 
   /**

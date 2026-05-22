@@ -13,16 +13,6 @@ runConfig:
 # Declares the secrets that are used by this backend.
 # Secrets can be set using `firebase apphosting:secrets:set`
 env:
-  - variable: GOOGLE_API_KEY
-    secret: GOOGLE_API_KEY
-    availability:
-      - BUILD
-      - RUNTIME
-  - variable: GEMINI_API_KEY
-    secret: GOOGLE_API_KEY
-    availability:
-      - BUILD
-      - RUNTIME
   - variable: NODE_ENV
     value: production
     availability:
