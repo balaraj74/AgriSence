@@ -1,18 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   TouchableOpacity,
   ScrollView,
+  Alert,
+  Platform,
+  Image,
+  Switch,
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../../src/theme';
 import { useAuth } from '../../../src/hooks/useAuth';
 import { signOut } from '../../../src/services/auth';
-import { Card, CardContent } from '../../../src/components/ui/Card';
-import { Button } from '../../../src/components/ui/Button';
 import {
   User,
   LogOut,
@@ -22,136 +24,341 @@ import {
   Bell,
   ChevronRight,
   BookOpen,
+  Settings,
+  Phone,
+  CircleHelp as HelpCircle,
+  Pen as Edit3,
 } from 'lucide-react-native';
 
+// ─── Initials Avatar ──────────────────────────────────────────────────────────
+function InitialsAvatar({ name, size = 80 }: { name: string; size?: number }) {
+  const cleanName = (name || 'Farmer').trim();
+  const parts = cleanName.split(/\s+/).filter(Boolean);
+  let initials = '';
+  if (parts.length >= 2 && parts[0] && parts[parts.length - 1]) {
+    const firstChar = parts[0][0] || '';
+    const lastChar = parts[parts.length - 1]![0] || '';
+    initials = `${firstChar}${lastChar}`.toUpperCase();
+  } else if (parts[0]) {
+    initials = parts[0].slice(0, 2).toUpperCase();
+  } else {
+    initials = 'FA';
+  }
+  return (
+    <View
+      style={[
+        initialsStyles.container,
+        { width: size, height: size, borderRadius: size / 2 },
+      ]}
+    >
+      <Text style={[initialsStyles.text, { fontSize: size * 0.32 }]}>
+        {initials}
+      </Text>
+    </View>
+  );
+}
+
+const initialsStyles = StyleSheet.create({
+  container: {
+    backgroundColor: '#ff7a00',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  text: {
+    color: '#fff',
+    fontWeight: '700',
+  },
+});
+
+// ─── Screen ───────────────────────────────────────────────────────────────────
 export default function ProfileScreen() {
   const router = useRouter();
   const { user } = useAuth();
   const { colors, typography, spacing, colorScheme, toggleTheme } = useTheme();
+  const [signingOut, setSigningOut] = useState(false);
 
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-      router.replace('/(auth)');
-    } catch (error) {
-      console.error('Failed to sign out:', error);
-    }
+  const isDark = colorScheme === 'dark';
+  const insets = useSafeAreaInsets();
+
+  const displayName = user?.displayName ?? 'Farmer Partner';
+  const firstName = displayName.split(' ')[0] ?? displayName;
+  const hasPhoto = !!user?.photoURL;
+
+  const handleSignOut = () => {
+    Alert.alert(
+      'Sign Out',
+      'Are you sure you want to sign out?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Sign Out',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              setSigningOut(true);
+              await signOut();
+              // Navigate to auth screen
+              router.replace('/(auth)');
+            } catch (error) {
+              setSigningOut(false);
+              console.error('Failed to sign out:', error);
+              Alert.alert('Error', 'Failed to sign out. Please try again.');
+            }
+          },
+        },
+      ],
+    );
   };
 
   const profileOptions = [
     {
       title: 'Notifications',
-      desc: 'Preferences, alerts & sound controls',
+      desc: 'Alerts, sounds & preferences',
       icon: Bell,
-      onPress: () => {},
+      color: '#ff7a00',
+      onPress: () => Alert.alert('Coming Soon', 'Notification settings will be available soon.'),
     },
     {
       title: 'Privacy & Security',
-      desc: 'Biometrics & account settings',
+      desc: 'Biometrics & account safety',
       icon: Shield,
-      onPress: () => {},
+      color: '#8b5cf6',
+      onPress: () => Alert.alert('Coming Soon', 'Security settings will be available soon.'),
     },
     {
       title: 'Farming Guide',
-      desc: 'General cultivation recommendations',
+      desc: 'Cultivation recommendations',
       icon: BookOpen,
-      onPress: () => {},
+      color: '#10b981',
+      onPress: () => Alert.alert('Coming Soon', 'Farming guide will be available soon.'),
+    },
+    {
+      title: 'Support & Help',
+      desc: 'FAQs and contact us',
+      icon: HelpCircle,
+      color: '#2563eb',
+      onPress: () => Alert.alert('Coming Soon', 'Support centre will be available soon.'),
+    },
+    {
+      title: 'Contact AgriSence',
+      desc: '+91 90000 00000',
+      icon: Phone,
+      color: '#d97706',
+      onPress: () => Alert.alert('Contact Us', 'Phone: +91 90000 00000\nEmail: support@agrisence.com'),
     },
   ];
 
+  // Light glassmorphic card background
+  const glassCardBg = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.85)';
+  const glassBorder = isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.06)';
+
   return (
-    <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
-      <View style={[styles.header, { borderBottomColor: colors.border }]}>
-        <Text style={[styles.headerTitle, { color: colors.foreground, fontFamily: typography.fontFamily.sansBold }]}>
+    <View style={[styles.safe, { backgroundColor: isDark ? '#0f1117' : '#f4f6f9' }]}>
+      {/* ── Header ──────────────────────────────────────────────────────── */}
+      <View style={[styles.header, { backgroundColor: isDark ? '#0f1117' : '#f4f6f9', paddingTop: insets.top + 10 }]}>
+        <Text
+          style={[
+            styles.headerTitle,
+            { color: colors.foreground, fontFamily: typography.fontFamily.sansBold },
+          ]}
+        >
           My Profile
         </Text>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          onPress={() => Alert.alert('Edit Profile', 'Profile editing coming soon.')}
+          style={[styles.editBtn, { backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)' }]}
+        >
+          <Edit3 size={18} color={colors.mutedForeground} />
+        </TouchableOpacity>
       </View>
 
-      <ScrollView contentContainerStyle={{ padding: spacing[4], gap: spacing[6] }}>
-        {/* User Card */}
-        <Card>
-          <CardContent style={[styles.userCardContent, { padding: spacing[4] }]}>
-            <View style={[styles.avatar, { backgroundColor: `${colors.primary}15` }]}>
-              <User size={32} color={colors.primary} />
-            </View>
-            <View style={styles.userInfo}>
-              <Text style={[styles.userName, { color: colors.foreground, fontFamily: typography.fontFamily.sansBold }]}>
-                {user?.displayName || 'Farmer Partner'}
-              </Text>
-              <Text style={[styles.userEmail, { color: colors.mutedForeground, fontFamily: typography.fontFamily.sans }]}>
-                {user?.email || 'farmer@agrisence.org'}
-              </Text>
-            </View>
-          </CardContent>
-        </Card>
-
-        {/* Theme Settings Card */}
-        <Card>
-          <CardContent style={[styles.settingsCardContent, { padding: spacing[4] }]}>
-            <View style={styles.settingsLabelRow}>
-              {colorScheme === 'dark' ? (
-                <Moon size={22} color={colors.primary} />
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 120, paddingTop: 8 }}
+      >
+        {/* ── Hero User Card ───────────────────────────────────────────── */}
+        <View
+          style={[
+            styles.heroCard,
+            {
+              backgroundColor: glassCardBg,
+              borderColor: glassBorder,
+              ...Platform.select({
+                ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.08, shadowRadius: 16 },
+                android: { elevation: 4 },
+              }),
+            },
+          ]}
+        >
+          <View style={styles.heroTop}>
+            {/* Avatar */}
+            <View style={[styles.avatarRing, { borderColor: '#ff7a00' }]}>
+              {hasPhoto ? (
+                <Image source={{ uri: user!.photoURL! }} style={styles.avatarImg} />
               ) : (
-                <Sun size={22} color={colors.primary} />
+                <InitialsAvatar name={displayName} size={76} />
               )}
-              <View>
-                <Text style={[styles.settingTitle, { color: colors.foreground, fontFamily: typography.fontFamily.sansSemiBold }]}>
-                  Dark Theme
-                </Text>
-                <Text style={[styles.settingDesc, { color: colors.mutedForeground, fontFamily: typography.fontFamily.sans }]}>
-                  Enable light or dark visual aesthetic
+            </View>
+            {/* Info */}
+            <View style={styles.heroInfo}>
+              <Text
+                style={[styles.userName, { color: colors.foreground, fontFamily: typography.fontFamily.sansBold }]}
+              >
+                {displayName}
+              </Text>
+              <Text
+                style={[styles.userEmail, { color: colors.mutedForeground, fontFamily: typography.fontFamily.sans }]}
+              >
+                {user?.email ?? 'farmer@agrisence.org'}
+              </Text>
+              <View style={[styles.badge, { backgroundColor: '#ff7a0018', borderColor: '#ff7a0030' }]}>
+                <View style={styles.greenDot} />
+                <Text style={[styles.badgeText, { fontFamily: typography.fontFamily.sansMedium, color: '#ff7a00' }]}>
+                  Active Farmer
                 </Text>
               </View>
             </View>
-            <Button
-              variant="secondary"
-              size="sm"
-              onPress={toggleTheme}
-              style={styles.toggleButton}
-            >
-              {colorScheme === 'dark' ? 'Disable' : 'Enable'}
-            </Button>
-          </CardContent>
-        </Card>
+          </View>
 
-        {/* Options List */}
-        <View style={{ gap: spacing[3] }}>
+          {/* Stats row */}
+          <View style={[styles.statsRow, { borderTopColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)' }]}>
+            {[
+              { label: 'Fields', value: '3' },
+              { label: 'Crops', value: '5' },
+              { label: 'Season', value: 'Kharif' },
+            ].map((s, i, arr) => (
+              <View
+                key={s.label}
+                style={[
+                  styles.statItem,
+                  i < arr.length - 1 && {
+                    borderRightWidth: 1,
+                    borderRightColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',
+                  },
+                ]}
+              >
+                <Text style={[styles.statValue, { color: colors.foreground, fontFamily: typography.fontFamily.sansBold }]}>
+                  {s.value}
+                </Text>
+                <Text style={[styles.statLabel, { color: colors.mutedForeground, fontFamily: typography.fontFamily.sans }]}>
+                  {s.label}
+                </Text>
+              </View>
+            ))}
+          </View>
+        </View>
+
+        {/* ── Theme Toggle Card ────────────────────────────────────────── */}
+        <View
+          style={[
+            styles.glassCard,
+            {
+              backgroundColor: glassCardBg,
+              borderColor: glassBorder,
+              marginTop: 16,
+              ...Platform.select({
+                ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 10 },
+                android: { elevation: 3 },
+              }),
+            },
+          ]}
+        >
+          <View style={styles.themeRow}>
+            <View style={[styles.themeIconBox, { backgroundColor: isDark ? '#1e2a3a' : '#fff3e6' }]}>
+              {isDark ? (
+                <Moon size={20} color="#60a5fa" />
+              ) : (
+                <Sun size={20} color="#ff7a00" />
+              )}
+            </View>
+            <View style={{ flex: 1, marginLeft: 14 }}>
+              <Text style={[styles.settingTitle, { color: colors.foreground, fontFamily: typography.fontFamily.sansSemiBold }]}>
+                {isDark ? 'Dark Mode' : 'Light Mode'}
+              </Text>
+              <Text style={[styles.settingDesc, { color: colors.mutedForeground, fontFamily: typography.fontFamily.sans }]}>
+                Switch visual appearance
+              </Text>
+            </View>
+            <Switch
+              value={isDark}
+              onValueChange={toggleTheme}
+              trackColor={{ false: '#e5e7eb', true: '#374151' }}
+              thumbColor={isDark ? '#60a5fa' : '#ff7a00'}
+            />
+          </View>
+        </View>
+
+        {/* ── Settings List ─────────────────────────────────────────────── */}
+        <View
+          style={[
+            styles.glassCard,
+            {
+              backgroundColor: glassCardBg,
+              borderColor: glassBorder,
+              marginTop: 16,
+              overflow: 'hidden',
+              ...Platform.select({
+                ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 10 },
+                android: { elevation: 3 },
+              }),
+            },
+          ]}
+        >
           {profileOptions.map((item, idx) => (
             <TouchableOpacity
               key={idx}
-              style={[styles.optionRow, { backgroundColor: colors.card, borderColor: colors.border }]}
+              style={[
+                styles.optionRow,
+                idx > 0 && {
+                  borderTopWidth: 1,
+                  borderTopColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)',
+                },
+              ]}
               onPress={item.onPress}
-              activeOpacity={0.7}
+              activeOpacity={0.65}
             >
-              <View style={styles.optionLeft}>
-                <View style={[styles.optionIconBox, { backgroundColor: `${colors.primary}15` }]}>
-                  <item.icon size={20} color={colors.primary} />
-                </View>
-                <View>
-                  <Text style={[styles.optionName, { color: colors.foreground, fontFamily: typography.fontFamily.sansSemiBold }]}>
-                    {item.title}
-                  </Text>
-                  <Text style={[styles.optionDesc, { color: colors.mutedForeground, fontFamily: typography.fontFamily.sans }]}>
-                    {item.desc}
-                  </Text>
-                </View>
+              <View style={[styles.optionIconBox, { backgroundColor: `${item.color}15` }]}>
+                <item.icon size={20} color={item.color} />
               </View>
-              <ChevronRight size={20} color={colors.mutedForeground} />
+              <View style={styles.optionText}>
+                <Text style={[styles.optionName, { color: colors.foreground, fontFamily: typography.fontFamily.sansSemiBold }]}>
+                  {item.title}
+                </Text>
+                <Text style={[styles.optionDesc, { color: colors.mutedForeground, fontFamily: typography.fontFamily.sans }]}>
+                  {item.desc}
+                </Text>
+              </View>
+              <ChevronRight size={18} color={colors.mutedForeground} />
             </TouchableOpacity>
           ))}
         </View>
 
-        <Button
-          variant="destructive"
-          size="lg"
+        {/* ── App Info ─────────────────────────────────────────────────── */}
+        <Text style={[styles.versionText, { color: colors.mutedForeground, fontFamily: typography.fontFamily.sans }]}>
+          AgriSence v1.0.0 — Made with 💚 for Indian Farmers
+        </Text>
+
+        {/* ── Sign Out Button ──────────────────────────────────────────── */}
+        <TouchableOpacity
+          style={[
+            styles.signOutBtn,
+            {
+              backgroundColor: isDark ? 'rgba(239,68,68,0.12)' : 'rgba(220,38,38,0.08)',
+              borderColor: isDark ? 'rgba(239,68,68,0.3)' : 'rgba(220,38,38,0.2)',
+            },
+          ]}
           onPress={handleSignOut}
-          style={styles.signOutButton}
+          activeOpacity={0.7}
+          disabled={signingOut}
         >
-          <LogOut size={20} color="#ffffff" style={{ marginRight: spacing[2] }} />
-          Sign Out
-        </Button>
+          <LogOut size={20} color="#dc2626" />
+          <Text style={[styles.signOutText, { fontFamily: typography.fontFamily.sansSemiBold }]}>
+            {signingOut ? 'Signing out...' : 'Sign Out'}
+          </Text>
+        </TouchableOpacity>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -160,44 +367,112 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    padding: 16,
-    borderBottomWidth: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 14,
   },
   headerTitle: {
-    fontSize: 22,
+    fontSize: 24,
+    letterSpacing: -0.5,
   },
-  userCardContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 16,
-  },
-  avatar: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
+  editBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  userInfo: {
+
+  // Hero card
+  heroCard: {
+    borderRadius: 20,
+    borderWidth: 1,
+    overflow: 'hidden',
+  },
+  heroTop: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 18,
+    gap: 16,
+  },
+  avatarRing: {
+    width: 82,
+    height: 82,
+    borderRadius: 41,
+    borderWidth: 3,
+    overflow: 'hidden',
+    flexShrink: 0,
+  },
+  avatarImg: {
+    width: '100%',
+    height: '100%',
+  },
+  heroInfo: {
     flex: 1,
+    gap: 3,
   },
   userName: {
-    fontSize: 18,
+    fontSize: 19,
+    letterSpacing: -0.4,
   },
   userEmail: {
-    fontSize: 14,
-    marginTop: 2,
+    fontSize: 13,
   },
-  settingsCardContent: {
+  badge: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    borderWidth: 1,
+    borderRadius: 12,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    alignSelf: 'flex-start',
+    marginTop: 4,
+    gap: 5,
   },
-  settingsLabelRow: {
+  greenDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#4ade80',
+  },
+  badgeText: {
+    fontSize: 11,
+  },
+  statsRow: {
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
+    borderTopWidth: 1,
+  },
+  statItem: {
     flex: 1,
+    alignItems: 'center',
+    paddingVertical: 14,
+    gap: 2,
+  },
+  statValue: {
+    fontSize: 18,
+  },
+  statLabel: {
+    fontSize: 11,
+  },
+
+  // Glass card
+  glassCard: {
+    borderRadius: 20,
+    borderWidth: 1,
+  },
+  themeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+  },
+  themeIconBox: {
+    width: 42,
+    height: 42,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   settingTitle: {
     fontSize: 15,
@@ -206,40 +481,53 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 2,
   },
-  toggleButton: {
-    marginLeft: 12,
-  },
+
+  // Options
   optionRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 12,
-    borderWidth: 1,
-    borderRadius: 12,
-  },
-  optionLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
+    padding: 14,
+    gap: 14,
   },
   optionIconBox: {
-    width: 40,
-    height: 40,
-    borderRadius: 10,
+    width: 42,
+    height: 42,
+    borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  optionText: {
+    flex: 1,
   },
   optionName: {
     fontSize: 15,
   },
   optionDesc: {
     fontSize: 12,
+    marginTop: 2,
   },
-  signOutButton: {
-    width: '100%',
-    alignSelf: 'stretch',
+
+  // Version
+  versionText: {
+    textAlign: 'center',
+    fontSize: 12,
+    marginTop: 24,
+    marginBottom: 12,
+  },
+
+  // Sign out
+  signOutBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    gap: 10,
+    borderWidth: 1,
+    borderRadius: 16,
+    paddingVertical: 16,
+    marginBottom: 8,
+  },
+  signOutText: {
+    fontSize: 16,
+    color: '#dc2626',
   },
 });

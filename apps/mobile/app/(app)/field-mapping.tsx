@@ -3,7 +3,7 @@ import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, Alert } fr
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useQueryClient } from '@tanstack/react-query';
 import { Plus, Pencil, Trash2 } from 'lucide-react-native';
-import MapView, { Polygon, Marker } from 'react-native-maps';
+import MapView, { Polygon, Marker, Polyline } from 'react-native-maps';
 import { useTheme } from '../../src/theme';
 import { useAuth } from '../../src/hooks/useAuth';
 import { Header } from '../../src/components/ui/Header';
@@ -66,7 +66,41 @@ function useFieldMappingData(userId: string | undefined) {
     if (!userId) return;
     try {
       const [fieldData, cropData] = await Promise.all([getFields(userId), getCrops(userId)]);
-      setFields(fieldData);
+      const normalizedFields = fieldData.map(f => {
+        const coords = (f.coordinates || []).map((c: any) => {
+          let latitude = 0;
+          let longitude = 0;
+          if (c) {
+            if (typeof c.latitude === 'number') latitude = c.latitude;
+            else if (typeof c.lat === 'number') latitude = c.lat;
+            
+            if (typeof c.longitude === 'number') longitude = c.longitude;
+            else if (typeof c.lng === 'number') longitude = c.lng;
+          }
+          return { latitude, longitude };
+        }).filter(c => c.latitude !== 0 || c.longitude !== 0);
+
+        let centroid = { latitude: 20.5937, longitude: 78.9629 };
+        if (f.centroid) {
+          const centroidVal = f.centroid as any;
+          const lat = typeof centroidVal.latitude === 'number' ? centroidVal.latitude : typeof centroidVal.lat === 'number' ? centroidVal.lat : null;
+          const lng = typeof centroidVal.longitude === 'number' ? centroidVal.longitude : typeof centroidVal.lng === 'number' ? centroidVal.lng : null;
+          if (lat !== null && lng !== null) {
+            centroid = { latitude: lat, longitude: lng };
+          }
+        } else if (coords.length > 0) {
+          const sumLat = coords.reduce((sum, c) => sum + c.latitude, 0);
+          const sumLng = coords.reduce((sum, c) => sum + c.longitude, 0);
+          centroid = { latitude: sumLat / coords.length, longitude: sumLng / coords.length };
+        }
+
+        return {
+          ...f,
+          coordinates: coords,
+          centroid,
+        };
+      });
+      setFields(normalizedFields);
       setCrops(cropData);
     } catch {
       Alert.alert('Error', 'Failed to load fields and crops.');
@@ -183,9 +217,19 @@ function FormFields({ name, setName, survey, setSurvey, village, setVillage, cro
 
 function FieldItem({ field, isSelected, onPress, onEdit, onDelete }: any) {
   const { colors, spacing } = useTheme();
+  const isLight = colors.background === '#ffffff';
+  
   return (
-    <Card style={{ backgroundColor: colors.card, borderColor: isSelected ? colors.primary : colors.border, marginBottom: spacing[2] }}>
-      <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity activeOpacity={0.7} onPress={onPress} style={{ marginBottom: spacing[2] }}>
+      <Card style={{ 
+        backgroundColor: isLight ? 'rgba(255, 255, 255, 0.85)' : 'rgba(28, 28, 30, 0.85)', 
+        borderColor: isSelected ? colors.primary : colors.border,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: isLight ? 0.08 : 0.2,
+        shadowRadius: 8,
+        elevation: 3,
+      }}>
         <CardContent style={{ padding: spacing[3], flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
           <View style={{ flex: 1, gap: 2 }}>
             <Text style={{ fontSize: 14, fontWeight: '700', color: colors.foreground }}>{field.fieldName}</Text>
@@ -193,12 +237,12 @@ function FieldItem({ field, isSelected, onPress, onEdit, onDelete }: any) {
             <Text style={{ fontSize: 12, color: colors.primary, fontWeight: '600' }}>{field.area.toFixed(2)} ac / {field.perimeter.toFixed(1)} m</Text>
           </View>
           <View style={{ flexDirection: 'row', gap: spacing[1] }}>
-            <TouchableOpacity onPress={onEdit} style={{ padding: 6 }}><Pencil size={14} color={colors.mutedForeground} /></TouchableOpacity>
-            <TouchableOpacity onPress={onDelete} style={{ padding: 6 }}><Trash2 size={14} color={colors.destructive} /></TouchableOpacity>
+            <TouchableOpacity activeOpacity={0.6} onPress={onEdit} style={{ padding: 6, backgroundColor: `${colors.primary}15`, borderRadius: 8 }}><Pencil size={14} color={colors.primary} /></TouchableOpacity>
+            <TouchableOpacity activeOpacity={0.6} onPress={onDelete} style={{ padding: 6, backgroundColor: `${colors.destructive}15`, borderRadius: 8 }}><Trash2 size={14} color={colors.destructive} /></TouchableOpacity>
           </View>
         </CardContent>
-      </TouchableOpacity>
-    </Card>
+      </Card>
+    </TouchableOpacity>
   );
 }
 
@@ -226,11 +270,14 @@ export default function FieldMappingScreen() {
           mapType="hybrid"
           onPress={screen.handleMapPress}
         >
-          {!screen.isDrawing && fields.map((f) => (
+          {!screen.isDrawing && fields.filter(f => f.coordinates.length >= 3).map((f) => (
             <Polygon key={f.id} coordinates={f.coordinates} strokeColor={screen.selectedFieldId === f.id ? colors.primary : '#ffffff'} strokeWidth={2} fillColor={screen.selectedFieldId === f.id ? `${colors.primary}50` : 'rgba(255,255,255,0.2)'} tappable onPress={() => screen.setSelectedFieldId(f.id)} />
           ))}
-          {screen.isDrawing && form.coordinates.length > 0 && (
+          {screen.isDrawing && form.coordinates.length >= 3 && (
             <Polygon coordinates={form.coordinates} strokeColor={colors.primary} strokeWidth={2} fillColor={`${colors.primary}30`} />
+          )}
+          {screen.isDrawing && form.coordinates.length === 2 && (
+            <Polyline coordinates={form.coordinates} strokeColor={colors.primary} strokeWidth={2} />
           )}
           {screen.isDrawing && form.coordinates.map((coord, idx) => (
             <Marker key={idx} coordinate={coord} onPress={() => form.setCoordinates((prev) => prev.filter((_, i) => i !== idx))} />

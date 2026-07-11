@@ -4,11 +4,11 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  SafeAreaView,
   TouchableOpacity,
   Linking,
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../../src/theme';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../../../src/components/ui/Card';
 import { Button } from '../../../src/components/ui/Button';
@@ -26,6 +26,7 @@ import {
 export default function AiHubScreen() {
   const router = useRouter();
   const { colors, typography, spacing } = useTheme();
+  const insets = useSafeAreaInsets();
 
   const aiItems = [
     {
@@ -49,8 +50,8 @@ export default function AiHubScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
-      <View style={[styles.header, { borderBottomColor: colors.border }]}>
+    <View style={[styles.safe, { backgroundColor: colors.background }]}>
+      <View style={[styles.header, { borderBottomColor: colors.border, paddingTop: insets.top + 6 }]}>
         <View style={styles.headerTitleRow}>
           <Sparkles size={28} color={colors.primary} />
           <Text style={[styles.headerTitle, { color: colors.foreground, fontFamily: typography.fontFamily.sansBold }]}>
@@ -173,7 +174,7 @@ export default function AiHubScreen() {
           </CardFooter>
         </Card>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 

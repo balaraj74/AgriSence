@@ -16,7 +16,7 @@ export default function IndexScreen() {
     );
   }
 
-  return <Redirect href={user ? '/(app)' : '/(auth)'} />;
+  return <Redirect href={user ? ('/(app)' as any) : '/(auth)'} />;
 }
 
 const styles = StyleSheet.create({

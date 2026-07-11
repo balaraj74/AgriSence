@@ -1,3 +1,4 @@
+import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -6,7 +7,6 @@ import {
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
-  SafeAreaView,
   TextInput,
 } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -126,7 +126,7 @@ export default function VoiceAdvisorScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]} edges={['top']}>
       <Header title="Voice Assistant" showBackButton />
 
       <ScrollView contentContainerStyle={{ padding: spacing[4], gap: spacing[5] }}>

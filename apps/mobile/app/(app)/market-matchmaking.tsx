@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MapView, { Marker, Callout } from 'react-native-maps';
-import * as Location from 'expo-location';
+import { useLocationStore } from '../../src/store/location.store';
 import { useTheme } from '../../src/theme';
 import { Header } from '../../src/components/ui/Header';
 import { Button } from '../../src/components/ui/Button';
@@ -140,6 +140,7 @@ export default function MarketMatchmakingScreen() {
   );
 
   // Map & Location states
+  const { location: globalLocation, fetchLocation: getGlobalLocation } = useLocationStore();
   const [userCoords, setUserCoords] = useState<{ latitude: number; longitude: number }>({
     latitude: 20.5937,
     longitude: 78.9629, // Default to India centroid
@@ -156,40 +157,32 @@ export default function MarketMatchmakingScreen() {
 
   // Initialize: Get current location
   useEffect(() => {
-    (async () => {
-      try {
-        const lastLoc = await Location.getLastKnownPositionAsync({});
-        if (lastLoc) {
-          const coords = { latitude: lastLoc.coords.latitude, longitude: lastLoc.coords.longitude };
-          setUserCoords(coords);
-          mapRef.current?.animateToRegion({
-            ...coords,
-            latitudeDelta: 0.05,
-            longitudeDelta: 0.05,
-          });
-        }
-      } catch (e) {
-        console.warn('Could not retrieve last known location.', e);
-      }
-    })();
-  }, []);
+    if (globalLocation) {
+      setUserCoords(globalLocation);
+      mapRef.current?.animateToRegion({
+        ...globalLocation,
+        latitudeDelta: 0.05,
+        longitudeDelta: 0.05,
+      });
+    }
+  }, [globalLocation]);
 
   const handleGetLocation = async () => {
     setIsLocating(true);
     setErrorMsg(null);
     try {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
+      let coords = globalLocation;
+      if (!coords) {
+        await getGlobalLocation();
+        coords = useLocationStore.getState().location;
+      }
+      
+      if (!coords) {
         Alert.alert('Permission Denied', 'Please grant location permissions in Settings.');
         setIsLocating(false);
         return;
       }
 
-      const loc = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.Balanced,
-      });
-
-      const coords = { latitude: loc.coords.latitude, longitude: loc.coords.longitude };
       setUserCoords(coords);
 
       mapRef.current?.animateToRegion({

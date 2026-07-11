@@ -3,10 +3,18 @@ import { Stack, Redirect } from 'expo-router';
 import { useTheme } from '../../src/theme';
 import { useAuth } from '../../src/hooks/useAuth';
 import { ActivityIndicator, View, StyleSheet } from 'react-native';
+import { useLocationStore } from '../../src/store/location.store';
 
 export default function AppLayout() {
   const { user, isLoading } = useAuth();
   const { colors } = useTheme();
+  const fetchLocation = useLocationStore((state) => state.fetchLocation);
+
+  React.useEffect(() => {
+    if (user) {
+      fetchLocation();
+    }
+  }, [user]);
 
   // Redirect to Auth if not logged in
   if (isLoading) {

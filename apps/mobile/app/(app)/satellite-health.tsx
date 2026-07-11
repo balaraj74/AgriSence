@@ -147,9 +147,38 @@ export default function SatelliteHealthScreen() {
     setErrorMessage(null);
     try {
       const fetched = await getFields(user.uid);
-      setFields(fetched as FirestoreField[]);
-      if (fetched.length > 0) {
-        setSelectedFieldId(fetched[0].id);
+      const normalized = fetched.map(f => {
+        const coords = (f.coordinates || []).map((c: any) => {
+          let latitude = 0;
+          let longitude = 0;
+          if (c) {
+            if (typeof c.latitude === 'number') latitude = c.latitude;
+            else if (typeof c.lat === 'number') latitude = c.lat;
+            
+            if (typeof c.longitude === 'number') longitude = c.longitude;
+            else if (typeof c.lng === 'number') longitude = c.lng;
+          }
+          return { latitude, longitude };
+        }).filter(c => c.latitude !== 0 || c.longitude !== 0);
+
+        let centroid = { latitude: 20.5937, longitude: 78.9629 };
+        if (f.centroid) {
+          const centroidVal = f.centroid as any;
+          const lat = typeof centroidVal.latitude === 'number' ? centroidVal.latitude : typeof centroidVal.lat === 'number' ? centroidVal.lat : null;
+          const lng = typeof centroidVal.longitude === 'number' ? centroidVal.longitude : typeof centroidVal.lng === 'number' ? centroidVal.lng : null;
+          if (lat !== null && lng !== null) {
+            centroid = { latitude: lat, longitude: lng };
+          }
+        }
+        return {
+          ...f,
+          coordinates: coords,
+          centroid,
+        };
+      });
+      setFields(normalized as FirestoreField[]);
+      if (normalized.length > 0) {
+        setSelectedFieldId(normalized[0]!.id);
       }
     } catch (err: any) {
       console.error('Error fetching fields:', err);

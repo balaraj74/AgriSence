@@ -1,3 +1,4 @@
+import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
@@ -6,7 +7,6 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  SafeAreaView,
   TextInput,
   TouchableOpacity,
   ActivityIndicator,
@@ -159,7 +159,7 @@ export default function ChatbotScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]} edges={['top']}>
       <Header
         title="AI Farming Chatbot"
         subtitle="AgriSence Intelligence Assistant"

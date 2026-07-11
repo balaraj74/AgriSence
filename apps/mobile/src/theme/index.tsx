@@ -1,5 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useColorScheme } from 'react-native';
+import React, { createContext, useContext, useState } from 'react';
 import { Colors, type ThemeColors, type ColorScheme } from './colors';
 import { Typography, Spacing, BorderRadius, Shadows } from './typography';
 
@@ -16,10 +15,8 @@ interface ThemeContextValue {
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const systemScheme = useColorScheme();
-  const [colorScheme, setColorScheme] = useState<ColorScheme>(
-    systemScheme === 'dark' ? 'dark' : 'dark' // Default to dark (matches web default)
-  );
+  // Default to light theme as per user preference
+  const [colorScheme, setColorScheme] = useState<ColorScheme>('light');
 
   const toggleTheme = () => {
     setColorScheme((prev) => (prev === 'dark' ? 'light' : 'dark'));

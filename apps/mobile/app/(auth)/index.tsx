@@ -1,3 +1,4 @@
+import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useState } from 'react';
 import {
   View,
@@ -7,7 +8,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  SafeAreaView,
   Image,
 } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -44,7 +44,7 @@ export default function AuthScreen() {
         await signUpWithEmail(email, password, name);
       }
       // Wait for auth store to pick up state, then redirect
-      router.replace('/(app)');
+      router.replace('/(app)' as any);
     } catch (err: any) {
       setError(err.message || 'An error occurred during authentication.');
     } finally {
@@ -61,12 +61,12 @@ export default function AuthScreen() {
     setTimeout(() => {
       setIsLoading(false);
       // Fallback bypass for simulator/testing
-      router.replace('/(app)');
+      router.replace('/(app)' as any);
     }, 1000);
   };
 
   return (
-    <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]} edges={['top']}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.container}
@@ -77,8 +77,12 @@ export default function AuthScreen() {
           keyboardShouldPersistTaps="handled"
         >
           <View style={styles.header}>
-            <View style={[styles.logoContainer, { backgroundColor: `${colors.primary}15` }]}>
-              <Sprout size={36} color={colors.primary} />
+            <View style={styles.logoContainer}>
+              <Image
+                source={require('../../assets/images/icon.png')}
+                style={{ width: 72, height: 72, borderRadius: 20 }}
+                resizeMode="cover"
+              />
             </View>
             <Text
               style={[

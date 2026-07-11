@@ -11,7 +11,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import * as Location from 'expo-location';
+import { useLocationStore } from '../../src/store/location.store';
 import MapView, { Marker } from 'react-native-maps';
 import { useTheme } from '../../src/theme';
 import { Header } from '../../src/components/ui/Header';
@@ -134,7 +134,7 @@ export default function FertilizerFinderScreen() {
 
   const [status, setStatus] = useState<'idle' | 'locating' | 'fetching' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number } | null>(null);
+  const { location: userLocation, fetchLocation: getUserLocation } = useLocationStore();
   const [shops, setShops] = useState<Shop[]>([]);
   const [activeTab, setActiveTab] = useState<'map' | 'list'>('map');
 
@@ -190,19 +190,19 @@ export default function FertilizerFinderScreen() {
     setShops([]);
 
     try {
-      const { status: locationPermission } = await Location.requestForegroundPermissionsAsync();
-      if (locationPermission !== 'granted') {
+      let loc = userLocation;
+      if (!loc) {
+        await getUserLocation();
+        loc = useLocationStore.getState().location;
+      }
+      
+      if (!loc) {
         setErrorMsg('Location access denied. Please enable location permissions in your settings.');
         setStatus('error');
         return;
       }
 
-      const location = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.Balanced,
-      });
-
-      const { latitude, longitude } = location.coords;
-      setUserLocation({ latitude, longitude });
+      const { latitude, longitude } = loc;
 
       setStatus('fetching');
       

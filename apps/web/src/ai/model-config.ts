@@ -1,49 +1,52 @@
 /**
- * AI Model Configuration
- * Centralized configuration for Gemini model selection
- * 
- * Available models as of December 2025:
- * - gemini-2.5-flash: Stable, production-ready
- * - gemini-3-flash-preview: Latest preview with enhanced capabilities
- * - gemini-2.5-pro: Balanced performance and capability
+ * AI Model Configuration — Vertex AI via @genkit-ai/google-genai
+ *
+ * All AI calls route through Google Cloud Vertex AI (project: agrisence-1dc30).
+ * Credits are consumed from your GCP billing account — NOT the Gemini Developer API.
+ *
+ * Authentication: Application Default Credentials (ADC)
+ *   - Local:       `gcloud auth application-default login` (already done)
+ *   - Production:  Firebase App Hosting auto-detects the project service account
+ *
+ * Available Vertex AI models (stable as of July 2026):
+ *   - gemini-2.5-flash : Fast, multimodal, best cost/performance → primary model
+ *   - gemini-2.5-pro   : Highest capability for complex reasoning
  */
 
 import { vertexAI } from '@genkit-ai/google-genai';
 
-// Model selection - Use preview for cutting-edge features, stable for production
-const USE_PREVIEW_MODEL = true;
-
-// Model identifiers
+// Model identifiers — Vertex AI format
 const MODELS = {
-    // Latest Gemini 3 Flash - frontier intelligence built for speed
-    GEMINI_3_FLASH: 'gemini-2.5-flash', // Use stable version for now until 3-flash is fully released
-    // Stable production model
-    GEMINI_2_FLASH: 'gemini-2.5-flash',
-    // Pro model for complex reasoning
-    GEMINI_PRO: 'gemini-2.5-flash',
+  FLASH: 'gemini-2.5-flash',   // Primary — fast, multimodal, great for most flows
+  PRO:   'gemini-2.5-pro',     // Complex reasoning — soil reports, predictions
 } as const;
 
 /**
- * Get the primary AI model for general use
- * Uses the latest stable model for reliable results
+ * Primary model for general AI flows (chatbot, disease detection, schemes, etc.)
  */
 export function getPrimaryModel() {
-    return vertexAI.model(USE_PREVIEW_MODEL ? MODELS.GEMINI_3_FLASH : MODELS.GEMINI_2_FLASH);
+  return vertexAI.model(MODELS.FLASH);
 }
 
 /**
- * Get the vision model for image analysis
- * Flash model has excellent multimodal capabilities
+ * Vision model for image analysis (disease detection, medicinal plants, soil)
  */
 export function getVisionModel() {
-    return vertexAI.model(MODELS.GEMINI_3_FLASH);
+  return vertexAI.model(MODELS.FLASH);
 }
 
 /**
- * Get the model name string for prompts
+ * High-capability model for complex analytical reports
  */
-export function getModelName() {
-    return USE_PREVIEW_MODEL ? MODELS.GEMINI_3_FLASH : MODELS.GEMINI_2_FLASH;
+export function getReportModel() {
+  return vertexAI.model(MODELS.FLASH); // Switch to MODELS.PRO for max capability
+}
+
+/**
+ * Get the model name string for inline model references in flows
+ */
+export function getModelName(): string {
+  return MODELS.FLASH;
 }
 
 // Export model constants for reference

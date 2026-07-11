@@ -9,7 +9,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import * as Location from 'expo-location';
+import { useLocationStore } from '../../src/store/location.store';
 import { useTheme } from '../../src/theme';
 import { Header } from '../../src/components/ui/Header';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../src/components/ui/Card';
@@ -86,6 +86,8 @@ export default function WeatherScreen() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [statusText, setStatusText] = useState('Getting your location...');
 
+  const { location, fetchLocation } = useLocationStore();
+
   useEffect(() => {
     fetchWeather();
   }, []);
@@ -97,22 +99,22 @@ export default function WeatherScreen() {
     setStatusText('Getting your location...');
 
     try {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
+      let loc = location;
+      if (!loc) {
+        await fetchLocation();
+        loc = useLocationStore.getState().location;
+      }
+
+      if (!loc) {
         setErrorMsg('Location permission denied. Enable location to view weather forecast.');
         setIsLoading(false);
         return;
       }
 
-      setStatusText('Locating farm coords...');
-      const location = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.Balanced,
-      });
-
       setStatusText('Checking the skies...');
       const result = await getWeather({
-        lat: location.coords.latitude,
-        lon: location.coords.longitude,
+        lat: loc.latitude,
+        lon: loc.longitude,
       });
 
       setWeatherData(result);

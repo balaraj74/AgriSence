@@ -39,7 +39,8 @@ function RootLayoutContent() {
 
   return (
     <>
-      <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} backgroundColor={colors.background} />
+      {/* Dashboard header is always dark overlay, so we use light icons */}
+      <StatusBar style="light" backgroundColor="transparent" translucent={true} />
       <Stack
         screenOptions={{
           headerShown: false,

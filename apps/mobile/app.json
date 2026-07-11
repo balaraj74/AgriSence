@@ -23,6 +23,11 @@
         "backgroundColor": "#0f1117"
       },
       "package": "com.agrisence.app",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBIk7cP1NaOlrHWCM51Q0eCXUg0i2V-eyE"
+        }
+      },
       "googleServicesFile": "./google-services.json",
       "permissions": [
         "android.permission.CAMERA",

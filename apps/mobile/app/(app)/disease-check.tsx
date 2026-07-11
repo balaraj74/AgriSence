@@ -1,3 +1,4 @@
+import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -11,7 +12,6 @@ import {
   Dimensions,
   Platform,
   Alert,
-  SafeAreaView,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTheme } from '../../src/theme';
@@ -23,8 +23,8 @@ import { Badge } from '../../src/components/ui/Badge';
 import { Button } from '../../src/components/ui/Button';
 import { Card } from '../../src/components/ui/Card';
 import * as Speech from 'expo-speech';
-import * as Location from 'expo-location';
 import * as ImagePicker from 'expo-image-picker';
+import { useLocationStore } from '../../src/store/location.store';
 import {
   LocateFixed,
   Languages,
@@ -67,8 +67,7 @@ export default function DiseaseCheckScreen() {
 
   // Core States
   const [activeTab, setActiveTab] = useState<'new' | 'history'>('new');
-  const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
-  const [isLoadingLocation, setIsLoadingLocation] = useState(false);
+  const { location, isLoading: isLoadingLocation, fetchLocation: handleGetLocation, setLocation } = useLocationStore();
   const [selectedLanguage, setSelectedLanguage] = useState('English');
   const [imageFiles, setImageFiles] = useState<Array<{ uri: string; dataUri: string }>>([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -110,31 +109,7 @@ export default function DiseaseCheckScreen() {
     };
   }, []);
 
-  // Location Handlers
-  const handleGetLocation = async () => {
-    setIsLoadingLocation(true);
-    setErrorMsg(null);
-    try {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Location permission is required to analyze crop health.');
-        setIsLoadingLocation(false);
-        return;
-      }
-      const currentLoc = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.Balanced,
-      });
-      setLocation({
-        latitude: currentLoc.coords.latitude,
-        longitude: currentLoc.coords.longitude,
-      });
-    } catch (e) {
-      console.error(e);
-      setErrorMsg('Failed to acquire device GPS location. Please check your settings.');
-    } finally {
-      setIsLoadingLocation(false);
-    }
-  };
+
 
   // Image Picking
   const handleCapturePhoto = async () => {
@@ -267,7 +242,7 @@ export default function DiseaseCheckScreen() {
   };
 
   const handleReset = () => {
-    setLocation(null);
+    // Do NOT clear global location — it's acquired once at app startup and shared
     setImageFiles([]);
     setFinalResult(null);
     setErrorMsg(null);
@@ -289,7 +264,7 @@ export default function DiseaseCheckScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
       <Header title="Disease Check" subtitle="AI Diagnostic Plant Scanner" />
 
       {/* Tabs */}
