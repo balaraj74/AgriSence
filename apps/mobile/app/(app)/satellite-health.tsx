@@ -799,6 +799,7 @@ export default function SatelliteHealthScreen() {
 
     return (
       <View style={styles.analysisResults}>
+        {renderClaimBanner()}
         {/* Map NDVI overlay */}
         <Card style={[styles.resultsCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
           <CardHeader style={styles.cardHeaderFlex}>
@@ -872,6 +873,13 @@ export default function SatelliteHealthScreen() {
           </CardContent>
         </Card>
 
+        {/* Stage 1-2: Crop classification + phenology */}
+        {renderCropClassification()}
+        {renderPhenology()}
+
+        {/* Stage 3: Phenology-conditioned stress + explainability */}
+        {renderStressModel()}
+
         {/* Charts Trend */}
         <Card style={[styles.resultsCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
           <CardHeader>
@@ -883,7 +891,15 @@ export default function SatelliteHealthScreen() {
                 </Text>
               </View>
             </CardTitle>
-            <CardDescription>Vegetation index updates for {selectedField.fieldName}</CardDescription>
+            <CardDescription>Fused optical (NDVI) + SAR (VH) for {selectedField.fieldName}</CardDescription>
+            {analysisResult.healthTrend.some((d) => d.cloudObscured) && (
+              <View style={[styles.fusionNote, { backgroundColor: `${colors.primary}0d`, borderColor: `${colors.primary}25` }]}>
+                <CloudOff size={13} color={colors.primary} style={{ marginRight: 6 }} />
+                <Text style={[styles.fusionNoteText, { color: colors.mutedForeground, fontFamily: typography.fontFamily.sans }]}>
+                  {analysisResult.healthTrend.filter((d) => d.cloudObscured).length} cloud-obscured day(s) gap-filled from SAR VH backscatter.
+                </Text>
+              </View>
+            )}
           </CardHeader>
           <CardContent style={styles.chartCardContent}>
             {chartData.length > 0 ? (
@@ -950,6 +966,10 @@ export default function SatelliteHealthScreen() {
             </View>
           </CardContent>
         </Card>
+
+        {/* Stage 4-5: Water balance + priority-scored irrigation advisory */}
+        {renderWaterBalance()}
+        {renderIrrigationAdvisory()}
       </View>
     );
   };
