@@ -302,12 +302,66 @@ export interface SatelliteInput {
   };
   language: string;
 }
+export type GrowthStage = 'Sowing' | 'Vegetative' | 'Flowering' | 'Maturity';
+
+export interface SatelliteTrendPoint {
+  date: string;
+  ndvi: number;
+  ndwi?: number;
+  evi?: number;
+  vh?: number;
+  vhVvRatio?: number;
+  cloudObscured?: boolean;
+}
+
+export interface CropClassification {
+  cropLabel: string;
+  confidence: number;
+  topFeatures: Array<{ feature: string; value: string; contribution: number }>;
+}
+
+export interface Phenology {
+  currentStage: GrowthStage;
+  startOfSeason: string;
+  peakNdviDate: string;
+  lengthOfGrowingPeriodDays: number;
+  stageProgressPercent: number;
+}
+
+export interface StressModel {
+  stressScore: number;
+  verdict: 'Healthy' | 'Moderate' | 'Stressed';
+  contributingIndices: Array<{ index: string; weight: number; detail: string }>;
+  explanation: string;
+}
+
+export interface WaterBalance {
+  etcMm: number;
+  effectiveRainfallMm: number;
+  deficitMm: number;
+  kc: number;
+}
+
+export interface IrrigationAdvisory {
+  priorityScore: number;
+  priorityRank: 'Critical' | 'High' | 'Medium' | 'Low';
+  stageCriticalityWeight: number;
+  recommendedDate: string;
+  recommendedVolumeMm: number;
+  rationale: string;
+}
+
 export interface SatelliteOutput {
   healthMapBase64: string;
-  healthTrend: Array<{ date: string; ndvi: number }>;
+  healthTrend: SatelliteTrendPoint[];
   farmerAdvice: string;
   overallHealth: 'Healthy' | 'Moderate' | 'Stressed';
   lastUpdated: string;
+  cropClassification?: CropClassification;
+  phenology?: Phenology;
+  stressModel?: StressModel;
+  waterBalance?: WaterBalance;
+  irrigationAdvisory?: IrrigationAdvisory;
 }
 export const getSatelliteHealth = (input: SatelliteInput) =>
   callGenkitFlow<SatelliteOutput>('getSatelliteHealthAnalysis', input);
