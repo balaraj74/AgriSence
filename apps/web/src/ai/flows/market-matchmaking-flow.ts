@@ -1,17 +1,7 @@
 
 'use server';
-
-/**
- * @fileOverview An AI flow to simulate market matchmaking for farmers.
- * 
- * - findBestBuyers - Analyzes a farmer's crop details and matches them with simulated buyers.
- * - FindBestBuyersInput - The input type for the function.
- * - FindBestBuyersOutput - The return type for the function.
- */
-
-import { ai } from '@/ai/genkit';
 import { z } from 'zod';
-import { vertexAI } from '@genkit-ai/google-genai';
+import { callGemini, getPrimaryModel } from "@/ai/model-config";
 
 const FindBestBuyersInputSchema = z.object({
   cropType: z.string().describe("The type of crop the farmer wants to sell, e.g., 'Tomatoes', 'Wheat'."),
@@ -49,24 +39,20 @@ const FindBestBuyersOutputSchema = z.object({
   overallSummary: z.string().describe("A brief, encouraging summary of the market situation for the farmer's crop."),
 });
 export type FindBestBuyersOutput = z.infer<typeof FindBestBuyersOutputSchema>;
-
-
 export async function findBestBuyers(input: FindBestBuyersInput): Promise<FindBestBuyersOutput> {
-  return marketMatchmakingFlow(input);
-}
+try {
+  const output = await callGemini(`
+            A farmer has the following crop to sell. Find the best buyer matches for them, ranked by proximity and offer quality.
 
-
-const marketMatchmakingFlow = ai.defineFlow(
-  {
-    name: 'marketMatchmakingFlow',
-    inputSchema: FindBestBuyersInputSchema,
-    outputSchema: FindBestBuyersOutputSchema,
-  },
-  async (input) => {
-    try {
-      const { output } = await ai.generate({
-          model: vertexAI.model('gemini-2.5-flash'),
-          system: `You are an expert AI Market Matchmaking engine for Indian farmers, simulating a two-way digital mandi. Your task is to analyze a farmer's crop supply and find the best potential buyers from a simulated market of wholesalers, retailers, and other farmers.
+            - **Crop:** ${input.cropType}
+            - **Quantity:** ${input.quantity} ${input.unit}
+            - **Location:** ${input.location}
+            - **Preferred Sell-by Date:** ${input.sellByDate}
+            
+            Generate a list of the top 3-5 buyer matches based on these details.
+          `, {
+        preferredModel: getPrimaryModel(),
+        systemInstruction: `You are an expert AI Market Matchmaking engine for Indian farmers, simulating a two-way digital mandi. Your task is to analyze a farmer's crop supply and find the best potential buyers from a simulated market of wholesalers, retailers, and other farmers.
 
           You must generate a list of 3 to 5 plausible and diverse buyer matches. The matches should be realistic for the Indian context and ranked by the best combination of proximity and offer price.
           
@@ -84,28 +70,15 @@ const marketMatchmakingFlow = ai.defineFlow(
 
           Finally, provide a brief, encouraging overall summary.
           `,
-          prompt: `
-            A farmer has the following crop to sell. Find the best buyer matches for them, ranked by proximity and offer quality.
-
-            - **Crop:** ${input.cropType}
-            - **Quantity:** ${input.quantity} ${input.unit}
-            - **Location:** ${input.location}
-            - **Preferred Sell-by Date:** ${input.sellByDate}
-            
-            Generate a list of the top 3-5 buyer matches based on these details.
-          `,
-          output: {
-              schema: FindBestBuyersOutputSchema,
-          }
+        responseSchema: FindBestBuyersOutputSchema,
       });
-      
-      if (!output) {
-        throw new Error("AI did not return a valid analysis.");
-      }
-      return output;
-    } catch (error) {
-       console.error("Error in marketMatchmakingFlow:", error);
-       throw new Error("The AI model could not find buyer matches at this time. Please try again.");
-    }
+  
+  if (!output) {
+    throw new Error("AI did not return a valid analysis.");
   }
-);
+  return output;
+} catch (error) {
+   console.error("Error in marketMatchmakingFlow:", error);
+   throw new Error("The AI model could not find buyer matches at this time. Please try again.");
+}
+}

@@ -1,14 +1,7 @@
 
 'use server';
-
-/**
- * @fileOverview An AI agent that provides realistic 7-day market price forecasts for crops.
- * Uses current market data, seasonal patterns, and economic factors for accurate predictions.
- */
-
-import { ai } from '@/ai/genkit';
 import { z } from 'zod';
-import { vertexAI } from '@genkit-ai/google-genai';
+import { callGemini, getPrimaryModel } from "@/ai/model-config";
 
 const PredictMarketPriceInputSchema = z.object({
   cropName: z.string().describe("The name of the crop, e.g., 'Wheat'."),
@@ -43,9 +36,7 @@ const PredictMarketPriceOutputSchema = z.object({
 });
 export type PredictMarketPriceOutput = z.infer<typeof PredictMarketPriceOutputSchema>;
 
-export async function predictMarketPrice(input: PredictMarketPriceInput): Promise<PredictMarketPriceOutput> {
-  return predictMarketPriceFlow(input);
-}
+
 
 // Get dates for the next 7 days
 const getNext7Days = () => {
@@ -68,23 +59,17 @@ const getSeasonContext = () => {
   return 'Kharif harvest season';
 };
 
-const predictMarketPriceFlow = ai.defineFlow(
-  {
-    name: 'predictMarketPriceFlow',
-    inputSchema: PredictMarketPriceInputSchema,
-    outputSchema: PredictMarketPriceOutputSchema,
-  },
-  async ({ cropName, marketName }) => {
-    const dates = getNext7Days();
-    const season = getSeasonContext();
-    const today = new Date().toLocaleDateString('en-IN', {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric'
-    });
+export async function predictMarketPrice({ cropName, marketName }: PredictMarketPriceInput): Promise<PredictMarketPriceOutput> {
+        const dates = getNext7Days();
+        const season = getSeasonContext();
+        const today = new Date().toLocaleDateString('en-IN', {
+          weekday: 'long',
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric'
+        });
 
-    const prompt = `You are an agricultural market analyst. Generate a 7-day price forecast for ${cropName} in ${marketName}, India.
+        const prompt = `You are an agricultural market analyst. Generate a 7-day price forecast for ${cropName} in ${marketName}, India.
 
 Today is ${today}. Current season: ${season}.
 
@@ -105,45 +90,43 @@ Return JSON with:
 - factors: array of {factor, impact, description}
 - recommendation: string (advice for farmers)`;
 
-    try {
-      const { output } = await ai.generate({
-        model: vertexAI.model('gemini-2.5-flash'),
-        prompt: prompt,
-        output: { schema: PredictMarketPriceOutputSchema },
-        config: { temperature: 0.5 },
-      });
+        try {
+          const output = await callGemini(prompt, {
+            preferredModel: getPrimaryModel(),
+            responseSchema: PredictMarketPriceOutputSchema,
+            temperature: 0.5,
+          });
 
-      if (!output) {
-        // Return fallback data
-        return createFallbackPrediction(cropName, dates);
-      }
+          if (!output) {
+            // Return fallback data
+            return createFallbackPrediction(cropName, dates);
+          }
 
-      // Ensure forecast has 7 days
-      if (!output.forecast || output.forecast.length < 7) {
-        const basePrice = output.currentPrice || 2500;
-        output.forecast = dates.map((date, i) => ({
-          date,
-          predictedPrice: Math.round(basePrice * (1 + (Math.random() - 0.5) * 0.03)),
-          confidence: 'medium',
-        }));
-      }
+          // Ensure forecast has 7 days
+          if (!output.forecast || output.forecast.length < 7) {
+            const basePrice = output.currentPrice || 2500;
+            output.forecast = dates.map((date, i) => ({
+              date,
+              predictedPrice: Math.round(basePrice * (1 + (Math.random() - 0.5) * 0.03)),
+              confidence: 'medium',
+            }));
+          }
 
-      return {
-        currentPrice: output.currentPrice || 2500,
-        forecast: output.forecast,
-        summary: output.summary || `Price forecast for ${cropName} in ${marketName}`,
-        trendDirection: output.trendDirection || 'stable',
-        expectedChange: output.expectedChange || 0,
-        factors: output.factors || [],
-        recommendation: output.recommendation || 'Monitor market conditions before making selling decisions.',
-      };
-    } catch (error) {
-      console.error("Error in predictMarketPriceFlow:", error);
-      // Return fallback instead of throwing
-      return createFallbackPrediction(cropName, dates);
-    }
-  }
-);
+          return {
+            currentPrice: output.currentPrice || 2500,
+            forecast: output.forecast,
+            summary: output.summary || `Price forecast for ${cropName} in ${marketName}`,
+            trendDirection: output.trendDirection || 'stable',
+            expectedChange: output.expectedChange || 0,
+            factors: output.factors || [],
+            recommendation: output.recommendation || 'Monitor market conditions before making selling decisions.',
+          };
+        } catch (error) {
+          console.error("Error in predictMarketPriceFlow:", error);
+          // Return fallback instead of throwing
+          return createFallbackPrediction(cropName, dates);
+        }
+        };
 
 // Fallback prediction when AI fails
 function createFallbackPrediction(cropName: string, dates: string[]): PredictMarketPriceOutput {

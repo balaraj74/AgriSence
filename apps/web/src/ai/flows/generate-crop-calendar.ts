@@ -1,18 +1,7 @@
 
 'use server';
-
-/**
- * @fileOverview An AI flow to generate a seasonal crop calendar.
- * 
- * - generateCropCalendar - A function that creates a task schedule for a given crop and region.
- * - GenerateCropCalendarInput - The input type for the function.
- * - GenerateCropCalendarOutput - The return type for the function.
- */
-
-import { ai } from '@/ai/genkit';
 import { z } from 'zod';
-import { vertexAI } from '@genkit-ai/google-genai';
-
+import { callGemini, getPrimaryModel } from "@/ai/model-config";
 
 const GenerateCropCalendarInputSchema = z.object({
   cropName: z.string().describe("The name of the crop, e.g., 'Paddy' or 'Ragi'."),
@@ -32,25 +21,9 @@ const GenerateCropCalendarOutputSchema = z.object({
   tasks: z.array(TaskSchema).describe("An array of key agricultural tasks and their schedules for the given crop and region."),
 });
 export type GenerateCropCalendarOutput = z.infer<typeof GenerateCropCalendarOutputSchema>;
-
-
 export async function generateCropCalendar(input: GenerateCropCalendarInput): Promise<GenerateCropCalendarOutput> {
-  return generateCropCalendarFlow(input);
-}
-
-
-const generateCropCalendarFlow = ai.defineFlow(
-  {
-    name: 'generateCropCalendarFlow',
-    inputSchema: GenerateCropCalendarInputSchema,
-    outputSchema: GenerateCropCalendarOutputSchema,
-  },
-  async (input) => {
-    try {
-      const { output } = await ai.generate({
-          model: vertexAI.model('gemini-2.5-flash'),
-          system: `You are an expert agriculturalist specializing in Indian farming practices. Your task is to generate a typical, simplified seasonal calendar for a specific crop in a given Indian region.`,
-          prompt: `
+try {
+  const output = await callGemini(`
             The calendar should include the most critical tasks: Sowing, at least one Fertilizing event, Irrigation period, and Harvesting.
             
             For each task, provide a concise name and a typical date range. The date range should be in a "Month Day - Month Day" format. If it's a single day, just state the "Month Day". Do not include the year.
@@ -64,19 +37,18 @@ const generateCropCalendarFlow = ai.defineFlow(
             Now, generate this calendar for:
             - Crop: ${input.cropName}
             - Region: ${input.region}
-          `,
-          output: {
-              schema: GenerateCropCalendarOutputSchema,
-          }
+          `, {
+        preferredModel: getPrimaryModel(),
+        systemInstruction: `You are an expert agriculturalist specializing in Indian farming practices. Your task is to generate a typical, simplified seasonal calendar for a specific crop in a given Indian region.`,
+        responseSchema: GenerateCropCalendarOutputSchema,
       });
-      
-      if (!output || !output.tasks) {
-        throw new Error("AI did not return a valid task list.");
-      }
-      return output;
-    } catch (error) {
-       console.error("Error in generateCropCalendarFlow:", error);
-       throw new Error("The AI model could not generate a calendar. Please try again.");
-    }
+  
+  if (!output || !output.tasks) {
+    throw new Error("AI did not return a valid task list.");
   }
-);
+  return output;
+} catch (error) {
+   console.error("Error in generateCropCalendarFlow:", error);
+   throw new Error("The AI model could not generate a calendar. Please try again.");
+}
+}

@@ -1,17 +1,7 @@
 
 'use server';
-
-/**
- * @fileOverview An AI assistant to check eligibility for farmer loans and insurance schemes.
- * 
- * - checkLoanInsuranceEligibility - Analyzes a farmer's profile to find suitable financial products.
- * - CheckLoanInsuranceEligibilityInput - The input type for the function.
- * - CheckLoanInsuranceEligibilityOutput - The return type for the function.
- */
-
-import { ai } from '@/ai/genkit';
 import { z } from 'zod';
-import { vertexAI } from '@genkit-ai/google-genai';
+import { callGemini, getPrimaryModel } from "@/ai/model-config";
 
 const CheckLoanInsuranceEligibilityInputSchema = z.object({
   landSizeAcres: z.number().describe("The farmer's total land holding in acres."),
@@ -35,33 +25,9 @@ const CheckLoanInsuranceEligibilityOutputSchema = z.object({
   overallSummary: z.string().describe("A brief, encouraging summary of the findings for the farmer."),
 });
 export type CheckLoanInsuranceEligibilityOutput = z.infer<typeof CheckLoanInsuranceEligibilityOutputSchema>;
-
-
 export async function checkLoanInsuranceEligibility(input: CheckLoanInsuranceEligibilityInput): Promise<CheckLoanInsuranceEligibilityOutput> {
-  return loanInsuranceAssistantFlow(input);
-}
-
-
-const loanInsuranceAssistantFlow = ai.defineFlow(
-  {
-    name: 'loanInsuranceAssistantFlow',
-    inputSchema: CheckLoanInsuranceEligibilityInputSchema,
-    outputSchema: CheckLoanInsuranceEligibilityOutputSchema,
-  },
-  async (input) => {
-    try {
-      const { output } = await ai.generate({
-          model: vertexAI.model('gemini-2.5-flash'),
-          system: `You are an expert AI assistant for Indian farmers, specializing in government loans and insurance schemes. Your task is to analyze a farmer's profile and determine their eligibility for key financial products.
-
-          Available Schemes to consider:
-          1.  **Kisan Credit Card (KCC):** A short-term formal credit loan. Eligibility: Any farmer who owns cultivable land. Benefit: Low-interest credit for farming needs.
-          2.  **Pradhan Mantri Fasal Bima Yojana (PMFBY):** A crop insurance scheme. Eligibility: All farmers growing notified crops in notified areas. Benefit: Insurance coverage against crop failure due to natural calamities.
-          3.  **Modified Interest Subvention Scheme (MISS):** Provides interest subvention on short-term crop loans. Eligibility: Farmers taking loans up to ₹3 lakh via KCC.
-
-          Based on the user's input, identify all schemes they are likely eligible for. For each scheme, provide the required information in the output schema. Keep all explanations simple, clear, and encouraging.
-          `,
-          prompt: `
+try {
+  const output = await callGemini(`
             Analyze the following farmer's profile:
 
             - **Total Land:** ${input.landSizeAcres} acres
@@ -70,19 +36,26 @@ const loanInsuranceAssistantFlow = ai.defineFlow(
             - **Already has KCC:** ${input.hasKisanCreditCard ? 'Yes' : 'No'}
 
             Generate a list of eligible schemes with all the required details. If the farmer already has a KCC, do not recommend it again but do recommend related schemes like MISS.
+          `, {
+        preferredModel: getPrimaryModel(),
+        systemInstruction: `You are an expert AI assistant for Indian farmers, specializing in government loans and insurance schemes. Your task is to analyze a farmer's profile and determine their eligibility for key financial products.
+
+          Available Schemes to consider:
+          1.  **Kisan Credit Card (KCC):** A short-term formal credit loan. Eligibility: Any farmer who owns cultivable land. Benefit: Low-interest credit for farming needs.
+          2.  **Pradhan Mantri Fasal Bima Yojana (PMFBY):** A crop insurance scheme. Eligibility: All farmers growing notified crops in notified areas. Benefit: Insurance coverage against crop failure due to natural calamities.
+          3.  **Modified Interest Subvention Scheme (MISS):** Provides interest subvention on short-term crop loans. Eligibility: Farmers taking loans up to ₹3 lakh via KCC.
+
+          Based on the user's input, identify all schemes they are likely eligible for. For each scheme, provide the required information in the output schema. Keep all explanations simple, clear, and encouraging.
           `,
-          output: {
-              schema: CheckLoanInsuranceEligibilityOutputSchema,
-          }
+        responseSchema: CheckLoanInsuranceEligibilityOutputSchema,
       });
-      
-      if (!output) {
-        throw new Error("AI did not return a valid analysis.");
-      }
-      return output;
-    } catch (error) {
-       console.error("Error in loanInsuranceAssistantFlow:", error);
-       throw new Error("The AI model could not process your eligibility check. Please try again.");
-    }
+  
+  if (!output) {
+    throw new Error("AI did not return a valid analysis.");
   }
-);
+  return output;
+} catch (error) {
+   console.error("Error in loanInsuranceAssistantFlow:", error);
+   throw new Error("The AI model could not process your eligibility check. Please try again.");
+}
+}

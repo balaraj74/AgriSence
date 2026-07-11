@@ -1,22 +1,11 @@
 
 'use server';
-
-/**
- * @fileOverview Identifies a plant from an image and diagnoses any diseases, providing treatment advice in a specified language.
- *
- * - diagnoseCropDisease - A function that handles the plant identification and diagnosis process.
- * - DiagnoseCropDiseaseInput - The input type for the diagnoseCropDisease function.
- * - DiagnoseCropDiseaseOutput - The return type for the diagnoseCropDisease function.
- */
-
-import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
+import {z} from 'zod';
 import { getWeatherInfo } from './weather-search';
-import { vertexAI } from '@genkit-ai/google-genai';
 import { addDiagnosisRecord, getDiagnosisHistory } from '@/lib/actions/diagnoses';
 import { storage } from '@/lib/firebase/config';
 import { ref, uploadString, getDownloadURL } from 'firebase/storage';
-
+import { callGemini, getPrimaryModel } from "@/ai/model-config";
 
 const DiagnoseCropDiseaseInputSchema = z.object({
   imageUris: z.array(z.string()).describe("A list of photos of a plant leaf, as data URIs. Up to 5 images. Format: 'data:<mimetype>;base64,<encoded_data>'."),
@@ -55,11 +44,6 @@ const DiagnoseCropDiseaseOutputSchema = z.object({
 });
 export type DiagnoseCropDiseaseOutput = z.infer<typeof DiagnoseCropDiseaseOutputSchema>;
 
-export async function diagnoseCropDisease(input: DiagnoseCropDiseaseInput): Promise<DiagnoseCropDiseaseOutput> {
-  return diagnoseCropDiseaseFlow(input);
-}
-
-
 async function uploadImageToStorage(dataUri: string, userId: string): Promise<string> {
     const storageRef = ref(storage, `diagnoses/${userId}/${Date.now()}.jpg`);
     // 'data_url' is the format Firebase Storage expects for data URIs
@@ -69,40 +53,34 @@ async function uploadImageToStorage(dataUri: string, userId: string): Promise<st
 }
 
 
-const diagnoseCropDiseaseFlow = ai.defineFlow(
-  {
-    name: 'diagnoseCropDiseaseFlow',
-    inputSchema: DiagnoseCropDiseaseInputSchema,
-    outputSchema: DiagnoseCropDiseaseOutputSchema,
-  },
-  async (input) => {
-    try {
-      // 1. Fetch weather data
-      let weatherData = null;
-      try {
-        weatherData = await getWeatherInfo({
-            lat: input.geolocation.latitude,
-            lon: input.geolocation.longitude
-        });
-      } catch (weatherError) {
-          console.warn("Could not fetch weather data, proceeding without it.", weatherError);
-      }
-      
-      // 2. Fetch user's diagnosis history
-      let historyData = "No previous diagnosis history available.";
-      try {
-          const historyRecords = await getDiagnosisHistory(input.userId);
-          if (historyRecords.length > 0) {
-              historyData = historyRecords.slice(0, 5).map(record => 
-                  `- Date: ${record.timestamp.toLocaleDateString()}, Plant: ${record.plantName}, Disease: ${record.diseaseName}, Severity: ${record.severity}`
-              ).join('\n');
-          }
-      } catch (historyError) {
-          console.warn("Could not fetch diagnosis history.", historyError);
-      }
+export async function diagnoseCropDisease(input: DiagnoseCropDiseaseInput): Promise<DiagnoseCropDiseaseOutput> {
+        try {
+              // 1. Fetch weather data
+              let weatherData = null;
+              try {
+                weatherData = await getWeatherInfo({
+                    lat: input.geolocation.latitude,
+                    lon: input.geolocation.longitude
+                });
+              } catch (weatherError) {
+                  console.warn("Could not fetch weather data, proceeding without it.", weatherError);
+              }
+              
+              // 2. Fetch user's diagnosis history
+              let historyData = "No previous diagnosis history available.";
+              try {
+                  const historyRecords = await getDiagnosisHistory(input.userId);
+                  if (historyRecords.length > 0) {
+                      historyData = historyRecords.slice(0, 5).map(record => 
+                          `- Date: ${record.timestamp.toLocaleDateString()}, Plant: ${record.plantName}, Disease: ${record.diseaseName}, Severity: ${record.severity}`
+                      ).join('\n');
+                  }
+              } catch (historyError) {
+                  console.warn("Could not fetch diagnosis history.", historyError);
+              }
 
-      const weatherInfo = weatherData ? JSON.stringify(weatherData, null, 2) : "Not available";
-      const promptText = `You are an expert agronomist and plant pathologist AI. Your task is to provide a comprehensive and highly detailed crop health report for a farmer. The explanations must be clear, thorough, and easy to understand.
+              const weatherInfo = weatherData ? JSON.stringify(weatherData, null, 2) : "Not available";
+              const promptText = `You are an expert agronomist and plant pathologist AI. Your task is to provide a comprehensive and highly detailed crop health report for a farmer. The explanations must be clear, thorough, and easy to understand.
 IMPORTANT: Generate the entire response, including all names and descriptions, in the following language: ${input.language}.
 
 1.  **Image Quality Check**: First, analyze the image quality. If it's too blurry, dark, or partial, set 'isPlant' to false and explain the issue in 'plantName'. Do not proceed with diagnosis.
@@ -131,43 +109,47 @@ CONTEXT:
 - User's Recent Diagnosis History:
 ${historyData}
 `;
-      
-      const promptPayload = [
-        ...input.imageUris.map(uri => ({ media: { url: uri } })),
-        { text: promptText },
-      ];
-      
-      const { output } = await ai.generate({
-        prompt: promptPayload,
-        model: vertexAI.model('gemini-2.5-flash'),
-        output: { schema: DiagnoseCropDiseaseOutputSchema },
-      });
-
-      if (!output) {
-        throw new Error("No output was generated by the AI model.");
-      }
-
-      if (output.plantIdentification.isPlant && input.imageUris.length > 0) {
-          try {
-              const imageUrl = await uploadImageToStorage(input.imageUris[0], input.userId);
-              await addDiagnosisRecord(input.userId, {
-                  plantName: output.plantIdentification.plantName,
-                  diseaseName: output.diseaseDiagnosis.diseaseName,
-                  severity: output.diseaseDiagnosis.severity,
-                  confidenceScore: output.diseaseDiagnosis.confidenceScore,
-                  imageUrl: imageUrl,
-                  geolocation: input.geolocation,
+              
+              const promptPayload = [
+                ...input.imageUris.map(uri => {
+                  const match = uri.match(/^data:(.+);base64,(.+)$/);
+                  if (match) {
+                    return { inlineData: { mimeType: match[1], data: match[2] } };
+                  }
+                  return { inlineData: { mimeType: 'image/jpeg', data: uri.split(',')[1] || uri } };
+                }),
+                promptText,
+              ];
+              
+              const output = await callGemini(promptPayload, {
+                preferredModel: getPrimaryModel(),
+                responseSchema: DiagnoseCropDiseaseOutputSchema,
               });
-          } catch (historyError) {
-              console.error("Failed to save diagnosis history:", historyError);
-          }
-      }
 
-      return output;
+              if (!output) {
+                throw new Error("No output was generated by the AI model.");
+              }
 
-    } catch (error: any) {
-       console.error("Error in diagnoseCropDiseaseFlow:", error);
-       throw new Error(`The AI model failed to process the request. Details: ${error.message || 'Unknown error'}`);
-    }
-  }
-);
+              if (output.plantIdentification.isPlant && input.imageUris.length > 0) {
+                  try {
+                      const imageUrl = await uploadImageToStorage(input.imageUris[0], input.userId);
+                      await addDiagnosisRecord(input.userId, {
+                          plantName: output.plantIdentification.plantName,
+                          diseaseName: output.diseaseDiagnosis.diseaseName,
+                          severity: output.diseaseDiagnosis.severity,
+                          confidenceScore: output.diseaseDiagnosis.confidenceScore,
+                          imageUrl: imageUrl,
+                          geolocation: input.geolocation,
+                      });
+                  } catch (historyError) {
+                      console.error("Failed to save diagnosis history:", historyError);
+                  }
+              }
+
+              return output;
+
+            } catch (error: any) {
+               console.error("Error in diagnoseCropDiseaseFlow:", error);
+               throw new Error(`The AI model failed to process the request. Details: ${error.message || 'Unknown error'}`);
+            }
+        }

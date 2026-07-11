@@ -1,34 +1,22 @@
 
 'use server';
-
-/**
- * @fileOverview An AI flow to simulate satellite-based crop health monitoring.
- * 
- * - getSatelliteHealthAnalysis - Analyzes a given field polygon to generate a simulated health map and advice.
- */
-
-import { ai } from '@/ai/genkit';
-import { vertexAI } from '@genkit-ai/google-genai';
 import { GetSatelliteHealthInputSchema, GetSatelliteHealthOutputSchema } from '@/types';
 import type { GetSatelliteHealthInput, GetSatelliteHealthOutput } from '@/types';
-
-
+import { callGemini, getPrimaryModel } from "@/ai/model-config";
 export async function getSatelliteHealthAnalysis(input: GetSatelliteHealthInput): Promise<GetSatelliteHealthOutput> {
-  return getSatelliteHealthFlow(input);
-}
+try {
+  const output = await callGemini(`
+            Run the full satellite pipeline on the following field and return every stage's output in ${input.language}. Cover the last 30 days ending today.
 
+            - **Field Name:** ${input.field.fieldName}
+            - **Crop:** ${input.field.cropName || 'Not specified (infer from signature)'}
+            - **Area:** ${input.field.area.toFixed(2)} acres
+            - **Field Shape Coordinates (for map generation):** ${JSON.stringify(input.field.coordinates)}
 
-const getSatelliteHealthFlow = ai.defineFlow(
-  {
-    name: 'getSatelliteHealthFlow',
-    inputSchema: GetSatelliteHealthInputSchema,
-    outputSchema: GetSatelliteHealthOutputSchema,
-  },
-  async (input) => {
-    try {
-      const { output } = await ai.generate({
-          model: vertexAI.model('gemini-2.5-flash'),
-          system: `You are an expert agricultural AI that emulates a comprehensive satellite crop-monitoring pipeline. You fuse OPTICAL (Sentinel-2) and SAR (Sentinel-1) data at the FEATURE level, conditioned on the crop's phenological growth stage, and you make every verdict explainable down to the contributing indices. The entire response must be in ${input.language}.
+            Populate: healthTrend (fused optical+SAR with a cloud-gap-filled stretch), cropClassification (with SHAP features), phenology (SOS/peak/LGP/currentStage), stressModel (stage-conditioned, with attention weights and a one-sentence explanation), waterBalance, irrigationAdvisory (priority-scored using the criticality table and formula), the health map, overallHealth, lastUpdated timestamp, and farmer advice.
+          `, {
+        preferredModel: getPrimaryModel(),
+        systemInstruction: `You are an expert agricultural AI that emulates a comprehensive satellite crop-monitoring pipeline. You fuse OPTICAL (Sentinel-2) and SAR (Sentinel-1) data at the FEATURE level, conditioned on the crop's phenological growth stage, and you make every verdict explainable down to the contributing indices. The entire response must be in ${input.language}.
 
           CRITICAL: All time-series data must cover a rolling 30-day window ending on today's date.
 
@@ -65,28 +53,15 @@ const getSatelliteHealthFlow = ai.defineFlow(
           - overallHealth: single word (Healthy/Moderate/Stressed) consistent with the stress verdict.
           - farmerAdvice: simple actionable bullet points that reference the heatmap zones, the growth stage, the stress drivers, and the irrigation priority.
           `,
-          prompt: `
-            Run the full satellite pipeline on the following field and return every stage's output in ${input.language}. Cover the last 30 days ending today.
-
-            - **Field Name:** ${input.field.fieldName}
-            - **Crop:** ${input.field.cropName || 'Not specified (infer from signature)'}
-            - **Area:** ${input.field.area.toFixed(2)} acres
-            - **Field Shape Coordinates (for map generation):** ${JSON.stringify(input.field.coordinates)}
-
-            Populate: healthTrend (fused optical+SAR with a cloud-gap-filled stretch), cropClassification (with SHAP features), phenology (SOS/peak/LGP/currentStage), stressModel (stage-conditioned, with attention weights and a one-sentence explanation), waterBalance, irrigationAdvisory (priority-scored using the criticality table and formula), the health map, overallHealth, lastUpdated timestamp, and farmer advice.
-          `,
-          output: {
-              schema: GetSatelliteHealthOutputSchema,
-          }
+        responseSchema: GetSatelliteHealthOutputSchema,
       });
-      
-      if (!output) {
-        throw new Error("AI did not return a valid analysis.");
-      }
-      return output;
-    } catch (error) {
-       console.error("Error in getSatelliteHealthFlow:", error);
-       throw new Error("The AI model could not generate a satellite health report. Please try again.");
-    }
+  
+  if (!output) {
+    throw new Error("AI did not return a valid analysis.");
   }
-);
+  return output;
+} catch (error) {
+   console.error("Error in getSatelliteHealthFlow:", error);
+   throw new Error("The AI model could not generate a satellite health report. Please try again.");
+}
+}

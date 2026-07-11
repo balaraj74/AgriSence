@@ -1,18 +1,7 @@
 
 'use server';
-
-/**
- * @fileOverview An enhanced AI chatbot that provides personalized farming advice.
- * Uses farmer context for personalized responses based on their crops, diagnosis history, and fields.
- *
- * - farmingAdviceChatbot - A function that handles the chatbot interaction.
- * - FarmingAdviceChatbotInput - The input type for the farmingAdviceChatbot function.
- * - FarmingAdviceChatbotOutput - The return type for the farmingAdviceChatbot function.
- */
-
-import { ai } from '@/ai/genkit';
-import { z } from 'genkit';
-import { vertexAI } from '@genkit-ai/google-genai';
+import { z } from 'zod';
+import { callGemini, getPrimaryModel } from "@/ai/model-config";
 
 const FarmingAdviceChatbotInputSchema = z.object({
   question: z.string().describe('The question asked by the farmer.'),
@@ -36,31 +25,20 @@ const FarmingAdviceChatbotOutputSchema = z.object({
   confidence: z.number().min(0).max(1).describe('Confidence level in the answer, from 0.0 to 1.0.'),
 });
 export type FarmingAdviceChatbotOutput = z.infer<typeof FarmingAdviceChatbotOutputSchema>;
-
 export async function farmingAdviceChatbot(input: FarmingAdviceChatbotInput): Promise<FarmingAdviceChatbotOutput> {
-  return farmingAdviceChatbotFlow(input);
-}
+try {
+  const language = input.language || 'English';
 
-const farmingAdviceChatbotFlow = ai.defineFlow(
-  {
-    name: 'farmingAdviceChatbotFlow',
-    inputSchema: FarmingAdviceChatbotInputSchema,
-    outputSchema: FarmingAdviceChatbotOutputSchema,
-  },
-  async (input) => {
-    try {
-      const language = input.language || 'English';
+  // Build conversation history context
+  let historyContext = '';
+  if (input.conversationHistory && input.conversationHistory.length > 0) {
+    historyContext = '\n\n**Previous Conversation:**\n' +
+      input.conversationHistory.slice(-6).map(msg =>
+        `${msg.role === 'user' ? 'Farmer' : 'AI'}: ${msg.content}`
+      ).join('\n');
+  }
 
-      // Build conversation history context
-      let historyContext = '';
-      if (input.conversationHistory && input.conversationHistory.length > 0) {
-        historyContext = '\n\n**Previous Conversation:**\n' +
-          input.conversationHistory.slice(-6).map(msg =>
-            `${msg.role === 'user' ? 'Farmer' : 'AI'}: ${msg.content}`
-          ).join('\n');
-      }
-
-      const systemPrompt = `You are an expert AI agronomist assistant for **AgriSence**, an agriculture app for Indian farmers. 
+  const systemPrompt = `You are an expert AI agronomist assistant for **AgriSence**, an agriculture app for Indian farmers. 
 
 Your role is to provide:
 1. **Accurate, actionable farming advice** tailored to Indian agriculture
@@ -87,35 +65,31 @@ Your role is to provide:
 
 ${input.farmerContext ? `\n**Farmer's Context:**\n${input.farmerContext}` : ''}${historyContext}`;
 
-      const { output } = await ai.generate({
-        model: vertexAI.model('gemini-2.5-flash'),
-        system: systemPrompt,
-        prompt: `Farmer's Question: "${input.question}"
+  const output = await callGemini(`Farmer's Question: "${input.question}"\n\nPlease provide a helpful, detailed answer and suggest relevant follow-up questions they might have.`, {
+    preferredModel: getPrimaryModel(),
+    systemInstruction: systemPrompt,
+    responseSchema: FarmingAdviceChatbotOutputSchema,
+  });
 
-Please provide a helpful, detailed answer and suggest relevant follow-up questions they might have.`,
-        output: { schema: FarmingAdviceChatbotOutputSchema },
-      });
-
-      if (!output) {
-        throw new Error('No response generated');
-      }
-
-      return output;
-    } catch (error) {
-      console.error('Error in farmingAdviceChatbotFlow:', error);
-      // Return a graceful fallback response
-      return {
-        answer: `I apologize, but I'm having trouble processing your question right now. Please try again in a moment, or try rephrasing your question. If the issue persists, you can also visit your local KVK (Krishi Vigyan Kendra) for assistance.`,
-        suggestedFollowups: [
-          'What are common issues with my crops?',
-          'How can I improve soil health?',
-          'What government schemes are available for farmers?',
-        ],
-        relatedFeatures: [
-          { name: 'Disease Check', href: '/disease-check', reason: 'Get AI diagnosis for plant issues' },
-        ],
-        confidence: 0.3,
-      };
-    }
+  if (!output) {
+    throw new Error('No response generated');
   }
-);
+
+  return output;
+} catch (error) {
+  console.error('Error in farmingAdviceChatbotFlow:', error);
+  // Return a graceful fallback response
+  return {
+    answer: `I apologize, but I'm having trouble processing your question right now. Please try again in a moment, or try rephrasing your question. If the issue persists, you can also visit your local KVK (Krishi Vigyan Kendra) for assistance.`,
+    suggestedFollowups: [
+      'What are common issues with my crops?',
+      'How can I improve soil health?',
+      'What government schemes are available for farmers?',
+    ],
+    relatedFeatures: [
+      { name: 'Disease Check', href: '/disease-check', reason: 'Get AI diagnosis for plant issues' },
+    ],
+    confidence: 0.3,
+  };
+}
+}

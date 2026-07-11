@@ -1,34 +1,24 @@
 
 'use server';
-
-/**
- * @fileOverview An AI-powered assistant for soil health and fertilizer recommendations.
- * 
- * - getSoilAdvice - Analyzes soil data to provide fertilizer and management advice.
- */
-
-import { ai } from '@/ai/genkit';
-import { vertexAI } from '@genkit-ai/google-genai';
 import { GetSoilAdviceInputSchema, GetSoilAdviceOutputSchema } from '@/types/soil-advisor';
 import type { GetSoilAdviceInput, GetSoilAdviceOutput } from '@/types/soil-advisor';
-
-
+import { callGemini, getPrimaryModel } from "@/ai/model-config";
 export async function getSoilAdvice(input: GetSoilAdviceInput): Promise<GetSoilAdviceOutput> {
-  return getSoilAdviceFlow(input);
-}
+try {
+  const output = await callGemini(`
+            A farmer has provided the following soil data for their field. Please generate a comprehensive soil health report, including crop recommendations and all requested base64 PNG charts.
 
-
-const getSoilAdviceFlow = ai.defineFlow(
-  {
-    name: 'getSoilAdviceFlow',
-    inputSchema: GetSoilAdviceInputSchema,
-    outputSchema: GetSoilAdviceOutputSchema,
-  },
-  async (input) => {
-    try {
-      const { output } = await ai.generate({
-          model: vertexAI.model('gemini-2.5-flash'),
-          system: `You are an expert agronomist AI specializing in Indian soil conditions. Your task is to provide a detailed and farmer-friendly soil health report.
+            - **Farm Location:** ${input.location}
+            - **Soil pH:** ${input.soilPh}
+            - **Nitrogen (N):** ${input.nitrogen} kg/ha
+            - **Phosphorus (P):** ${input.phosphorus} kg/ha
+            - **Potassium (K):** ${input.potassium} kg/ha
+            - **Response Language:** ${input.language}
+            
+            Generate the structured report based on these details.
+          `, {
+        preferredModel: getPrimaryModel(),
+        systemInstruction: `You are an expert agronomist AI specializing in Indian soil conditions. Your task is to provide a detailed and farmer-friendly soil health report.
           
           You will analyze the provided soil data and generate recommendations. The entire response, including all names and descriptions, must be in the requested language: ${input.language}.
           
@@ -45,30 +35,15 @@ const getSoilAdviceFlow = ai.defineFlow(
                 - **Organic Matter Progress**: Create a simple progress bar showing the organic matter status.
                 - **Micronutrient Radar**: If micronutrient data is available (assume typical values if not), create a simple radar chart.
           `,
-          prompt: `
-            A farmer has provided the following soil data for their field. Please generate a comprehensive soil health report, including crop recommendations and all requested base64 PNG charts.
-
-            - **Farm Location:** ${input.location}
-            - **Soil pH:** ${input.soilPh}
-            - **Nitrogen (N):** ${input.nitrogen} kg/ha
-            - **Phosphorus (P):** ${input.phosphorus} kg/ha
-            - **Potassium (K):** ${input.potassium} kg/ha
-            - **Response Language:** ${input.language}
-            
-            Generate the structured report based on these details.
-          `,
-          output: {
-              schema: GetSoilAdviceOutputSchema,
-          }
+        responseSchema: GetSoilAdviceOutputSchema,
       });
-      
-      if (!output) {
-        throw new Error("AI did not return a valid analysis.");
-      }
-      return output;
-    } catch (error) {
-       console.error("Error in getSoilAdviceFlow:", error);
-       throw new Error("The AI model could not generate soil advice. Please try again.");
-    }
+  
+  if (!output) {
+    throw new Error("AI did not return a valid analysis.");
   }
-);
+  return output;
+} catch (error) {
+   console.error("Error in getSoilAdviceFlow:", error);
+   throw new Error("The AI model could not generate soil advice. Please try again.");
+}
+}

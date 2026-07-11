@@ -1,17 +1,8 @@
 
 'use server';
-/**
- * @fileOverview An AI agent that gets weather information using a tool.
- *
- * - getWeatherInfo - A function that handles the weather query.
- * - GetWeatherInfoInput - The input type for the getWeatherInfo function.
- * - GetWeatherInfoOutput - The return type for the getWeatherInfo function.
- */
-
-import { ai } from '@/ai/genkit';
-import { z } from 'genkit';
+import { z } from 'zod';
 import fetch from 'node-fetch';
-import { vertexAI } from '@genkit-ai/google-genai';
+import { callGemini, getPrimaryModel } from "@/ai/model-config";
 
 const GetWeatherInfoInputSchema = z.object({
   lat: z.number().describe('The latitude for the location.'),
@@ -43,21 +34,7 @@ const GetWeatherInfoOutputSchema = z.object({
   sunset: z.string().describe("Today's sunset time, e.g., '18:45'"),
 });
 export type GetWeatherInfoOutput = z.infer<typeof GetWeatherInfoOutputSchema>;
-
-
-export async function getWeatherInfo(input: GetWeatherInfoInput): Promise<GetWeatherInfoOutput> {
-  return weatherFlow(input);
-}
-
-const weatherTool = ai.defineTool(
-  {
-    name: 'getCurrentWeather',
-    description: 'Get the current weather and a multi-day forecast for a given latitude and longitude.',
-    inputSchema: GetWeatherInfoInputSchema,
-    // Note: The output schema for the tool itself doesn't include the AI summary.
-    outputSchema: GetWeatherInfoOutputSchema.omit({ summary: true }),
-  },
-  async ({ lat, lon }) => {
+async function weatherTool({ lat, lon }: { lat: number, lon: number }) {
     const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,is_day&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto`;
     const geocodeUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`;
 
@@ -107,51 +84,42 @@ const weatherTool = ai.defineTool(
       sunset: new Date(weatherData.daily.sunset[0]).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }),
     };
   }
-);
 
-const weatherPrompt = ai.definePrompt({
-  name: 'summarizeWeather',
-  model: vertexAI.model('gemini-2.5-flash'),
-  input: { schema: GetWeatherInfoOutputSchema.omit({ summary: true }) },
-  output: { schema: z.object({ summary: GetWeatherInfoOutputSchema.shape.summary }) },
-  prompt: `You are a helpful weather assistant. Given the following weather data in JSON format, provide a short, conversational summary of the overall weather. For example "Looks like a clear day, but expect some rain showers later in the week."
+export async function getWeatherInfo(input: GetWeatherInfoInput): Promise<GetWeatherInfoOutput> {
+try {
+  // 1. Call the tool to get structured weather data.
+  const structuredData = await weatherTool(input);
+
+  let summary = 'The weather forecast is available below.'; // Default summary
+  try {
+    // 2. Call the AI to generate a summary from the structured data.
+    const promptText = `You are a helpful weather assistant. Given the following weather data in JSON format, provide a short, conversational summary of the overall weather. For example "Looks like a clear day, but expect some rain showers later in the week."
 
     Data:
-    {{{json this}}}
-    `,
-});
-
-const weatherFlow = ai.defineFlow(
-  {
-    name: 'weatherFlow',
-    inputSchema: GetWeatherInfoInputSchema,
-    outputSchema: GetWeatherInfoOutputSchema,
-  },
-  async (input) => {
-    try {
-      // 1. Call the tool to get structured weather data.
-      const structuredData = await weatherTool(input);
-
-      let summary = 'The weather forecast is available below.'; // Default summary
-      try {
-        // 2. Call the AI to generate a summary from the structured data.
-        const { output } = await weatherPrompt(structuredData);
-        if (output?.summary) {
-          summary = output.summary;
-        }
-      } catch (error) {
-        console.error('Could not generate weather summary from AI:', error);
-        // Do not throw; proceed with a default summary.
-      }
-
-      // 3. Combine the structured data and the AI's summary.
-      return {
-        ...structuredData,
-        summary,
-      };
-    } catch (error) {
-      console.error("Error in weatherFlow:", error);
-      throw new Error("The weather service is currently unavailable. Please try again in a few moments.");
+    ${JSON.stringify(structuredData, null, 2)}`;
+    
+    const responseText = await callGemini(promptText, {
+      preferredModel: getPrimaryModel(),
+      responseSchema: z.object({ summary: GetWeatherInfoOutputSchema.shape.summary })
+    });
+    
+    const output = JSON.parse(responseText);
+    
+    if (output?.summary) {
+      summary = output.summary;
     }
+  } catch (error) {
+    console.error('Could not generate weather summary from AI:', error);
+    // Do not throw; proceed with a default summary.
   }
-);
+
+  // 3. Combine the structured data and the AI's summary.
+  return {
+    ...structuredData,
+    summary,
+  };
+} catch (error) {
+  console.error("Error in weatherFlow:", error);
+  throw new Error("The weather service is currently unavailable. Please try again in a few moments.");
+}
+}

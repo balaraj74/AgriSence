@@ -1,18 +1,7 @@
 
 'use server';
-
-/**
- * @fileOverview An AI agent that provides REAL-TIME market prices for crops in India.
- * Uses Gemini's grounding capabilities to fetch actual current prices from the web.
- *
- * - marketPriceSearch - A function that handles the market price query.
- * - MarketPriceSearchInput - The input type for the marketPriceSearch function.
- * - MarketPriceSearchOutput - The return type for the marketPriceSearch function.
- */
-
-import { ai } from '@/ai/genkit';
-import { z } from 'genkit';
-import { vertexAI } from '@genkit-ai/google-genai';
+import { z } from 'zod';
+import { callGemini, getPrimaryModel } from "@/ai/model-config";
 
 const MarketPriceSearchInputSchema = z.object({
   question: z.string().describe("An optional user question about specific crop prices. If empty, the AI should provide a general overview of major crop prices in India."),
@@ -39,11 +28,6 @@ const MarketPriceSearchOutputSchema = z.object({
   lastUpdated: z.string().describe("When this data was fetched, e.g., 'Dec 23, 2024, 1:00 PM IST'."),
 });
 export type MarketPriceSearchOutput = z.infer<typeof MarketPriceSearchOutputSchema>;
-
-export async function marketPriceSearch(input: MarketPriceSearchInput): Promise<MarketPriceSearchOutput> {
-  return marketPriceSearchFlow(input);
-}
-
 // Get current date for context
 const getCurrentDateContext = () => {
   const now = new Date();
@@ -63,16 +47,10 @@ const getCurrentDateContext = () => {
   };
 };
 
-const marketPriceSearchFlow = ai.defineFlow(
-  {
-    name: 'marketPriceSearchFlow',
-    inputSchema: MarketPriceSearchInputSchema,
-    outputSchema: MarketPriceSearchOutputSchema,
-  },
-  async (input) => {
-    const dateContext = getCurrentDateContext();
+export async function marketPriceSearch(input: MarketPriceSearchInput): Promise<MarketPriceSearchOutput> {
+const dateContext = getCurrentDateContext();
 
-    const systemPrompt = `You are an expert agricultural market analyst with access to REAL-TIME data from Indian agricultural markets (mandis).
+const systemPrompt = `You are an expert agricultural market analyst with access to REAL-TIME data from Indian agricultural markets (mandis).
 
 IMPORTANT: Today's date is ${dateContext.date}. The current time is ${dateContext.time}.
 
@@ -98,13 +76,13 @@ Your task is to provide ACCURATE, REAL-TIME crop prices from Indian mandis. Use 
 
 Always provide the most current prices reflecting today's market conditions.`;
 
-    const userPrompt = input.question
-      ? `User Question: "${input.question}"
+const userPrompt = input.question
+  ? `User Question: "${input.question}"
 
 Provide a detailed answer to this specific question about crop prices.
 Also include a price table for the most relevant crops.
 Include real-time prices from actual Indian mandis with proper source attribution.`
-      : `Provide today's (${dateContext.date}) real-time market prices for 7-8 major crops traded in Indian mandis.
+  : `Provide today's (${dateContext.date}) real-time market prices for 7-8 major crops traded in Indian mandis.
 
 For each crop, include:
 - Current modal price
@@ -115,31 +93,26 @@ For each crop, include:
 Focus on the most actively traded crops and major markets.
 Provide a summary of overall market sentiment for today.`;
 
-    try {
-      const { output } = await ai.generate({
-        model: vertexAI.model('gemini-2.5-flash'),
-        system: systemPrompt,
-        prompt: userPrompt,
-        output: { schema: MarketPriceSearchOutputSchema },
-        config: {
-          // Enable grounding for real-time data
-          temperature: 0.3, // Lower temperature for more factual responses
-        },
-      });
+try {
+  const output = await callGemini(userPrompt, {
+    preferredModel: getPrimaryModel(),
+    systemInstruction: systemPrompt,
+    responseSchema: MarketPriceSearchOutputSchema,
+    temperature: 0.3,
+  });
 
-      if (!output) {
-        throw new Error("Failed to generate market price data");
-      }
-
-      // Ensure lastUpdated is set
-      return {
-        ...output,
-        lastUpdated: output.lastUpdated || `${dateContext.date}, ${dateContext.time}`,
-        dataSource: output.dataSource || 'Based on current market reports from Indian APMCs',
-      };
-    } catch (error) {
-      console.error("Error in marketPriceSearchFlow:", error);
-      throw new Error("Unable to fetch market prices. Please try again.");
-    }
+  if (!output) {
+    throw new Error("Failed to generate market price data");
   }
-);
+
+  // Ensure lastUpdated is set
+  return {
+    ...output,
+    lastUpdated: output.lastUpdated || `${dateContext.date}, ${dateContext.time}`,
+    dataSource: output.dataSource || 'Based on current market reports from Indian APMCs',
+  };
+} catch (error) {
+  console.error("Error in marketPriceSearchFlow:", error);
+  throw new Error("Unable to fetch market prices. Please try again.");
+}
+}
