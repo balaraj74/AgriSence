@@ -314,10 +314,338 @@ export default function SatelliteHealthScreen() {
             Satellite Health Monitor
           </Text>
           <Text style={[styles.introSubtitle, { color: colors.mutedForeground, fontFamily: typography.fontFamily.sans }]}>
-            Scan vegetation vigor (NDVI) of your crops in real-time.
+            Feature-level optical + SAR fusion, conditioned on crop growth stage.
           </Text>
         </View>
       </View>
+    );
+  };
+
+  // Novel-claim banner shown once analysis is ready.
+  const renderClaimBanner = () => (
+    <View style={[styles.claimBanner, { backgroundColor: `${colors.primary}0d`, borderColor: `${colors.primary}30` }]}>
+      <View style={styles.claimRow}>
+        <Layers size={16} color={colors.primary} style={{ marginRight: 8, marginTop: 2 }} />
+        <Text style={[styles.claimText, { color: colors.foreground, fontFamily: typography.fontFamily.sans }]}>
+          We fuse optical and SAR at the feature level per growth stage, so what counts as stress
+          changes with the crop stage, and every verdict is explainable down to the contributing indices.
+        </Text>
+      </View>
+    </View>
+  );
+
+  const getVerdictColor = (v?: 'Healthy' | 'Moderate' | 'Stressed') =>
+    v === 'Healthy' ? '#22c55e' : v === 'Moderate' ? '#eab308' : '#ef4444';
+
+  // Stage 1: Crop classification with SHAP-style feature bars.
+  const renderCropClassification = () => {
+    const cc = analysisResult?.cropClassification;
+    if (!cc) return null;
+    const maxContribution = Math.max(...cc.topFeatures.map((f) => Math.abs(f.contribution)), 0.0001);
+    return (
+      <Card style={[styles.resultsCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+        <CardHeader>
+          <CardTitle>
+            <View style={styles.chartTitleRow}>
+              <Radar size={20} color={colors.primary} style={{ marginRight: 8 }} />
+              <Text style={{ fontSize: 16, color: colors.foreground, fontFamily: typography.fontFamily.sansBold }}>
+                Crop Classification
+              </Text>
+            </View>
+          </CardTitle>
+          <CardDescription>Multi-temporal optical + SAR signature</CardDescription>
+        </CardHeader>
+        <CardContent style={{ paddingTop: 8 }}>
+          <View style={styles.classifyRow}>
+            <Text style={[styles.classifyLabel, { color: colors.foreground, fontFamily: typography.fontFamily.sansBold }]}>
+              {cc.cropLabel}
+            </Text>
+            <Badge variant={cc.confidence >= 0.75 ? 'success' : 'warning'}>
+              {(cc.confidence * 100).toFixed(0)}% confidence
+            </Badge>
+          </View>
+          <Text style={[styles.sectionCaption, { color: colors.mutedForeground, fontFamily: typography.fontFamily.sansSemiBold }]}>
+            TOP CONTRIBUTING FEATURES (SHAP)
+          </Text>
+          {cc.topFeatures.map((f, i) => (
+            <View key={i} style={styles.shapRow}>
+              <View style={styles.shapLabelCol}>
+                <Text style={[styles.shapFeature, { color: colors.foreground, fontFamily: typography.fontFamily.sansMedium }]} numberOfLines={1}>
+                  {f.feature}
+                </Text>
+                <Text style={[styles.shapValue, { color: colors.mutedForeground, fontFamily: typography.fontFamily.sans }]}>
+                  {f.value}
+                </Text>
+              </View>
+              <View style={styles.shapBarTrack}>
+                <View
+                  style={{
+                    height: 8,
+                    borderRadius: 4,
+                    width: `${(Math.abs(f.contribution) / maxContribution) * 100}%`,
+                    backgroundColor: f.contribution >= 0 ? colors.primary : colors.mutedForeground,
+                  }}
+                />
+              </View>
+            </View>
+          ))}
+        </CardContent>
+      </Card>
+    );
+  };
+
+  // Stage 2: Phenology growth-stage timeline.
+  const renderPhenology = () => {
+    const ph = analysisResult?.phenology;
+    if (!ph) return null;
+    return (
+      <Card style={[styles.resultsCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+        <CardHeader>
+          <CardTitle>
+            <View style={styles.chartTitleRow}>
+              <Activity size={20} color={colors.primary} style={{ marginRight: 8 }} />
+              <Text style={{ fontSize: 16, color: colors.foreground, fontFamily: typography.fontFamily.sansBold }}>
+                Growth Stage
+              </Text>
+            </View>
+          </CardTitle>
+          <CardDescription>Phenology engine: SOS, peak NDVI and growing period</CardDescription>
+        </CardHeader>
+        <CardContent style={{ paddingTop: 8 }}>
+          <View style={styles.stageTimeline}>
+            {STAGE_ORDER.map((stage, i) => {
+              const meta = STAGE_META[stage];
+              const StageIcon = meta.icon;
+              const isCurrent = ph.currentStage === stage;
+              const isPast = STAGE_META[ph.currentStage].order > meta.order;
+              const active = isCurrent || isPast;
+              return (
+                <React.Fragment key={stage}>
+                  <View style={styles.stageNode}>
+                    <View
+                      style={[
+                        styles.stageDot,
+                        {
+                          backgroundColor: active ? `${meta.color}20` : `${colors.mutedForeground}12`,
+                          borderColor: isCurrent ? meta.color : 'transparent',
+                          borderWidth: isCurrent ? 2 : 0,
+                        },
+                      ]}
+                    >
+                      <StageIcon size={16} color={active ? meta.color : colors.mutedForeground} />
+                    </View>
+                    <Text
+                      style={[
+                        styles.stageName,
+                        {
+                          color: isCurrent ? meta.color : colors.mutedForeground,
+                          fontFamily: isCurrent ? typography.fontFamily.sansBold : typography.fontFamily.sans,
+                        },
+                      ]}
+                    >
+                      {stage}
+                    </Text>
+                  </View>
+                  {i < STAGE_ORDER.length - 1 && (
+                    <View style={[styles.stageConnector, { backgroundColor: isPast ? STAGE_META[ph.currentStage].color : `${colors.mutedForeground}25` }]} />
+                  )}
+                </React.Fragment>
+              );
+            })}
+          </View>
+          <View style={styles.phenologyGrid}>
+            <View style={styles.phenologyCell}>
+              <Text style={[styles.phenologyVal, { color: colors.foreground, fontFamily: typography.fontFamily.sansBold }]}>
+                {ph.stageProgressPercent.toFixed(0)}%
+              </Text>
+              <Text style={[styles.phenologyKey, { color: colors.mutedForeground }]}>Stage progress</Text>
+            </View>
+            <View style={styles.phenologyCell}>
+              <Text style={[styles.phenologyVal, { color: colors.foreground, fontFamily: typography.fontFamily.sansBold }]}>
+                {ph.lengthOfGrowingPeriodDays}d
+              </Text>
+              <Text style={[styles.phenologyKey, { color: colors.mutedForeground }]}>Growing period</Text>
+            </View>
+            <View style={styles.phenologyCell}>
+              <Text style={[styles.phenologyVal, { color: colors.foreground, fontFamily: typography.fontFamily.sansBold }]}>
+                {(() => { try { return format(parseISO(ph.peakNdviDate), 'd MMM'); } catch { return ph.peakNdviDate; } })()}
+              </Text>
+              <Text style={[styles.phenologyKey, { color: colors.mutedForeground }]}>Peak NDVI</Text>
+            </View>
+          </View>
+        </CardContent>
+      </Card>
+    );
+  };
+
+  // Stage 3: Phenology-conditioned stress model + Why flagged explainability.
+  const renderStressModel = () => {
+    const sm = analysisResult?.stressModel;
+    if (!sm) return null;
+    const vColor = getVerdictColor(sm.verdict);
+    return (
+      <Card style={[styles.resultsCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+        <CardHeader style={styles.cardHeaderFlex}>
+          <View style={{ flex: 1 }}>
+            <CardTitle>
+              <View style={styles.chartTitleRow}>
+                <Gauge size={20} color={colors.primary} style={{ marginRight: 8 }} />
+                <Text style={{ fontSize: 16, color: colors.foreground, fontFamily: typography.fontFamily.sansBold }}>
+                  Stress Verdict
+                </Text>
+              </View>
+            </CardTitle>
+            <CardDescription>Stage-conditioned fusion of optical + SAR</CardDescription>
+          </View>
+          <Badge variant={sm.verdict === 'Healthy' ? 'success' : sm.verdict === 'Moderate' ? 'warning' : 'error'}>
+            {sm.verdict}
+          </Badge>
+        </CardHeader>
+        <CardContent style={{ paddingTop: 8 }}>
+          <View style={styles.stressScoreRow}>
+            <Text style={[styles.stressScoreLabel, { color: colors.mutedForeground, fontFamily: typography.fontFamily.sansSemiBold }]}>
+              STRESS SCORE
+            </Text>
+            <Text style={[styles.stressScoreVal, { color: vColor, fontFamily: typography.fontFamily.sansBold }]}>
+              {sm.stressScore.toFixed(2)}
+            </Text>
+          </View>
+          <View style={[styles.stressScoreTrack, { backgroundColor: `${colors.mutedForeground}15` }]}>
+            <View style={{ height: 8, borderRadius: 4, width: `${sm.stressScore * 100}%`, backgroundColor: vColor }} />
+          </View>
+
+          <View style={[styles.whyBox, { backgroundColor: `${vColor}0d`, borderColor: `${vColor}30` }]}>
+            <View style={styles.whyHeaderRow}>
+              <Info size={14} color={vColor} style={{ marginRight: 6 }} />
+              <Text style={[styles.whyTitle, { color: vColor, fontFamily: typography.fontFamily.sansBold }]}>Why flagged?</Text>
+            </View>
+            <Text style={[styles.whyText, { color: colors.foreground, fontFamily: typography.fontFamily.sans }]}>
+              {sm.explanation}
+            </Text>
+          </View>
+
+          <Text style={[styles.sectionCaption, { color: colors.mutedForeground, fontFamily: typography.fontFamily.sansSemiBold }]}>
+            CONTRIBUTING INDICES (ATTENTION)
+          </Text>
+          {sm.contributingIndices.map((ci, i) => (
+            <View key={i} style={styles.attnRow}>
+              <View style={styles.attnLabelCol}>
+                <Text style={[styles.attnIndex, { color: colors.foreground, fontFamily: typography.fontFamily.sansMedium }]}>
+                  {ci.index}
+                </Text>
+                <Text style={[styles.attnDetail, { color: colors.mutedForeground, fontFamily: typography.fontFamily.sans }]}>
+                  {ci.detail}
+                </Text>
+              </View>
+              <View style={styles.attnBarCol}>
+                <View style={[styles.attnBarTrack, { backgroundColor: `${colors.mutedForeground}15` }]}>
+                  <View style={{ height: 6, borderRadius: 3, width: `${Math.min(ci.weight * 100, 100)}%`, backgroundColor: colors.primary }} />
+                </View>
+                <Text style={[styles.attnWeight, { color: colors.mutedForeground, fontFamily: typography.fontFamily.sans }]}>
+                  {(ci.weight * 100).toFixed(0)}%
+                </Text>
+              </View>
+            </View>
+          ))}
+        </CardContent>
+      </Card>
+    );
+  };
+
+  // Stage 4: Water balance & deficit.
+  const renderWaterBalance = () => {
+    const wb = analysisResult?.waterBalance;
+    if (!wb) return null;
+    const hasDeficit = wb.deficitMm > 0;
+    return (
+      <Card style={[styles.resultsCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+        <CardHeader>
+          <CardTitle>
+            <View style={styles.chartTitleRow}>
+              <Droplets size={20} color={colors.primary} style={{ marginRight: 8 }} />
+              <Text style={{ fontSize: 16, color: colors.foreground, fontFamily: typography.fontFamily.sansBold }}>
+                Water Balance
+              </Text>
+            </View>
+          </CardTitle>
+          <CardDescription>ETc vs rainfall (FAO-56, stage Kc = {wb.kc.toFixed(2)})</CardDescription>
+        </CardHeader>
+        <CardContent style={{ paddingTop: 8 }}>
+          <View style={styles.waterGrid}>
+            <View style={styles.waterCell}>
+              <Text style={[styles.waterVal, { color: colors.foreground, fontFamily: typography.fontFamily.sansBold }]}>{wb.etcMm.toFixed(0)}mm</Text>
+              <Text style={[styles.waterKey, { color: colors.mutedForeground }]}>Crop demand (ETc)</Text>
+            </View>
+            <View style={styles.waterCell}>
+              <Text style={[styles.waterVal, { color: colors.foreground, fontFamily: typography.fontFamily.sansBold }]}>{wb.effectiveRainfallMm.toFixed(0)}mm</Text>
+              <Text style={[styles.waterKey, { color: colors.mutedForeground }]}>Effective rainfall</Text>
+            </View>
+            <View style={styles.waterCell}>
+              <Text style={[styles.waterVal, { color: hasDeficit ? '#ef4444' : '#22c55e', fontFamily: typography.fontFamily.sansBold }]}>
+                {hasDeficit ? '-' : '+'}{Math.abs(wb.deficitMm).toFixed(0)}mm
+              </Text>
+              <Text style={[styles.waterKey, { color: colors.mutedForeground }]}>{hasDeficit ? 'Deficit' : 'Surplus'}</Text>
+            </View>
+          </View>
+        </CardContent>
+      </Card>
+    );
+  };
+
+  // Stage 5: Priority-scored irrigation advisory.
+  const renderIrrigationAdvisory = () => {
+    const ia = analysisResult?.irrigationAdvisory;
+    if (!ia) return null;
+    const pColor = PRIORITY_COLORS[ia.priorityRank] || colors.primary;
+    let recDate = ia.recommendedDate;
+    try { recDate = format(parseISO(ia.recommendedDate), 'd MMM yyyy'); } catch {}
+    return (
+      <Card style={[styles.resultsCard, { backgroundColor: colors.card, borderColor: `${pColor}40` }]}>
+        <CardHeader style={styles.cardHeaderFlex}>
+          <View style={{ flex: 1 }}>
+            <CardTitle>
+              <View style={styles.chartTitleRow}>
+                <Droplets size={20} color={pColor} style={{ marginRight: 8 }} />
+                <Text style={{ fontSize: 16, color: colors.foreground, fontFamily: typography.fontFamily.sansBold }}>
+                  Irrigation Advisory
+                </Text>
+              </View>
+            </CardTitle>
+            <CardDescription>Priority = stress x stage-criticality + deficit + area</CardDescription>
+          </View>
+          <Badge variant={ia.priorityRank === 'Low' ? 'success' : ia.priorityRank === 'Critical' ? 'error' : 'warning'}>
+            {ia.priorityRank}
+          </Badge>
+        </CardHeader>
+        <CardContent style={{ paddingTop: 8 }}>
+          <View style={styles.priorityRow}>
+            <Text style={[styles.priorityScore, { color: pColor, fontFamily: typography.fontFamily.sansBold }]}>
+              {(ia.priorityScore * 100).toFixed(0)}
+            </Text>
+            <View style={{ flex: 1, marginLeft: 12 }}>
+              <View style={[styles.priorityTrack, { backgroundColor: `${colors.mutedForeground}15` }]}>
+                <View style={{ height: 8, borderRadius: 4, width: `${ia.priorityScore * 100}%`, backgroundColor: pColor }} />
+              </View>
+              <Text style={[styles.priorityCaption, { color: colors.mutedForeground, fontFamily: typography.fontFamily.sans }]}>
+                Stage criticality weight: {ia.stageCriticalityWeight.toFixed(1)}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.recRow}>
+            <View style={styles.recCell}>
+              <Text style={[styles.recVal, { color: colors.foreground, fontFamily: typography.fontFamily.sansBold }]}>{recDate}</Text>
+              <Text style={[styles.recKey, { color: colors.mutedForeground }]}>Recommended date</Text>
+            </View>
+            <View style={styles.recCell}>
+              <Text style={[styles.recVal, { color: colors.foreground, fontFamily: typography.fontFamily.sansBold }]}>{ia.recommendedVolumeMm.toFixed(0)}mm</Text>
+              <Text style={[styles.recKey, { color: colors.mutedForeground }]}>Recommended volume</Text>
+            </View>
+          </View>
+          <Text style={[styles.recRationale, { color: colors.foreground, fontFamily: typography.fontFamily.sans }]}>
+            {ia.rationale}
+          </Text>
+        </CardContent>
+      </Card>
     );
   };
 
