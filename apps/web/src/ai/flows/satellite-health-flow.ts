@@ -28,30 +28,52 @@ const getSatelliteHealthFlow = ai.defineFlow(
     try {
       const { output } = await ai.generate({
           model: vertexAI.model('gemini-2.5-flash'),
-          system: `You are an expert agricultural AI specializing in satellite imagery analysis. Your task is to simulate a crop health report based on a farmer's field data for the last 30 days. The entire response must be in ${input.language}.
+          system: `You are an expert agricultural AI that emulates a comprehensive satellite crop-monitoring pipeline. You fuse OPTICAL (Sentinel-2) and SAR (Sentinel-1) data at the FEATURE level, conditioned on the crop's phenological growth stage, and you make every verdict explainable down to the contributing indices. The entire response must be in ${input.language}.
 
-          CRITICAL: The data you generate must be for a rolling 30-day window, ending on today's date.
+          CRITICAL: All time-series data must cover a rolling 30-day window ending on today's date.
 
-          You will generate:
-          1.  **Last Updated Timestamp**: A timestamp for when the analysis was run, in ISO 8601 format (e.g., "2025-09-15T10:30:00Z").
-          2.  **Simulated NDVI Health Map**: A base64 encoded PNG image representing the crop health. The map should be a simple heatmap with green (healthy, NDVI > 0.6), yellow (moderate, NDVI 0.3-0.6), and red (stressed, NDVI < 0.3) zones. The image background MUST be transparent, and the colored zones should roughly match the shape of the provided field coordinates to look like an overlay. Do not include any text or labels on the image itself.
-          3.  **30-Day Health Trend**: A list of 30 daily data points for an NDVI trend chart. The values should be plausible, showing some fluctuation. The most recent date must be today, and the dates should go back 30 days from today.
-          4.  **Farmer-Friendly Advice**: Based on the simulated heatmap and NDVI trend, generate simple, actionable advice. Use bullet points for readability. Your advice MUST reference insights from the heatmap.
-                - If the heatmap shows specific stressed (red/yellow) zones, your advice must mention them (e.g., "The north-west corner of your field shows signs of stress.").
-                - If NDVI is falling sharply, recommend checking for pest/disease or water stress in the highlighted areas.
-                - If NDVI is stable but low (<0.5), suggest soil fertility improvement or nitrogen supplementation.
-                - If NDVI is increasing, encourage the farmer to continue current practices and suggest preventive measures for the next 2 weeks.
-          5.  **Overall Health Status**: A single word summarizing the current state based on the most recent data: "Healthy", "Moderate", or "Stressed".
+          Emulate this staged pipeline and populate every output field:
+
+          STAGE 0 - PREPROCESSING & FUSION
+          - Produce 30 daily data points fusing optical and SAR features. For each point provide: ndvi (0-1), ndwi (-1..1), evi (-1..1), vh (SAR backscatter dB, typically -25..-8), vhVvRatio (0..1).
+          - Simulate a realistic monsoon cloud gap: for a contiguous stretch of ~3-6 days, set cloudObscured=true. On those days OPTICAL indices must be gap-filled from the clean SAR VH trend (so ndvi still trends sensibly). This demonstrates SAR filling optical cloud gaps.
+
+          STAGE 1 - CROP CLASSIFICATION (cropClassification)
+          - Predict cropLabel (use the provided crop name if given, else infer from the feature signature) with a confidence (0-1).
+          - Provide 3 topFeatures with SHAP-style signed contributions, e.g. {feature:'VH/VV ratio', value:'0.42', contribution:0.31}.
+
+          STAGE 2 - PHENOLOGY ENGINE (phenology)
+          - Derive startOfSeason (SOS), peakNdviDate, lengthOfGrowingPeriodDays (LGP) and classify currentStage into one of: Sowing, Vegetative, Flowering, Maturity. Provide stageProgressPercent (0-100).
+
+          STAGE 3 - PHENOLOGY-CONDITIONED STRESS MODEL (stressModel) - CORE NOVELTY
+          - Output stressScore (0-1) and a stage-aware verdict (Healthy/Moderate/Stressed). Thresholds are STAGE-DEPENDENT: NDVI-dip tolerance is WIDE at Sowing and Maturity, TIGHT at Flowering (yield-critical).
+          - contributingIndices: attention weights (summing ~1.0) per index (e.g. 'NDVI anomaly', 'VH trend', 'NDWI', 'VCI') with a plain-language detail each.
+          - explanation: ONE plain-language sentence stating WHY it was flagged, referencing indices and the growth stage, e.g. 'Flagged Stressed: NDVI 18% below expected for flowering stage; VH backscatter declining over last 2 composites; rainfall 4mm vs ETc 32mm.'
+
+          STAGE 4 - WATER BALANCE (waterBalance)
+          - Compute etcMm = ETo x Kc where Kc is stage-dependent (FAO-56). Provide effectiveRainfallMm, deficitMm (ETc minus effective rainfall and soil contribution), and the kc used.
+
+          STAGE 5 - PRIORITY-SCORED IRRIGATION ADVISORY (irrigationAdvisory)
+          - Use stageCriticalityWeight from this table: Sowing=0.6, Vegetative=0.8, Flowering=1.0, Maturity=0.4.
+          - priorityScore = (stressScore x stageCriticalityWeight x 0.5) + (normalizedWaterDeficit x 0.3) + (fieldAreaWeight x 0.2). Normalize deficit and area to 0-1.
+          - Map priorityScore to priorityRank: >=0.75 Critical, >=0.5 High, >=0.25 Medium, else Low.
+          - Provide recommendedDate, recommendedVolumeMm, and a short rationale.
+
+          OTHER OUTPUTS
+          - lastUpdated: ISO 8601 timestamp for now.
+          - healthMapBase64: transparent-background PNG heatmap (green NDVI>0.6, yellow 0.3-0.6, red <0.3) roughly matching the field polygon shape. No text/labels on the image.
+          - overallHealth: single word (Healthy/Moderate/Stressed) consistent with the stress verdict.
+          - farmerAdvice: simple actionable bullet points that reference the heatmap zones, the growth stage, the stress drivers, and the irrigation priority.
           `,
           prompt: `
-            Analyze the following farm field and generate a simulated satellite health report in ${input.language}. The analysis must cover the last 30 days.
+            Run the full satellite pipeline on the following field and return every stage's output in ${input.language}. Cover the last 30 days ending today.
 
             - **Field Name:** ${input.field.fieldName}
-            - **Crop:** ${input.field.cropName || 'Not specified'}
+            - **Crop:** ${input.field.cropName || 'Not specified (infer from signature)'}
             - **Area:** ${input.field.area.toFixed(2)} acres
             - **Field Shape Coordinates (for map generation):** ${JSON.stringify(input.field.coordinates)}
 
-            Generate the health map, 30-day trend, overall status, "last updated" timestamp, and detailed farmer advice with bullet points that references the heatmap.
+            Populate: healthTrend (fused optical+SAR with a cloud-gap-filled stretch), cropClassification (with SHAP features), phenology (SOS/peak/LGP/currentStage), stressModel (stage-conditioned, with attention weights and a one-sentence explanation), waterBalance, irrigationAdvisory (priority-scored using the criticality table and formula), the health map, overallHealth, lastUpdated timestamp, and farmer advice.
           `,
           output: {
               schema: GetSatelliteHealthOutputSchema,
