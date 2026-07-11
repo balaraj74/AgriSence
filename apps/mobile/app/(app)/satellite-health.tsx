@@ -1259,4 +1259,230 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 22,
   },
+  claimBanner: {
+    borderWidth: 1,
+    borderRadius: 12,
+    padding: 12,
+  },
+  claimRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  claimText: {
+    flex: 1,
+    fontSize: 12,
+    lineHeight: 18,
+    fontStyle: 'italic',
+  },
+  sectionCaption: {
+    fontSize: 10,
+    letterSpacing: 0.8,
+    marginTop: 14,
+    marginBottom: 10,
+  },
+  classifyRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  classifyLabel: {
+    fontSize: 18,
+  },
+  shapRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  shapLabelCol: {
+    width: 130,
+    paddingRight: 8,
+  },
+  shapFeature: {
+    fontSize: 12,
+  },
+  shapValue: {
+    fontSize: 11,
+    marginTop: 1,
+  },
+  shapBarTrack: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  stageTimeline: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 18,
+  },
+  stageNode: {
+    alignItems: 'center',
+    width: 64,
+  },
+  stageDot: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 6,
+  },
+  stageName: {
+    fontSize: 11,
+    textAlign: 'center',
+  },
+  stageConnector: {
+    flex: 1,
+    height: 2,
+    marginBottom: 20,
+    marginHorizontal: -6,
+  },
+  phenologyGrid: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  phenologyCell: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  phenologyVal: {
+    fontSize: 15,
+  },
+  phenologyKey: {
+    fontSize: 10,
+    marginTop: 2,
+  },
+  stressScoreRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 6,
+  },
+  stressScoreLabel: {
+    fontSize: 11,
+    letterSpacing: 0.6,
+  },
+  stressScoreVal: {
+    fontSize: 20,
+  },
+  stressScoreTrack: {
+    height: 8,
+    borderRadius: 4,
+    overflow: 'hidden',
+  },
+  whyBox: {
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 12,
+    marginTop: 14,
+  },
+  whyHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 6,
+  },
+  whyTitle: {
+    fontSize: 12,
+  },
+  whyText: {
+    fontSize: 13,
+    lineHeight: 19,
+  },
+  attnRow: {
+    marginBottom: 12,
+  },
+  attnLabelCol: {
+    marginBottom: 5,
+  },
+  attnIndex: {
+    fontSize: 13,
+  },
+  attnDetail: {
+    fontSize: 11,
+    marginTop: 1,
+    lineHeight: 16,
+  },
+  attnBarCol: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  attnBarTrack: {
+    flex: 1,
+    height: 6,
+    borderRadius: 3,
+    overflow: 'hidden',
+    marginRight: 8,
+  },
+  attnWeight: {
+    fontSize: 11,
+    width: 34,
+    textAlign: 'right',
+  },
+  fusionNote: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+    marginTop: 8,
+  },
+  fusionNoteText: {
+    flex: 1,
+    fontSize: 11,
+    lineHeight: 15,
+  },
+  waterGrid: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  waterCell: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  waterVal: {
+    fontSize: 16,
+  },
+  waterKey: {
+    fontSize: 10,
+    marginTop: 3,
+    textAlign: 'center',
+  },
+  priorityRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  priorityScore: {
+    fontSize: 34,
+    lineHeight: 36,
+  },
+  priorityTrack: {
+    height: 8,
+    borderRadius: 4,
+    overflow: 'hidden',
+  },
+  priorityCaption: {
+    fontSize: 11,
+    marginTop: 6,
+  },
+  recRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
+  recCell: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  recVal: {
+    fontSize: 15,
+  },
+  recKey: {
+    fontSize: 10,
+    marginTop: 3,
+  },
+  recRationale: {
+    fontSize: 13,
+    lineHeight: 19,
+  },
 });
