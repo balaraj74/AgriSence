@@ -20,7 +20,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../..
 import { Badge } from '../../src/components/ui/Badge';
 import { Skeleton } from '../../src/components/ui/Skeleton';
 import { getFields } from '../../src/services/firestore';
-import { getSatelliteHealth, SatelliteOutput } from '../../src/services/ai';
+import { getSatelliteHealth, SatelliteOutput, GrowthStage } from '../../src/services/ai';
 import { useAuth } from '../../src/hooks/useAuth';
 import { format, parseISO } from 'date-fns';
 import {
@@ -33,7 +33,34 @@ import {
   ChevronDown,
   Check,
   RefreshCw,
+  Sprout,
+  Leaf,
+  Flower2,
+  Wheat,
+  Radar,
+  CloudOff,
+  Droplets,
+  Activity,
+  Layers,
+  Info,
+  Gauge,
 } from 'lucide-react-native';
+
+// Stage-criticality weight table (Sowing 0.6, Vegetative 0.8, Flowering 1.0, Maturity 0.4).
+const STAGE_META: Record<GrowthStage, { icon: any; color: string; order: number }> = {
+  Sowing: { icon: Sprout, color: '#a3a3a3', order: 0 },
+  Vegetative: { icon: Leaf, color: '#22c55e', order: 1 },
+  Flowering: { icon: Flower2, color: '#ec4899', order: 2 },
+  Maturity: { icon: Wheat, color: '#f59e0b', order: 3 },
+};
+const STAGE_ORDER: GrowthStage[] = ['Sowing', 'Vegetative', 'Flowering', 'Maturity'];
+
+const PRIORITY_COLORS: Record<string, string> = {
+  Critical: '#ef4444',
+  High: '#f59e0b',
+  Medium: '#eab308',
+  Low: '#22c55e',
+};
 
 const { width } = Dimensions.get('window');
 
